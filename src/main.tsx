@@ -1,10 +1,22 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import {createRoot} from 'react-dom/client'
+import React from "react";
+import "@app/index.css";
+import {App} from "@/app";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+
+import {worker} from "@app/mocks";
+
+async function enableMocking() {
+    if (import.meta.env.MODE === "development") {
+        await worker.start()
+
+    }
+}
+
+enableMocking().then(()=>{
+    createRoot(document.getElementById('root')).render(
+        <React.StrictMode>
+            <App/>
+        </React.StrictMode>
+    );
+})
