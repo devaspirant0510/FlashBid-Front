@@ -4,6 +4,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {Car} from "lucide-react";
 import {Card} from "@/components/ui/card.tsx";
 import {Link} from "react-router";
+import {MainLayout} from "@shared/layout";
 
 type TodoItem = {
     userId: number,
@@ -17,26 +18,28 @@ const HomePage = () => {
             return (await axios.get<TodoItem[]>("https://jsonplaceholder.typicode.com/todos")).data as TodoItem[];
         }
     })
-    if(isLoading){
+    if (isLoading) {
         return <>loading</>
     }
-    if(isError){
+    if (isError) {
         return <>error</>
     }
-    if(!data){
+    if (!data) {
         return <>nodata</>
     }
     return (
-        <div className={'flex flex-col items-start m-2'}>
-            <Button asChild className={""}>
-               <Link to={"/auction-list"}> /auction-list 로 이동</Link>
-            </Button>
-            {data.map((item, index) => (
-                <Card className={'w-full p-4 my-2'} key={index} >
-                    {item.title}
-                </Card>
-            ))}
-        </div>
+        <MainLayout>
+            <div className={'flex flex-col items-start m-2'}>
+                <Button asChild className={""}>
+                    <Link to={"/auction-list"}> /auction-list 로 이동</Link>
+                </Button>
+                {data.map((item, index) => (
+                    <Card className={'w-full p-4 my-2'} key={index}>
+                        {item.title}
+                    </Card>
+                ))}
+            </div>
+        </MainLayout>
     )
 }
 export default HomePage;
