@@ -1,6 +1,6 @@
 import {http, HttpResponse} from 'msw';
 import {fakerKO} from '@faker-js/faker';
-import {ApiResult} from "@app/mocks/response.ts";
+import {ApiResult} from "@entities/common";
 import {AuctionData} from "@entities/auction/model";
 
 const fakerT1 = fakerKO;
