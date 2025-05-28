@@ -3,7 +3,7 @@ import {httpFetcher} from "@shared/lib";
 import {Card} from "@/components/ui/card.tsx";
 import {Image} from "lucide-react";
 
-const AuctionList = () => {
+const AuctionListLegacy = () => {
     const {isLoading, isError, error, data} = useQuery({
         queryKey: ['api', 'auction-list'],
         queryFn: httpFetcher
@@ -41,4 +41,4 @@ const AuctionList = () => {
         </>
     );
 }
-export default AuctionList;
+export default AuctionListLegacy;
