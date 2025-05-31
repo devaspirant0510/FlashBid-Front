@@ -4,7 +4,8 @@ export type Goods = {
     title: string;
     description: string;
     deliveryType: '직거래' | '택배' | '협의후 결정';
-    images:string[]
+    images:string[],
+    category:string,
 }
 
 export type AuctionData ={

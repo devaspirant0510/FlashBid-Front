@@ -17,3 +17,21 @@ export type ApiResult<T> = {
     error: ApiError | null;
     message: string;
 }
+
+export function ApiResultBuilder<T>(data:T):ApiResult<T>{
+    return {
+        apiHeader: {
+            code: 200,
+            status:"OK"
+        },
+        data:data,
+        error:null,
+        message:"ok",
+        method:"GET",
+        path:"/",
+        timestamp: Date.now().toString(),
+
+    }
+
+
+}
