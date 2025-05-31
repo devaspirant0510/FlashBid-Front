@@ -1,17 +1,28 @@
 import {useQueryGetAuctionList} from "@/features/auction/lib";
-import {Card, CardContent, CardHeader} from "@/components/ui/card.tsx";
+import {Card, CardContent, CardHeader} from "@shared/components/ui/card.tsx";
 import {Divider} from "@shared/ui";
+import {useCallback} from "react";
+import {useNavigate} from "react-router";
 
 const AuctionList = () => {
+    const navigate = useNavigate();
     const {isLoading, isError, data, error} = useQueryGetAuctionList();
+
+    const onClickAuctionItem = useCallback((id: number) => {
+        navigate("/auction/live/" + id);
+    }, [])
+
     if (isLoading) {
         return (
             <>
+                loading
             </>
         )
     }
     if (isError) {
-        return <>{error}</>
+        return (
+            <>{error}</>
+        );
     }
     if (!data || !data.data) {
         return <>nodata</>
@@ -21,7 +32,7 @@ const AuctionList = () => {
             {
                 data.data.map(v => {
                     return (
-                        <Card className={'my-4'}>
+                        <Card className={'my-4'} onClick={() => onClickAuctionItem(v.id)}>
                             <CardContent className={'flex'}>
                                 <div>
                                     <img className={"w-full rounded-lg"} src={v.goods.images[0]}/>
@@ -31,10 +42,12 @@ const AuctionList = () => {
                                         {v.goods.title}
                                     </div>
                                     <div className={'text-lg font-bold'}>
-                                        현재가 :{v.startPrice+100000}
+                                        현재가 :{v.startPrice + 100000}
                                     </div>
                                     <div className={'text-sm text-gray-500 '}>
-                                        마감까지 :{Math.floor((new Date()-new Date(v.endTime) ) / 3600000)}시간 {Math.floor(((new Date() -new Date(v.endTime)) % 3600000) / 60000)}분 남음
+                                        마감까지
+                                        :{Math.floor((new Date() - new Date(v.endTime)) / 3600000)}시간 {Math.floor(((new Date() - new Date(v.endTime)) % 3600000) / 60000)}분
+                                        남음
                                     </div>
                                     <div>
                                         참여자수 :{v.count} 명
