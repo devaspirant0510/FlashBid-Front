@@ -1,11 +1,28 @@
 import {http, HttpResponse} from 'msw';
 import {fakerKO} from '@faker-js/faker';
-import {ApiResult} from "@entities/common";
+import {ApiResult, ApiResultBuilder} from "@entities/common";
 import {AuctionData} from "@entities/auction/model";
+import {Account} from "@entities/user/model";
 
 const fakerT1 = fakerKO;
 
 export const handlers = [
+    http.get("/api/user/:id",()=>{
+        const user:Account = {
+            id:fakerT1.number.int(),
+            description:fakerT1.lorem.lines(1),
+            email:fakerT1.internet.email(),
+            followers:fakerT1.number.int({min:10,max:2000}),
+            followings:fakerT1.number.int({min:10,max:2000}),
+            userName:fakerT1.person.fullName(),
+            userProfileUrl: fakerT1.image.avatar(),
+            userType:"CUSTOMER",
+            bidCount:fakerT1.number.int({min:10,max:100}),
+            reviewCount:fakerT1.number.int({min:4,max:25}),
+            sellCount:fakerT1.number.int({min:4,max:45}),
+        }
+        return HttpResponse.json(ApiResultBuilder<Account>(user));
+    }),
 
     http.get("/api/auction/live/:id", () => {
         return HttpResponse.json(
@@ -22,7 +39,19 @@ export const handlers = [
                         deliveryType: ['직거래', '택배', '협의후 결정'][Math.floor(Math.random() * 3)],
                         images: Array.from({length: Math.ceil(Math.random() * 7) + 3}, () => {
                             return fakerT1.image.url({width: 200, height: 200})
-                        })
+                        }),
+                        category: [
+                            "전자제품",
+                            "한정판 스니커즈",
+                            "빈티지 시계",
+                            "아이돌 굿즈",
+                            "미술 작품",
+                            "중고 서적",
+                            "레고 세트",
+                            "캠핑 용품",
+                            "피규어",
+                            "디지털 아트"
+                        ][Math.floor(Math.random() * 9)],
                     },
                     user: {
                         id: fakerT1.number.int(),
@@ -65,7 +94,19 @@ export const handlers = [
                     deliveryType: ['직거래', '택배', '협의후 결정'][Math.floor(Math.random() * 3)],
                     images: Array.from({length: Math.ceil(Math.random() * 7) + 3}, () => {
                         return fakerT1.image.url({width: 200, height: 200})
-                    })
+                    }),
+                    category: [
+                        "전자제품",
+                        "한정판 스니커즈",
+                        "빈티지 시계",
+                        "아이돌 굿즈",
+                        "미술 작품",
+                        "중고 서적",
+                        "레고 세트",
+                        "캠핑 용품",
+                        "피규어",
+                        "디지털 아트"
+                    ][Math.floor(Math.random() * 9)],
                 },
                 user: {
                     id: fakerT1.number.int(),
