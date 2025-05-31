@@ -4,8 +4,8 @@ import {Route} from "react-router-dom";
 import {HomePage} from "@pages/home";
 import {RQProvider} from "@app/provider";
 import {AuctionList} from "@pages/auction";
-import {LiveAuctionPage} from "@pages/auction/realtime";
-import LiveAuctionInfoPage from "@pages/auction/realtime/LiveAuctionInfoPage.tsx";
+import {LiveAuctionInfoPage, LiveAuctionPage} from "@pages/auction/realtime";
+import "./global.css"
 
 function App() {
     return (
