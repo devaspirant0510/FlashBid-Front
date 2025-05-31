@@ -1,8 +1,8 @@
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
-import {Button} from "@/components/ui/button.tsx";
+import {Button} from "@shared/components/ui/button.tsx";
 import {Car} from "lucide-react";
-import {Card} from "@/components/ui/card.tsx";
+import {Card} from "@shared/components/ui/card.tsx";
 import {Link} from "react-router";
 import {MainLayout} from "@shared/layout";
 

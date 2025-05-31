@@ -1,0 +1,1 @@
+export {default as UserSellerCard} from "./UserProfile.tsx"
