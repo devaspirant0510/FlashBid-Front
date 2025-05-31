@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useState,ReactNode} from "react";
-import {Card, CardContent, CardHeader} from "@/components/ui/card.tsx";
-import {Button} from "@/components/ui/button.tsx";
+import {Card, CardContent, CardHeader} from "@shared/components/ui/card.tsx";
+import {Button} from "@shared/components/ui/button.tsx";
 import CategoryItem from "@widgets/auction/CategoryItem.tsx";
 
 type Props = {
