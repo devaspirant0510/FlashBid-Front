@@ -56,7 +56,7 @@ const Header = () => {
                                     <FontAwesomeIcon icon={faBars} style={{color: '#f26522', fontSize: '18px'}}/>
                                 </li>
                                 <li><a href="/brind" style={{color: '#f26522', textDecoration: 'none'}}>블라인드 경매</a></li>
-                                <li><a href="/live" style={{color: '#f26522', textDecoration: 'none'}}>실시간 경매</a></li>
+                                <li><Link to="/auction/live" style={{color: '#f26522', textDecoration: 'none'}}>실시간 경매</Link></li>
                                 <li><a href="/community" style={{color: '#f26522', textDecoration: 'none'}}>커뮤니티</a>
                                 </li>
                                 <li><a href="/sell" style={{color: '#f26522', textDecoration: 'none'}}>상품판매</a></li>
