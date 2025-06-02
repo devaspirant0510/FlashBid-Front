@@ -4,6 +4,7 @@ import {HomePage} from "@pages/home";
 import {RQProvider} from "@app/provider";
 import {AuctionList} from "@pages/auction";
 import LoginPage from "@pages/login/LoginPage.tsx";
+import FeedPage from "@pages/feed/FeedPage.tsx";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/auction-list" element={<AuctionList/>}/>
+                    <Route path="/community" element={<FeedPage/>}/>
                     <Route path="/Login" element={<LoginPage/>}/>
                 </Routes>
             </BrowserRouter>
