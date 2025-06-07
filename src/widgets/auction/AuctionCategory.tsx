@@ -2,9 +2,11 @@ import React, {FC, useCallback, useEffect, useState,ReactNode} from "react";
 import {Card, CardContent, CardHeader} from "@shared/components/ui/card.tsx";
 import {Button} from "@shared/components/ui/button.tsx";
 import CategoryItem from "@widgets/auction/CategoryItem.tsx";
+import {Category} from "@entities/auction/model";
+import {useSearchParams} from "react-router-dom";
 
 type Props = {
-    category: string[]
+    category: Category[]
 }
 
 
@@ -12,6 +14,9 @@ type Props = {
 const AuctionCategory: FC<Props> = ({category}) => {
     const [selected, setSelected] = useState<boolean[]>(new Array(category.length).fill(false))
     const [current,setCurrent] = useState(0);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const currentCategory = searchParams.get("category");
     useEffect(()=>{
         console.log(current)
         const copySelected = structuredClone(selected);
@@ -22,6 +27,7 @@ const AuctionCategory: FC<Props> = ({category}) => {
     },[current])
     const onClickItem = useCallback((index: number) => {
         setCurrent(index);
+        setSearchParams({category:category[index].name})
 
     }, [selected]);
     return (
@@ -34,7 +40,7 @@ const AuctionCategory: FC<Props> = ({category}) => {
                     {category.map((value, index) => {
                         return(
                             <div key={index} onClick={() => onClickItem(index)}>
-                                <CategoryItem value={value} active={selected[index]}/>
+                                <CategoryItem value={value.name} active={selected[index]}/>
                             </div>
                         )
                     })}
