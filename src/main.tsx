@@ -18,4 +18,4 @@ enableMocking().then(() => {
         <App/>
     );
 
-}
+});
