@@ -8,9 +8,10 @@ import {
     CarouselPrevious
 } from "@shared/components/ui/carousel.tsx";
 import {Card, CardContent} from "@shared/components/ui/card.tsx";
+import {FileEntity} from "@entities/auction/model";
 
 type Props = {
-    images: string[]
+    images: FileEntity[]
 }
 const AuctionImageCarousel: FC<Props> = ({images}) => {
 
@@ -41,7 +42,7 @@ const AuctionImageCarousel: FC<Props> = ({images}) => {
                             <CarouselItem className={"w-full"} key={index}>
                                 <Card>
                                     <CardContent className="flex aspect-square items-center justify-center p-6">
-                                        <img className={'w-full'} src={image}/>
+                                        <img className={'w-full'} src={import.meta.env.VITE_SERVER_URL+image.url}/>
                                     </CardContent>
                                 </Card>
                             </CarouselItem>
