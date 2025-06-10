@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import {FC} from "react";
 import {Header} from "@widgets/ui";
 import {Row} from "@shared/ui";
 import Col from "@shared/ui/grid/Column.tsx";
