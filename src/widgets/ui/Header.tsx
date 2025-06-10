@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/free-solid-svg-icons';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
@@ -109,7 +109,7 @@ const Header = () => {
                             <a href="/mypage">
                                 <img src={"/img/notification.svg"} alt="" style={{height: '20px'}}/>
                             </a>
-                            <a href="/search">
+                            <a href="/Profile">
                                 <img src={"/img/user.svg"} alt="" style={{height: '20px'}}/>
                             </a>
                         </div>

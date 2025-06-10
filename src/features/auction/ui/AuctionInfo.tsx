@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import {FC} from "react";
 import {useQueryGetAuctionById} from "@/features/auction/lib";
 import {Badge} from "@shared/components/ui/badge.tsx";
 import AuctionImageCarousel from "@widgets/auction/AuctionImageCarousel.tsx";
