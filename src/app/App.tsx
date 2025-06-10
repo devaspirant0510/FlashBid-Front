@@ -6,7 +6,9 @@ import {AuctionList} from "@pages/auction";
 import LoginPage from "@pages/login/LoginPage.tsx";
 import FeedPage from "@pages/feed/FeedPage.tsx";
 import {LiveAuctionInfoPage, LiveAuctionPage} from "@pages/auction/realtime";
+import {ProductUploadPage} from "@pages/ProductUpload";
 import "./global.css"
+
 
 function App() {
     return (
@@ -20,6 +22,7 @@ function App() {
                     <Route path="/auction/live" element={<LiveAuctionPage/>}/>
                     <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                     <Route path="/auction/blind" element={<AuctionList/>}/>
+                    <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
                 </Routes>
             </BrowserRouter>
         </RQProvider>

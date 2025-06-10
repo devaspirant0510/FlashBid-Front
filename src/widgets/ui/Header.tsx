@@ -59,7 +59,7 @@ const Header = () => {
                                 <li><Link to="/auction/live" style={{color: '#f26522', textDecoration: 'none'}}>실시간 경매</Link></li>
                                 <li><a href="/community" style={{color: '#f26522', textDecoration: 'none'}}>커뮤니티</a>
                                 </li>
-                                <li><a href="/sell" style={{color: '#f26522', textDecoration: 'none'}}>상품판매</a></li>
+                                <li><a href="/auction/productUpload" style={{color: '#f26522', textDecoration: 'none'}}>상품판매</a></li>
                             </ul>
                         </nav>
 
