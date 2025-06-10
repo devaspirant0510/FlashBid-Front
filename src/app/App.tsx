@@ -9,6 +9,7 @@ import FeedPage from "@pages/feed/FeedPage.tsx";
 import {LiveAuctionInfoPage, LiveAuctionPage} from "@pages/auction/realtime";
 import "./global.css"
 import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
+import RegisterPage from "@/pages/register/RegisterPage";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                     <Route path="/auction/blind" element={<AuctionList/>}/>
                     <Route path="/FeedInfo/:id" element={<FeedInfo />} />
+                    <Route path={"/register"} element={<RegisterPage/>}/>
                 </Routes>
             </BrowserRouter>
         </RQProvider>
