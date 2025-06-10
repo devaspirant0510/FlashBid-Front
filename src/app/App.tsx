@@ -1,3 +1,4 @@
+import React from 'react';
 import {BrowserRouter, Routes} from "react-router";
 import {Route} from "react-router-dom";
 import {HomePage} from "@pages/home";
@@ -8,6 +9,9 @@ import FeedPage from "@pages/feed/FeedPage.tsx";
 import {LiveAuctionInfoPage, LiveAuctionPage} from "@pages/auction/realtime";
 import {ProductUploadPage} from "@pages/ProductUpload";
 import "./global.css"
+import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
+import RegisterPage from "@/pages/register/RegisterPage";
+import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
 
 
 function App() {
@@ -23,6 +27,9 @@ function App() {
                     <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                     <Route path="/auction/blind" element={<AuctionList/>}/>
                     <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
+                    <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
+                    <Route path="/FeedInfo/:id" element={<FeedInfo />} />
+                    <Route path={"/register"} element={<RegisterPage/>}/>
                 </Routes>
             </BrowserRouter>
         </RQProvider>

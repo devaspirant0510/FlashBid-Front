@@ -2,12 +2,15 @@ import {useQueryGetCategories} from "@/features/auction/lib";
 import AuctionCategory from "@widgets/auction/AuctionCategory.tsx";
 
 const CategoryLists = ()=>{
-    const {isLoading,data} =useQueryGetCategories();
+    const {isLoading,data,isError,error} =useQueryGetCategories();
     if(isLoading){
         return <>loading</>
     }
     if(!data || !data.data){
         return <>nodata</>
+    }
+    if(isError){
+        return <>{error}</>
     }
 
     return (

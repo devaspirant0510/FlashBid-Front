@@ -1,109 +1,188 @@
-import { MainLayout } from "@shared/layout";
-import { Link } from "react-router";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
+import LoginPan from './loginpan';
+
 
 function LoginPage() {
+    const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
+    const navigate = useNavigate(); // useNavigate 훅 호출
+
+    const handleLoginPanOpen = () => {
+        setIsLoginPanOpen(true);
+    };
+
+    const handleLoginPanClose = () => {
+        setIsLoginPanOpen(false);
+    };
+
+    // 회원가입 버튼 클릭시 emailsign 페이지로 이동
+    const handleSignUpClick = () => {
+        navigate('/register');
+    };
+
     return (
-        <MainLayout>
-            <div className="px-[110px] py-10 text-center text-[#f26522]">
-                {/* LOGIN 타이틀 */}
-                <h2 className="text-2xl mb-5">LOGIN</h2>
+        <div style={{ padding: '40px 110px', textAlign: 'center', color: '#f26522' }}>
+            <h2 style={{ fontSize: '24px', marginBottom: '20px' }}>LOGIN</h2>
 
-                {/* 로그인 폼 */}
-                <div className="max-w-[400px] mx-auto border-t border-[#f26522] pt-8">
-                    <input
-                        type="email"
-                        placeholder="아이디"
-                        className="w-full box-border p-2.5 mb-2.5 border border-[#F5BC94] rounded text-[#f26522]"
-                    />
-                    <input
-                        type="password"
-                        placeholder="비밀번호"
-                        className="w-full box-border p-2.5 mb-2.5 border border-[#F5BC94] rounded text-[#f26522]"
-                    />
-
-                    <div className="flex justify-between text-xs text-[#F5BC94] mb-5">
-                        <label className="flex items-center">
-                            <input type="checkbox" className="mr-1.5" />
-                            이메일 저장
-                        </label>
-                        <div>
-                            <Link to="/find-email" className="text-[#F5BC94] no-underline">이메일 찾기</Link>
-                            <span className="mx-1">|</span>
-                            <Link to="/find-password" className="text-[#F5BC94] no-underline">비밀번호 찾기</Link>
-                        </div>
-                    </div>
-
-                    <button
-                        style={{
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            padding: '10px',
-                            backgroundColor: '#F5BC94',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            marginBottom: '10px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        로그인
-                    </button>
-                    <button
-                        style={{
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            padding: '10px',
-                            backgroundColor: 'white',
-                            color: '#F5BC94',
-                            border: '1px solid #F5BC94',
-                            borderRadius: '4px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        회원가입
-                    </button>
-
-                    {/* 소셜 로그인 */}
-                    <div className="mt-10">
-                        <div className="flex items-center mb-5">
-                            <div className="flex-1 h-px bg-[#f26522]"></div>
-                            <span className="px-2 text-[#f26522] text-sm">소셜 로그인</span>
-                            <div className="flex-1 h-px bg-[#f26522]"></div>
-                        </div>
-
-                        <div className="flex justify-center gap-2.5">
-                            <button className="px-3 py-2 border border-gray-300 rounded">Google</button>
-                            <button className="px-3 py-2 border border-gray-300 rounded">Naver</button>
-                            <button className="px-3 py-2 border border-gray-300 rounded">Kakao</button>
-                        </div>
+            <div
+                style={{
+                    maxWidth: '400px',
+                    margin: '0 auto',
+                    borderTop: '1px solid #f26522',
+                    paddingTop: '30px',
+                }}
+            >
+                <input
+                    type="email"
+                    placeholder="아이디"
+                    style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '10px',
+                        marginBottom: '10px',
+                        border: '1px solid #F5BC94',
+                        borderRadius: '4px',
+                        color: '#f26522',
+                    }}
+                />
+                <input
+                    type="password"
+                    placeholder="비밀번호"
+                    style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '10px',
+                        marginBottom: '10px',
+                        border: '1px solid #F5BC94',
+                        borderRadius: '4px',
+                        color: '#f26522',
+                    }}
+                />
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: '12px',
+                        color: '#F5BC94',
+                        marginBottom: '20px',
+                    }}
+                >
+                    <label>
+                        <input type="checkbox" style={{ marginRight: '5px' }} />
+                        이메일 저장
+                    </label>
+                    <div>
+                        <a href="/find-email" style={{ textDecoration: 'none', color: '#F5BC94' }}>
+                            이메일 찾기
+                        </a>
+                        <span style={{ margin: '0 5px' }}>|</span>
+                        <a href="/find-password" style={{ textDecoration: 'none', color: '#F5BC94' }}>
+                            비밀번호 찾기
+                        </a>
                     </div>
                 </div>
+                <button
+                    style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: '#F5BC94',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        marginBottom: '10px',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    로그인
+                </button>
+                <button
+                    style={{
+                        width: '100%',
+                        padding: '10px',
+                        backgroundColor: 'white',
+                        color: '#F5BC94',
+                        border: '1px solid #F5BC94',
+                        borderRadius: '4px',
+                        fontWeight: 'bold',
+                    }}
+                    onClick={handleSignUpClick} // 회원가입 클릭시 라우트 이동
+                >
+                    회원가입
+                </button>
 
-                {/* 푸터 */}
-                <footer className="mt-20 bg-[#444] text-white p-10">
-                    <div className="flex flex-wrap justify-between items-center">
-                        <div className="leading-relaxed text-sm">
-                            <strong>Unknown Auction</strong>
-                            <br />
-                            <Link to="/company" className="text-white mr-2.5 no-underline">회사소개</Link>
-                            <Link to="/terms" className="text-white mr-2.5 no-underline">이용약관</Link>
-                            <Link to="/privacy" className="text-white no-underline">개인정보처리방침</Link>
-                            <br /><br />
-                            상품명 : (주)Unknown Auction
-                            <br />
-                            대표이사 : OOO
-                            <br />
-                            Tel: 010-0000-0000 | Fax: 02-000-0000
-                            <br />
-                            사업자 등록번호 : 000-00-000000
-                        </div>
-                        <div className="flex gap-2.5 mt-5">
-                            {/* 아이콘/이미지 공간 비움 */}
-                        </div>
+                <div style={{ marginTop: '40px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                        <div style={{ flex: 1, height: '1px', backgroundColor: '#f26522' }}></div>
+                        <span style={{ padding: '0 10px', color: '#f26522', fontSize: '14px' }}>
+              소셜 로그인
+            </span>
+                        <div style={{ flex: 1, height: '1px', backgroundColor: '#f26522' }}></div>
                     </div>
-                </footer>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                        {['/img/kakao_logo.png','/img/naver_icon.png','/img/apple_logo.png','/img/google_logo.svg'].map((img, idx) => (
+                            <button
+                                key={idx}
+                                onClick={handleLoginPanOpen}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: 0,
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <img src={img} alt={`소셜로그인${idx}`} style={{ width: '40px', height: '40px' }} />
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </MainLayout>
+
+            {/* 로그인 모달 */}
+            <LoginPan isOpen={isLoginPanOpen} onClose={handleLoginPanClose} />
+
+            {/* 푸터 */}
+            <footer
+                style={{
+                    marginTop: '80px',
+                    backgroundColor: '#444',
+                    color: '#fff',
+                    padding: '40px 20px',
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
+                        <strong>Unknown Auction</strong>
+                        <br />
+                        <a href="/company" style={{ color: '#fff', marginRight: '10px', textDecoration: 'none' }}>
+                            회사소개
+                        </a>
+                        <a href="/terms" style={{ color: '#fff', marginRight: '10px', textDecoration: 'none' }}>
+                            이용약관
+                        </a>
+                        <a href="/privacy" style={{ color: '#fff', textDecoration: 'none' }}>
+                            개인정보처리방침
+                        </a>
+                        <br />
+                        <br />
+                        상품명 : (주)Unknown Auction
+                        <br />
+                        대표이사 : OOO
+                        <br />
+                        Tel: 010-0000-0000 | Fax: 02-000-0000
+                        <br />
+                        사업자 등록번호 : 000-00-000000
+                    </div>
+                </div>
+            </footer>
+        </div>
     );
 }
 
