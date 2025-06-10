@@ -15,6 +15,7 @@ import {
 import CommentInput from "@pages/feed/CommentInput.tsx";
 import CommentList from "@pages/feed/CommentList.tsx";
 import { useState } from "react";
+import {ProfileImage} from "@shared/ui";
 
 interface User {
     nickname: string;
@@ -63,7 +64,7 @@ const FeedInfo = () => {
                 <div className="max-w-[700px] mx-auto bg-white w-full rounded-xl shadow-md px-6 py-5">
                     <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center">
-                            <img src="" className="w-12 h-12 rounded-full" />
+                            <ProfileImage src={v.feed.user.profileUrl} size={56}/>
                             <div className="ml-3">
                                 <div className="font-semibold">{v.feed.user.nickname}</div>
                                 <div className="text-sm text-gray-400">{getTime(v.feed.createdAt)}</div>

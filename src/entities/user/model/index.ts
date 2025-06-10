@@ -9,7 +9,7 @@ export type User ={
 export type Account = {
     id: number;
     nickname: string;
-    userProfileUrl: string;
+    profileUrl: string;
     email: string;
     followers:number;
     followings:number;

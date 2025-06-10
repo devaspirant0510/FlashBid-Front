@@ -72,6 +72,10 @@ const LoginPan = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     const handleLoginClick = (type) => {
+        if(type==="kakao"){
+
+
+        }
         console.log(`${type} 로그인 시도`);
     };
 

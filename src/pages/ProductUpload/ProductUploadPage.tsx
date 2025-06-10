@@ -26,7 +26,7 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-    const token = import.meta.env.VITE_API_TOKEN;
+    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk0ODE0ODQsImV4cCI6MTc4MTAxNzQ4NCwiaWQiOiIxIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.jZqgP1S893Bsj6yNyBcCIsM8a1gXi3jCaP9p-e4sZp4";
 
 
 

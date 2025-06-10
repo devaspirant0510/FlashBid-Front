@@ -46,3 +46,12 @@ export type Category = {
     name: string;
     rootId: Category
 }
+
+export type ChatEntity = {
+    id:number;
+    chatType:"MESSAGE"|"BID_LOG";
+    contents:string,
+    createdAt:string,
+    auction:Auction,
+    user:Account
+}
