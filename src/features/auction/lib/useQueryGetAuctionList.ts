@@ -5,7 +5,7 @@ import {AuctionData} from "@entities/auction/model";
 
 export const useQueryGetAuctionList = () => {
     return useQuery({
-        queryKey:["api","auction","live"],
+        queryKey:["api","v1","auction","test","all"],
         queryFn:httpFetcher<ApiResult<AuctionData[]>>
     })
 }

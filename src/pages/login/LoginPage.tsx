@@ -1,5 +1,6 @@
 import { MainLayout } from "@shared/layout";
 import { Link } from "react-router";
+import {AuthLoginButton, KakaoLoginButton} from "@/features/login/ui";
 
 function LoginPage() {
     return (
@@ -72,9 +73,10 @@ function LoginPage() {
                         </div>
 
                         <div className="flex justify-center gap-2.5">
-                            <button className="px-3 py-2 border border-gray-300 rounded">Google</button>
-                            <button className="px-3 py-2 border border-gray-300 rounded">Naver</button>
-                            <button className="px-3 py-2 border border-gray-300 rounded">Kakao</button>
+                            <AuthLoginButton auth={"kakao"}/>
+                            <AuthLoginButton auth={'google'}/>
+                            <img src={"/img/apple_logo.png"} className={"rounded-full w-12 h-12"} alt={"애플 로그인"}/>
+                            <AuthLoginButton auth={'naver'}/>
                         </div>
                     </div>
                 </div>

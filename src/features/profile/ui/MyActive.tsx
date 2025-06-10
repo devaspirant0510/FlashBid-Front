@@ -2,7 +2,13 @@ import {useState} from "react";
 import FollowerModal from "@/features/profile/ui/FollowerModal.tsx";
 import {useFollowStore} from "@shared/store/myProfileStore.ts";
 
-const MyWallet = () => {
+interface UserActiveProps {
+    followercount: number;
+    followingcount: number;
+    feedcount: number;
+}
+
+const MyActive = ({followercount, followingcount, feedcount} : UserActiveProps) => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const  {setTab} = useFollowStore();
@@ -20,7 +26,7 @@ const MyWallet = () => {
                     </div>
                     <div className="mt-5"
                          style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        3
+                        {feedcount}
                     </div>
                 </div>
                 <div className="cursor-pointer"
@@ -34,7 +40,7 @@ const MyWallet = () => {
                     </div>
                     <div className="mt-5"
                          style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        10
+                        {followercount}
                     </div>
                 </div>
                 <div className="cursor-pointer"
@@ -47,7 +53,7 @@ const MyWallet = () => {
                     </div>
                     <div className="mt-5"
                          style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        11
+                        {followingcount}
                     </div>
                 </div>
             </div>
@@ -87,4 +93,4 @@ const MyWallet = () => {
     )
 }
 
-export default MyWallet;
+export default MyActive;

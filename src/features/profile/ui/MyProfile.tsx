@@ -1,7 +1,9 @@
+interface User{
+    nickname: string,
+    email: string
+}
 
-
-const MyProfile = () => {
-
+const MyProfile = ({nickname, email} : User) => {
 
     return (
         <aside className="col-span-3 space-y-4 mt-30">
@@ -12,10 +14,10 @@ const MyProfile = () => {
                 <div className="py-10">
                     <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full" />
                     <div className="font-semibold">
-                        이름
+                        {nickname}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                        이메일
+                        {email}
                     </div>
                     <button className="w-2/3 rounded-4xl bg-orange-100 py-2 mt-5" style={{ backgroundColor: '#E3E3E3', color: '#969696' }}>
                         본인인증

@@ -30,8 +30,9 @@ const AuctionInfo: FC<Props> = ({id}) => {
     if (isLoading) {
         return <>loading</>
     }
+    console.log(data)
     if (isError) {
-        return <>{error}</>
+        return <>aa</>
     }
     if (!data || !data.data) {
         return <>no data</>
@@ -39,39 +40,41 @@ const AuctionInfo: FC<Props> = ({id}) => {
     return (
         <>
             <div className={"flex"}>
-                <Badge className={'bg-[var(--uprimary)] text-white'}>카테고리 - {data.data.goods.category}</Badge>
-                <div>경매번호 {data.data.id}</div>
+                <Badge className={'bg-[var(--uprimary)] text-white'}>카테고리 - 전자제품
+                    {/*{data.data.goods.category}*/}
+                </Badge>
+                <div>경매번호 {data.data.auction.id}</div>
             </div>
-            <AuctionImageCarousel images={data.data.goods.images}/>
+            <AuctionImageCarousel images={data.data.images}/>
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
-                    <UserProfile userId={data.data.user.id}>
+                    <UserProfile userId={data.data.auction.user.id}>
                         {
                             (user) => {
-                                return <SellerCard user={user}/>
+                                return <SellerCard userDto={user}/>
                             }
                         }
                     </UserProfile>
                     <div className={'flex flex-col '}>
                         <Badge className={'bg-[var(--uprimary)] text-white'}>내용</Badge>
-                        {data.data.goods.description}
+                        {data.data.auction.goods.description}
                     </div>
                 </article>
                 <div className={'w-24'}></div>
                 <article className={'flex-2'}>
                     <div> 현재 판매 가격</div>
-                    <div className={'text-uprimary font-bold text-2xl'}>{data.data.startPrice.toLocaleString()}p</div>
+                    <div className={'text-uprimary font-bold text-2xl'}>{data.data.auction.startPrice.toLocaleString()}p</div>
                     <button className={"bg-uprimary p-4 rounded-lg border-2 border-usecondary"}>
                         <div>
                             <div className={'text-xl text-white'}> 채팅방 참여하기</div>
-                            <div className={'text-white'}>{getTimeLeft(data.data.endTime)}</div>
+                            <div className={'text-white'}>{getTimeLeft(data.data.auction.endTime)}</div>
                         </div>
                     </button>
                     <div>
                         <div className={'flex  rounded-full justify-between items-center mt-4'}>
                             <div className={'bg-ubackground2 rounded-full flex items-center'}>
                                 <div className={'bg-usecondary rounded-full text-white py-1 px-3'}>참여자</div>
-                                <div className={'text-uprimary px-3'}>{data.data.count}명</div>
+                                <div className={'text-uprimary px-3'}>{data.data.auction.count}명</div>
                             </div>
                             <div className={'rounded-full text-usecondary bg-ubackground2 py-1 px-3'}>
                                 3분전
@@ -89,7 +92,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                         <div className={'flex  rounded-full justify-start items-center mt-4'}>
                             <div className={'bg-ubackground2 rounded-full flex items-center'}>
                                 <div className={'bg-usecondary rounded-full text-white py-1 px-3'}>배송</div>
-                                <div className={'text-uprimary px-3'}>{data.data.goods.deliveryType}명</div>
+                                <div className={'text-uprimary px-3'}>{data.data.auction.goods.deliveryType}명</div>
                             </div>
                         </div>
                     </div>
@@ -101,7 +104,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                     바로 입찰하기
                 </div>
                 <div className={'flex justify-between'}>
-                    <div className={'text-usecondary'}>현재가 :{data.data.startPrice}p</div>
+                    <div className={'text-usecondary'}>현재가 :{data.data.auction.startPrice}p</div>
                     <div className={'text-usecondary'}>입찰단위 : 10,000p</div>
                 </div>
                 <div className={'rounded-full bg-ubackground2 flex justify-between items-center'}>
