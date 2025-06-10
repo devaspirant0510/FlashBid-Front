@@ -1,10 +1,6 @@
 import React from 'react';
 
-import kakaimg1 from './img/kakao.png';
-import kakaimg2 from './img/naver.png';
-import kakaimg3 from './img/apple.png';
-import kakaimg4 from './img/google.png';
-import kakaimg5 from './img/email.png';
+
 
 const styles = {
     overlay: {
@@ -86,19 +82,19 @@ const LoginPan = ({ isOpen, onClose }) => {
                 <h2 style={styles.title}>UNKNOWN</h2>
                 <div style={styles.options}>
                     <button style={{ ...styles.buttonBase, backgroundColor: '#FEE500' }} onClick={() => handleLoginClick('kakao')}>
-                        <img src={kakaimg1} alt="카카오" style={styles.image} />
+                        <img src={'/img/kakao.png'} alt="카카오" style={styles.image} />
                     </button>
                     <button style={{ ...styles.buttonBase, backgroundColor: '#03C75A' }} onClick={() => handleLoginClick('naver')}>
-                        <img src={kakaimg2} alt="네이버" style={styles.image} />
+                        <img src={'/img/naver.png'} alt="네이버" style={styles.image} />
                     </button>
                     <button style={{ ...styles.buttonBase, backgroundColor: '#000000' }} onClick={() => handleLoginClick('apple')}>
-                        <img src={kakaimg3} alt="애플" style={styles.image} />
+                        <img src={'/img/apple.png'} alt="애플" style={styles.image} />
                     </button>
                     <button style={{ ...styles.buttonBase, backgroundColor: '#FFFFFF', border: '1px solid #ccc' }} onClick={() => handleLoginClick('google')}>
-                        <img src={kakaimg4} alt="구글" style={styles.image} />
+                        <img src={'/img/google.png'} alt="구글" style={styles.image} />
                     </button>
                     <button style={{ ...styles.buttonBase, backgroundColor: '#F26522', color: '#fff' }} onClick={() => handleLoginClick('email')}>
-                        <img src={kakaimg5} alt="이메일" style={styles.image} />
+                        <img src={'/img/email.png'} alt="이메일" style={styles.image} />
                     </button>
                 </div>
             </div>

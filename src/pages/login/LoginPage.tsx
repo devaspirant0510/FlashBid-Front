@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
 import LoginPan from './loginpan';
-import kakaimg01 from '/img/KakaoTalk_20250530_094201778.png';
-import kakaimg02 from '/img/KakaoTalk_20250530_094201778_01.png';
-import kakaimg03 from '/img/KakaoTalk_20250530_094201778_02.png';
-import kakaimg04 from '/img/KakaoTalk_20250530_094201778_03.png';
+
 
 function LoginPage() {
     const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
@@ -20,7 +17,7 @@ function LoginPage() {
 
     // 회원가입 버튼 클릭시 emailsign 페이지로 이동
     const handleSignUpClick = () => {
-        navigate('/emailsign');
+        navigate('/register');
     };
 
     return (
@@ -123,7 +120,7 @@ function LoginPage() {
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                        {[kakaimg03, kakaimg01, kakaimg02, kakaimg04].map((img, idx) => (
+                        {['/img/kakao_logo.png','/img/naver_icon.png','/img/apple_logo.png','/img/google_logo.svg'].map((img, idx) => (
                             <button
                                 key={idx}
                                 onClick={handleLoginPanOpen}
