@@ -11,9 +11,11 @@ const KakaoMap = ({ setSelectedLocation }: KakaoMapProps) => {
     useEffect(() => {
         if (document.getElementById("kakao-map-script")) return;
 
+        const kakaoApiKey = import.meta.env.VITE_KAKAO_API_KEY;
+
         const script = document.createElement("script");
         script.id = "kakao-map-script";
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=73b609510bf50a842fa780be96b152e4&autoload=false&libraries=services`;
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&autoload=false&libraries=services`;
         script.async = true;
 
         script.onload = () => {

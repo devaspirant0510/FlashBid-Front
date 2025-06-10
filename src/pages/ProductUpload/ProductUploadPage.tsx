@@ -26,6 +26,8 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
+    const token = import.meta.env.VITE_API_TOKEN;
+
 
 
     const handleSubmit = async () => {
@@ -62,7 +64,7 @@ export default function ProductUploadPage() {
                 method: "POST",
                 body: formData,
                 headers: {
-                    Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
+                    Authorization: `Bearer ${token}`
                 },
             });
 
