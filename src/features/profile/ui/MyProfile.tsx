@@ -1,9 +1,12 @@
+import {ProfileImage} from "@shared/ui";
+
 interface User{
     nickname: string,
     email: string
+    url:string
 }
 
-const MyProfile = ({nickname, email} : User) => {
+const MyProfile = ({nickname, email,url} : User) => {
 
     return (
         <aside className="col-span-3 space-y-4 mt-30">
@@ -12,7 +15,9 @@ const MyProfile = ({nickname, email} : User) => {
             </h2>
             <div className="bg-white rounded-xl shadow border text-center">
                 <div className="py-10">
-                    <div className="w-24 h-24 mx-auto bg-gray-200 rounded-full" />
+                    <div className={'flex justify-center'}>
+                        <ProfileImage size={100} src={url}/>
+                    </div>
                     <div className="font-semibold">
                         {nickname}
                     </div>

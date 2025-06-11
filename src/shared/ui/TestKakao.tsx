@@ -9,7 +9,7 @@ const TestKakao = () => {
         const code = queryParams.get("code");
         console.log(code)
         if(code){
-            axios.get("http://localhost:8080/auth/callback/kakao?code="+code).then(r=>{
+            axios.get("http://172.27.226.250:8080/auth/callback/kakao?code="+code).then(r=>{
                 console.log(r)
                 console.log(r.headers);
             })

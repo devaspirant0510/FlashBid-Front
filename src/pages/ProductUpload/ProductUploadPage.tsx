@@ -7,6 +7,7 @@ import AuctionTypeSelector from "@/pages/ProductUpload/components/AuctionTypeSel
 import AuctionInfoInputs from "@/pages/ProductUpload/components/AuctionInfoInputs";
 import DeliveryOptions from "@/pages/ProductUpload/components/DeliveryOptions";
 import SubmitButtons from "@/pages/ProductUpload/components/SubmitButtons";
+import Cookies from "js-cookie";
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk0ODE0ODQsImV4cCI6MTc4MTAxNzQ4NCwiaWQiOiIxIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.jZqgP1S893Bsj6yNyBcCIsM8a1gXi3jCaP9p-e4sZp4";
+    const token = Cookies.get("access_token");
 
 
 

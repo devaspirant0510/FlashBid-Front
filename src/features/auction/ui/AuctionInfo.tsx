@@ -5,6 +5,7 @@ import AuctionImageCarousel from "@widgets/auction/AuctionImageCarousel.tsx";
 import UserProfile from "@/features/user/ui/UserProfile.tsx";
 import SellerCard from "@widgets/user/SellerCard.tsx";
 import {Button} from "@shared/components/ui/button.tsx";
+import {Link, useNavigate} from "react-router";
 
 type Props = {
     id: number
@@ -27,6 +28,7 @@ const getTimeLeft = (endTime: string) => {
 };
 const AuctionInfo: FC<Props> = ({id}) => {
     const {isLoading, isError, error, data} = useQueryGetAuctionById(id);
+    const navigate = useNavigate();
     if (isLoading) {
         return <>loading</>
     }
@@ -63,13 +65,21 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 <div className={'w-24'}></div>
                 <article className={'flex-2'}>
                     <div> 현재 판매 가격</div>
-                    <div className={'text-uprimary font-bold text-2xl'}>{data.data.auction.startPrice.toLocaleString()}p</div>
-                    <button className={"bg-uprimary p-4 rounded-lg border-2 border-usecondary"}>
-                        <div>
-                            <div className={'text-xl text-white'}> 채팅방 참여하기</div>
-                            <div className={'text-white'}>{getTimeLeft(data.data.auction.endTime)}</div>
-                        </div>
-                    </button>
+                    <div
+                        className={'text-uprimary font-bold text-4xl'}>{data.data.auction.startPrice.toLocaleString()}p
+                    </div>
+                    <Link to={"/auction/chat/" + id}>
+
+                        <button className={"bg-uprimary p-4 rounded-xl border-2 border-usecondary w-full mt-4 "}>
+                            <div>
+                                <div className={'text-xl text-white'}> 채팅방 참여하기</div>
+                                <div
+                                    className={'text-white'}>{Math.ceil(Math.random() * 3)}일 {Math.ceil(Math.random() * 11)}시간
+                                    남음
+                                </div>
+                            </div>
+                        </button>
+                    </Link>
                     <div>
                         <div className={'flex  rounded-full justify-between items-center mt-4'}>
                             <div className={'bg-ubackground2 rounded-full flex items-center'}>

@@ -9,7 +9,7 @@ const BackButton = () => {
 
     },[]);
     return (
-        <ArrowLeftIcon onClick={onClickBackButton} className={'text-uprimary'} size={30}>
+        <ArrowLeftIcon onClick={onClickBackButton} className={'text-uprimary '} size={25}>
         </ArrowLeftIcon>
     );
 };

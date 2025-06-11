@@ -14,6 +14,7 @@ export type AuctionData = {
     bidCount: number;
     chatCount: number;
     likeCount: number;
+    participateCount:number;
 }
 
 export type FileEntity = {

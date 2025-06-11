@@ -8,9 +8,11 @@ import {Header} from "@widgets/ui"
 import {useQuery} from "@tanstack/react-query";
 import {httpFetcher} from "@shared/lib";
 import {ApiResult} from "@entities/common";
+import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 export const ProfilePage = () => {
-    const { isLoading, data, isError,error } = useQuery({queryKey:["api","v1","profile",1],
+    const [_,id] = useAuthUser()
+    const { isLoading, data, isError,error } = useQuery({queryKey:["api","v1","profile",id],
         queryFn:httpFetcher<ApiResult<any>>});
 
     if(isLoading) {
@@ -32,6 +34,7 @@ export const ProfilePage = () => {
                     <MyProfile
                         nickname={data.data.user.nickname}
                         email={data.data.user.email}
+                        url={data.data.user.profileUrl}
                     />
 
                     {/* 오른쪽 콘텐츠 */}

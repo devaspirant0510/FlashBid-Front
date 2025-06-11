@@ -4,6 +4,8 @@ import Stomp, {Client} from 'stompjs';
 import * as  StompJs from "@stomp/stompjs";
 import {IFrame} from "@stomp/stompjs";
 import {useQueryClient} from "@tanstack/react-query";
+import Cookies from "js-cookie";
+import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 type Props = {
     children: (client: Client, auctionId: number) => React.ReactNode,
@@ -16,7 +18,7 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
     const stompClient = useRef(null);
     const clientRef = useRef<any>(null);
     const [client, setClient] = useState<any>(null)
-    console.log("au" + auctionId)
+    const token = Cookies.get("access_token")
 
     useEffect(() => {
         console.log("u")
@@ -30,7 +32,7 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
             },
             connectHeaders: {
                 // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
-                Authorization:"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcyNzExMTkxODA1MjE1NzExNDgiLCJpYXQiOjE3NDk0ODE1MzAsImV4cCI6MTc4MTAxNzUzMCwiaWQiOiIxIiwidWlkIjoiMTE3MjcxMTE5MTgwNTIxNTcxMTQ4IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.hQoRfttnHV7oGOiLgbr90VQskLhywE4wd4_gfEOVGHY"
+                Authorization:"Bearer "+token
             },
             debug: function (str) {
                 console.log(str);

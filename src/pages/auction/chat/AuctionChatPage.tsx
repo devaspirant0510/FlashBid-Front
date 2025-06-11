@@ -7,13 +7,15 @@ import AuctionChatBody from "@/features/auction/ui/AuctionChatBody.tsx";
 import AuctionChatInput from "@/features/auction/ui/AuctionChatInput.tsx";
 import StompClient from "@/features/auction/ui/StompClient.tsx";
 import UserProfile from "@/features/user/ui/UserProfile.tsx";
+import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
+import AuctionStatus from "@/features/auction/ui/AuctionStatus.tsx";
 
 type Params = {
     id:number
 }
 const AuctionChatPage = () => {
     const {id} = useParams<Params>();
-    console.log(id)
+    const [nickname,userId] = useAuthUser();
     if (!id) {
         return <>404 잘못된 접근입니다.</>
     }
@@ -21,17 +23,16 @@ const AuctionChatPage = () => {
         <MainLayout>
             <div>
                 <AuctionChatHeader auctionId={id}/>
-                <div className={"flex"}>
+                <div className={"flex gap-4"}>
                     <AuctionChatMenu/>
                     <div className={"flex-1"}>
                         <StompClient auctionId={id}>
                             {(client,auctionId) => {
-                                const userid = [1,2,3,5][Math.ceil(Math.random()*3)]
-                                console.log("userid" +userid)
                                 return (
-                                    <div className={"flex flex-col"}>
+                                    <div className={"flex flex-col "}>
+                                        <AuctionStatus auctionId={auctionId}/>
                                         <AuctionChatBody auctionId={auctionId}/>
-                                        <UserProfile userId={userid}>
+                                        <UserProfile userId={userId as number}>
                                             {
                                                 (user )=>{
                                                    return  (

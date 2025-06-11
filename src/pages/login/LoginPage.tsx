@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
 import LoginPan from './loginpan';
 import {MainLayout} from "@shared/layout";
+import {AuthLoginButton} from "@/features/login/ui";
+import Cookies from "js-cookie";
 
 
 function LoginPage() {
@@ -123,20 +125,10 @@ function LoginPage() {
                         </div>
 
                         <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
-                            {['/img/kakao_logo.png', '/img/naver_icon.png', '/img/apple_logo.png', '/img/google_logo.svg'].map((img, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={handleLoginPanOpen}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        padding: 0,
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <img src={img} alt={`소셜로그인${idx}`} style={{width: '40px', height: '40px'}}/>
-                                </button>
-                            ))}
+                            <AuthLoginButton auth={"kakao"}/>
+                            <AuthLoginButton auth={"naver"}/>
+                            <AuthLoginButton auth={"google"}/>
+                            <AuthLoginButton auth={"apple"}/>
                         </div>
                     </div>
                 </div>
@@ -146,6 +138,11 @@ function LoginPage() {
 
                 {/* 푸터 */}
                 <footer
+                    onClick={()=>{
+                        Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk1NzEzODEsImV4cCI6MTc4MTEwNzM4MSwiaWQiOjUsIm5pY2tuYW1lIjoiVDEg64-E656AIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.x55zMfmgd57LRZZC-0yzcGNfwM7AxWid9bAYQ2D0MD4");
+                        window.location.reload();
+
+                    }}
                     style={{
                         marginTop: '80px',
                         backgroundColor: '#444',
