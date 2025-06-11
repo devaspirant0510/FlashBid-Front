@@ -14,6 +14,7 @@ export type AuctionData = {
     bidCount: number;
     chatCount: number;
     likeCount: number;
+    participateCount:number;
 }
 
 export type FileEntity = {
@@ -45,4 +46,13 @@ export type Category = {
     updatedAt: string;
     name: string;
     rootId: Category
+}
+
+export type ChatEntity = {
+    id:number;
+    chatType:"MESSAGE"|"BID_LOG";
+    contents:string,
+    createdAt:string,
+    auction:Auction,
+    user:Account
 }

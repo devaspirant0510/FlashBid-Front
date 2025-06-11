@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 interface ModalProps {
     onClose: () => void;
@@ -7,13 +8,14 @@ interface ModalProps {
 export const Modal = ({ onClose }: ModalProps) => {
     const [content, setContent] = useState("");
     const [file, setFile] = useState<File | null>(null);
+    const token = Cookies.get("access_token");
+
 
     const handleSubmit = async () => {
         if (!content.trim()) {
             alert("내용을 입력하세요.");
             return;
         }
-            const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"; // 생략
 
             const formData = new FormData();
             formData.append(

@@ -7,6 +7,7 @@ import AuctionTypeSelector from "@/pages/ProductUpload/components/AuctionTypeSel
 import AuctionInfoInputs from "@/pages/ProductUpload/components/AuctionInfoInputs";
 import DeliveryOptions from "@/pages/ProductUpload/components/DeliveryOptions";
 import SubmitButtons from "@/pages/ProductUpload/components/SubmitButtons";
+import Cookies from "js-cookie";
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-    const token = import.meta.env.VITE_API_TOKEN;
+    const token = Cookies.get("access_token");
 
 
 

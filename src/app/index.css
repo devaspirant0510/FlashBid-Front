@@ -1,1 +1,20 @@
 @import "tailwindcss";
+/* scroll.css 같은 파일에 추가하거나 스타일 태그에 넣기 */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 4px;  /* 가로 스크롤바 높이 */
+    height: 4px; /* 세로 스크롤바 높이 */
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent; /* 트랙 배경 없애기 */
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* 손잡이 색깔, 투명도 조절 가능 */
+    border-radius: 2px;  /* 둥글게 */
+}
+
+.scrollbar-thin {
+    scrollbar-width: thin; /* Firefox에서 얇게 */
+    scrollbar-color: rgba(0,0,0,0.3) transparent; /* Firefox 손잡이 색 */
+}

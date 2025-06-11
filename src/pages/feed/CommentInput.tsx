@@ -1,5 +1,6 @@
 // components/CommentInput.tsx
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 interface CommentInputProps {
     feedId: number | string;
@@ -8,6 +9,7 @@ interface CommentInputProps {
 
 const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
     const [contents, setContents] = useState("");
+    const token = Cookies.get("access_token");
 
     const handleSubmit = async () => {
         if (!contents.trim()) {
@@ -15,7 +17,6 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
             return;
         }
 
-        const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"; // 실제 토큰으로 대체
         try {
             const response = await fetch("http://172.27.226.250:8080/api/v1/feed/comment", {
                 method: "POST",

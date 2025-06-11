@@ -5,6 +5,7 @@ import {Car} from "lucide-react";
 import {Card} from "@shared/components/ui/card.tsx";
 import {Link} from "react-router";
 import {MainLayout} from "@shared/layout";
+import AuthUser from "@/features/user/ui/AuthUser.tsx";
 
 type TodoItem = {
     userId: number,
@@ -29,16 +30,19 @@ const HomePage = () => {
     }
     return (
         <MainLayout>
-            <div className={'flex flex-col items-start m-2'}>
-                <Button asChild className={""}>
-                    <Link to={"/auction-list"}> /auction-list 로 이동</Link>
-                </Button>
-                {data.map((item, index) => (
-                    <Card className={'w-full p-4 my-2'} key={index}>
-                        {item.title}
-                    </Card>
-                ))}
-            </div>
+            <AuthUser>
+
+                <div className={'flex flex-col items-start m-2'}>
+                    <Button asChild className={""}>
+                        <Link to={"/auction-list"}> /auction-list 로 이동</Link>
+                    </Button>
+                    {data.map((item, index) => (
+                        <Card className={'w-full p-4 my-2'} key={index}>
+                            {item.title}
+                        </Card>
+                    ))}
+                </div>
+            </AuthUser>
         </MainLayout>
     )
 }

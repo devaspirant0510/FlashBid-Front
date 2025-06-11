@@ -1,27 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+import Stomp, {Client} from 'stompjs';
 import * as  StompJs from "@stomp/stompjs";
 import {IFrame} from "@stomp/stompjs";
-const StompClient = () => {
+import {useQueryClient} from "@tanstack/react-query";
+import Cookies from "js-cookie";
+import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
+
+type Props = {
+    children: (client: Client, auctionId: number) => React.ReactNode,
+    auctionId: number
+}
+const StompClient: FC<Props> = ({auctionId, children}) => {
+    const queryClient = useQueryClient();
     const [messages, setMessages] = useState([]);
     const [msg, setMsg] = useState('');
     const stompClient = useRef(null);
-    const auctionId = 1;
+    const clientRef = useRef<any>(null);
+    const [client, setClient] = useState<any>(null)
+    const token = Cookies.get("access_token")
 
     useEffect(() => {
         console.log("u")
         const clientdata = new StompJs.Client({
-            webSocketFactory:()=>new WebSocket("ws://localhost:8080/ws"),
-            onStompError:(i)=>{
+            webSocketFactory: () => new WebSocket("ws://172.27.226.250:8080/ws"),
+            onStompError: (i) => {
                 console.log(i)
             },
-            onWebSocketError:(e)=>{
+            onWebSocketError: (e) => {
                 console.log(e)
-
             },
-            connectHeaders:{
-                Authorization :"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
+            connectHeaders: {
+                // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
+                Authorization:"Bearer "+token
             },
             debug: function (str) {
                 console.log(str);
@@ -29,48 +40,43 @@ const StompClient = () => {
             reconnectDelay: 5000, // 자동 재 연결
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
+            onConnect: function (frame: IFrame) {
+                console.log(frame)
+                clientdata.subscribe("/topic/public/" + auctionId, (data) => {
+                    queryClient.setQueryData(["api", "v1", "auction", "chat", auctionId], (prev) => {
+                        console.log(JSON.parse(data.body))
+                        return {
+                            ...prev,
+                            data: [...prev.data, JSON.parse(data.body)]
+                        }
+
+                    })
+                    console.log(data.body)
+                });
+                setClient(1)
+
+                clientRef.current = clientdata;
+            }
         });
-        console.log(clientdata)
-        clientdata.onConnect = function (frame:IFrame) {
-            console.log(frame)
-            clientdata.subscribe("/topic/public/1", (data)=>{
-                console.log(data.body)
-                setMessages((prev)=>[...prev,data.body])
-
-            });
-        };
         clientdata.activate()
-    }, []);
+        console.log(client)
+        clientRef.current = clientdata;
+        console.log(clientRef.current)
+        return () => {
+            clientdata.deactivate().then(r => {
+                console.log("소켓 연결 해제")
+                console.log(r)
+            });
 
-    const sendMessage = () => {
-        if (stompClient.current && stompClient.current.connected) {
-            stompClient.current.send(`/app/chat/send/${auctionId}`, {}, msg);
-            setMsg('');
         }
-    };
+    }, [auctionId]);
 
+    console.log("client app rerender" + clientRef.current)
     return (
-        <div>
-            <h2>채팅방 💌</h2>
-            <div id="chat">
-                {messages.map((m, idx) => (
-                    <p key={idx}>
-                        <strong>{m}</strong>: {m}
-                    </p>
-                ))}
-            </div>
+        <>
 
-            <input
-                type="text"
-                value={msg}
-                placeholder="메시지를 입력하세요"
-                onChange={(e) => setMsg(e.target.value)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') sendMessage();
-                }}
-            />
-            <button onClick={sendMessage}>보내기</button>
-        </div>
+            {children(clientRef.current, auctionId)}
+        </>
     );
 };
 

@@ -1,12 +1,26 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from '@fortawesome/free-solid-svg-icons';
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
+import Cookies from "js-cookie";
+import {parseJwtPayload} from "@shared/lib/jwtUtils.ts";
 
 
 const Header = () => {
     const [query, setQuery] = useState("");
+    const token = Cookies.get("access_token");
+    const [userInfo,setUserInfo] = useState(null)
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(token){
+            console.log(token)
+            setUserInfo({...parseJwtPayload(token)})
+        }
+
+
+    },[token])
+
     const handleSearch = () => {
         if (query.trim() !== "") {
             console.log("검색어:", query);
@@ -19,9 +33,22 @@ const Header = () => {
                 <div className={"flex justify-end gap-3 px-8 py-1 text-xs "}>
                     <Link to="/help" style={{textDecoration: 'none', color: '#666'}}>고객센터</Link>
                     <span style={{color: '#666'}}>|</span>
-                    <a href="/signup" style={{textDecoration: 'none', color: '#666'}}>회원가입</a>
-                    <span style={{color: '#666'}}>|</span>
-                    <a href="/login" style={{textDecoration: 'none', color: '#666'}}>로그인</a>
+                    {!userInfo?
+                        <>
+                            <a href="/signup" style={{textDecoration: 'none', color: '#666'}}>회원가입</a>
+                            <span style={{color: '#666'}}>|</span>
+                            <a href="/login" style={{textDecoration: 'none', color: '#666'}}>로그인</a>
+                        </> :
+                        <>
+                            <a href="/Profile" style={{textDecoration: 'none', color: '#666'}}>{userInfo?.nickname}</a>
+                            <span style={{color: '#666'}}>|</span>
+                            <span onClick={()=>{
+                                Cookies.remove("access_token");
+                                Cookies.remove("refresh_token");
+                                navigate("/login")
+                            }} style={{textDecoration: 'none', color: '#666'}}>로그아웃</span>
+                        </>
+                    }
                 </div>
 
                 {/* 메인 헤더 */}
@@ -30,7 +57,7 @@ const Header = () => {
                 }}>
                     {/* 로고 */}
                     <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                        <img src={"/img/logo.svg"} alt="" style={{height: '60px'}}/>
+                        <Link to={"/"}><img src={"/img/logo.svg"} alt="" style={{height: '45px'}}/></Link>
                     </div>
 
                     {/* AUCTION 아래 메뉴들 */}
@@ -55,7 +82,7 @@ const Header = () => {
                                 <li>
                                     <FontAwesomeIcon icon={faBars} style={{color: '#f26522', fontSize: '18px'}}/>
                                 </li>
-                                <li><a href="/brind" style={{color: '#f26522', textDecoration: 'none'}}>블라인드 경매</a></li>
+                                <li><a href="/blind" style={{color: '#f26522', textDecoration: 'none'}}>블라인드 경매</a></li>
                                 <li><Link to="/auction/live" style={{color: '#f26522', textDecoration: 'none'}}>실시간 경매</Link></li>
                                 <li><a href="/community" style={{color: '#f26522', textDecoration: 'none'}}>커뮤니티</a>
                                 </li>

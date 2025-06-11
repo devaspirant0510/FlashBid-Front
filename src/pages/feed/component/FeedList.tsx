@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getTime } from "@pages/feed/getTime.ts";
 import CommentInput from "@pages/feed/CommentInput.tsx";
 import CommentList from "@pages/feed/CommentList.tsx";
+import {ProfileImage} from "@shared/ui";
 
 interface User {
     nickname: string;
@@ -64,7 +65,7 @@ const FeedList = () => {
                 return (
                     <div key={feedId} className="bg-white w-full rounded-xl shadow-md px-6 py-5">
                         <div className="flex items-center mb-4">
-                            <img src="" className="w-12 h-12 rounded-full" onClick={(e) => e.stopPropagation()} />
+                            <ProfileImage src={v.feed.user.profileUrl} size={48} onClick={(e) => e.stopPropagation()}/>
                             <div className="ml-3">
                                 <div className="font-semibold">{v.feed.user.nickname}</div>
                                 <div className="text-sm text-gray-400">{getTime(v.feed.createdAt)}</div>

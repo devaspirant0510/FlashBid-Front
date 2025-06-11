@@ -14,6 +14,7 @@ import "./global.css"
 import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
 import RegisterPage from "@/pages/register/RegisterPage";
 import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
+import BlindAuctionPage from "@pages/auction/blind/BlindAuctionPage.tsx";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                     <Route path="/auction/blind" element={<AuctionList/>}/>      
                     <Route path="/auction-list" element={<AuctionList/>}/>
+                    <Route path={"/blind"} element={<BlindAuctionPage/>}/>
                     <Route path="/Login" element={<LoginPage/>}/>
                     <Route path="/Profile" element={<ProfilePage/>}/>
                     <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
