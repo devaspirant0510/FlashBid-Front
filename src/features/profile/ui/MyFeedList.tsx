@@ -22,7 +22,7 @@ const MyFeedList = () => {
                 </div>
             </div>
             <div className="grid grid-cols-4 gap-4">
-                {[10,11,12,13,5,9,7,8].map(id => (
+                {[1,2,3,4,5].map(id => (
                     <MyFeed key={id} id={id}/>
                 ))}
             </div>

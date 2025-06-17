@@ -11,6 +11,7 @@ const RQProvider: FC<Props> = ({children}) => {
     return (
         <QueryClientProvider client={queryClient}>
             {children}
+            <ReactQueryDevtools   />
         </QueryClientProvider>
     );
 }

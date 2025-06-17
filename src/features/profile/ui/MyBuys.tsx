@@ -20,7 +20,7 @@ const MyBuys = () => {
                 </div>
             </div>
             <div className="grid grid-cols-5 gap-4">
-                {[11, 12, 13, 7, 5].map(id => (
+                {[1, 5].map(id => (
                     <MyBuysList key={id} id={id} />
                 ))}
             </div>

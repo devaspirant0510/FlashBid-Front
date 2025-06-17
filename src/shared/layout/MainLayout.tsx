@@ -5,11 +5,28 @@ import Col from "@shared/ui/grid/Column.tsx";
 
 type Props = {
     children: React.ReactNode;
+    isBanner?: boolean
 }
-const MainLayout:FC<Props> = ({children}) => {
+const MainLayout: FC<Props> = ({children, isBanner}) => {
     return (
         <>
-            <Header/>
+            <div className="relative">
+                {/* 배너 */}
+                {/* 헤더 */}
+                <div className="relative z-20">
+                    <Header/>
+                </div>
+                {isBanner && (
+                    <>
+                        <img
+                            className="relative w-full -mt-32 z-0"  // 헤더 위로 배너를 올려!
+                            src="/img/banner.png"
+                            alt="banner logo"
+                        />
+                    </>
+                )}
+
+            </div>
             <Row>
                 <Col span={2}/>
                 <Col span={20}>

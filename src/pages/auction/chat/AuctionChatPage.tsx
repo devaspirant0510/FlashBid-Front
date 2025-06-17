@@ -9,13 +9,14 @@ import StompClient from "@/features/auction/ui/StompClient.tsx";
 import UserProfile from "@/features/user/ui/UserProfile.tsx";
 import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 import AuctionStatus from "@/features/auction/ui/AuctionStatus.tsx";
+import BiddingDialog from "@widgets/auction/dialog/BiddingDialog.tsx";
 
 type Params = {
-    id:number
+    id: number
 }
 const AuctionChatPage = () => {
     const {id} = useParams<Params>();
-    const [nickname,userId] = useAuthUser();
+    const [nickname, userId] = useAuthUser();
     if (!id) {
         return <>404 잘못된 접근입니다.</>
     }
@@ -23,31 +24,33 @@ const AuctionChatPage = () => {
         <MainLayout>
             <div>
                 <AuctionChatHeader auctionId={id}/>
-                <div className={"flex gap-4"}>
-                    <AuctionChatMenu/>
-                    <div className={"flex-1"}>
-                        <StompClient auctionId={id}>
-                            {(client,auctionId) => {
-                                return (
+                <StompClient auctionId={id}>
+                    {(client, auctionId) => {
+                        return (
+                            <div className={"flex gap-4"}>
+                                <AuctionChatMenu client={client}/>
+                                <div className={"flex-1"}>
                                     <div className={"flex flex-col "}>
                                         <AuctionStatus auctionId={auctionId}/>
                                         <AuctionChatBody auctionId={auctionId}/>
                                         <UserProfile userId={userId as number}>
                                             {
-                                                (user )=>{
-                                                   return  (
-                                                    <AuctionChatInput client={client} auctionId={auctionId} account={user.user}/>
-                                                )}
+                                                (user) => {
+                                                    return (
+                                                        <AuctionChatInput client={client} auctionId={auctionId}
+                                                                          account={user.user}/>
+                                                    )
+                                                }
                                             }
 
                                         </UserProfile>
                                     </div>
-                                )
+                                </div>
+                            </div>
+                        )
 
-                            }}
-                        </StompClient>
-                    </div>
-                </div>
+                    }}
+                </StompClient>
             </div>
         </MainLayout>
     );

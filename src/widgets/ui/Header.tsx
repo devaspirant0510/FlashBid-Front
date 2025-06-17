@@ -14,7 +14,6 @@ const Header = () => {
     const navigate = useNavigate();
     useEffect(()=>{
         if(token){
-            console.log(token)
             setUserInfo({...parseJwtPayload(token)})
         }
 
@@ -29,7 +28,7 @@ const Header = () => {
     };
     return (
         <>
-            <div className={'rounded-br-[120px] border border-[#eeeee] shadow-sm'}>
+            <div className={'rounded-br-[120px] border border-[#eeeee] shadow-sm bg-white'}>
                 <div className={"flex justify-end gap-3 px-8 py-1 text-xs "}>
                     <Link to="/help" style={{textDecoration: 'none', color: '#666'}}>고객센터</Link>
                     <span style={{color: '#666'}}>|</span>

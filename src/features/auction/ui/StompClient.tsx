@@ -6,6 +6,7 @@ import {IFrame} from "@stomp/stompjs";
 import {useQueryClient} from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
+import {ChatEntity} from "@entities/auction/model";
 
 type Props = {
     children: (client: Client, auctionId: number) => React.ReactNode,
@@ -20,8 +21,8 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
     const [client, setClient] = useState<any>(null)
     const token = Cookies.get("access_token")
 
+
     useEffect(() => {
-        console.log("u")
         const clientdata = new StompJs.Client({
             webSocketFactory: () => new WebSocket("ws://172.27.226.250:8080/ws"),
             onStompError: (i) => {
@@ -32,10 +33,10 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
             },
             connectHeaders: {
                 // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
-                Authorization:"Bearer "+token
+                Authorization: "Bearer " + token
             },
             debug: function (str) {
-                console.log(str);
+                // console.log(str);
             },
             reconnectDelay: 5000, // 자동 재 연결
             heartbeatIncoming: 4000,
@@ -43,15 +44,27 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
             onConnect: function (frame: IFrame) {
                 console.log(frame)
                 clientdata.subscribe("/topic/public/" + auctionId, (data) => {
+                    const chatEntity = JSON.parse(data.body) as ChatEntity;
+                    console.log("chatenti")
+                    console.log(chatEntity)
+                    if (chatEntity.biddingLog !== null) {
+                        queryClient.setQueryData(["api", "v1", "auction", auctionId], (prev) => {
+                            return {
+                                ...prev,
+                                data: {
+                                    ...prev.data,
+                                    currentPrice: chatEntity.biddingLog.price
+                                }
+                            }
+                        })
+                    }
                     queryClient.setQueryData(["api", "v1", "auction", "chat", auctionId], (prev) => {
-                        console.log(JSON.parse(data.body))
                         return {
                             ...prev,
                             data: [...prev.data, JSON.parse(data.body)]
                         }
 
                     })
-                    console.log(data.body)
                 });
                 setClient(1)
 

@@ -9,6 +9,7 @@ export const useAuthUser = ()=>{
         if(accessToken){
             console.log(accessToken)
             const user = parseJwtPayload(accessToken)
+            console.log(user)
             setUser({...user});
         }
 
