@@ -32,7 +32,7 @@ interface Image {
     fileName: string;
 }
 
-interface FeedWrapper {
+export interface FeedWrapper {
     feed: Feed;
     images: Image[];
     commentCount: number;

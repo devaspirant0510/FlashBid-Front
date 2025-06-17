@@ -67,7 +67,7 @@ const AuctionList = () => {
                                          현재가
                                         </span>
                                         <span>
-                                            {v.auction.startPrice.toLocaleString()}p
+                                            {v.currentPrice?v.currentPrice.toLocaleString():v.auction.startPrice.toLocaleString()}p
                                         </span>
                                     </div>
                                     <div>

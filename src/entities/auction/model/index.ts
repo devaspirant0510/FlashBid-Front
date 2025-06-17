@@ -15,6 +15,7 @@ export type AuctionData = {
     chatCount: number;
     likeCount: number;
     participateCount:number;
+    currentPrice:number;
 }
 
 export type FileEntity = {
@@ -54,5 +55,15 @@ export type ChatEntity = {
     contents:string,
     createdAt:string,
     auction:Auction,
-    user:Account
+    user:Account,
+    biddingLog:BiddingLogEntity
+}
+
+export interface BiddingLogEntity {
+    id: number;
+    bidder: Account;
+    auction: Auction;
+    createdAt: string;
+    price: number ;
+    prevPrice: number ;
 }
