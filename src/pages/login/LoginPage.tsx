@@ -139,7 +139,7 @@ function LoginPage() {
                 {/* 푸터 */}
                 <footer
                     onClick={()=>{
-                        Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk1NzEzODEsImV4cCI6MTc4MTEwNzM4MSwiaWQiOjUsIm5pY2tuYW1lIjoiVDEg64-E656AIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.x55zMfmgd57LRZZC-0yzcGNfwM7AxWid9bAYQ2D0MD4");
+                        Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc1MjMxMTg1NiwiZXhwIjoxNzgzODQ3ODU2LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoiMTIzNCIsInJvbGUiOiIxMjM0In0.ZDoQCYyOzOBBRXC4c5bJ78hneZu9uFAki4OnrPzMmxE");
                         window.location.reload();
 
                     }}
