@@ -1,3 +1,5 @@
+import {FileEntity} from "@entities/auction/model";
+
 export type User ={
     id: number;
     userName: string;
@@ -6,8 +8,8 @@ export type User ={
 }
 export type Account = {
     id: number;
-    userName: string;
-    userProfileUrl: string;
+    nickname: string;
+    profileUrl: string;
     email: string;
     followers:number;
     followings:number;
@@ -16,4 +18,12 @@ export type Account = {
     sellCount:number;
     reviewCount:number;
     userType:string;
+}
+
+export type AccountDto ={
+    user:Account;
+    followingCount:number;
+    followerCount:number;
+    feedCount:number,
+    profileImage:FileEntity
 }

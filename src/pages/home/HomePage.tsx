@@ -5,6 +5,12 @@ import {Car} from "lucide-react";
 import {Card} from "@shared/components/ui/card.tsx";
 import {Link} from "react-router";
 import {MainLayout} from "@shared/layout";
+import AuthUser from "@/features/user/ui/AuthUser.tsx";
+import HotAuctionList from "@/features/main/ui/HotAuctionList.tsx";
+import {Row} from "@shared/ui";
+import Col from "@shared/ui/grid/Column.tsx";
+import React from "react";
+import HotFeedList from "@/features/feed/ui/HotFeedList.tsx";
 
 type TodoItem = {
     userId: number,
@@ -13,33 +19,23 @@ type TodoItem = {
     completed: false
 }
 const HomePage = () => {
-    const {isLoading, data, isError, error} = useQuery({
-        queryKey: ['test-query',], queryFn: async () => {
-            return (await axios.get<TodoItem[]>("https://jsonplaceholder.typicode.com/todos")).data as TodoItem[];
-        }
-    })
-    if (isLoading) {
-        return <>loading</>
-    }
-    if (isError) {
-        return <>error</>
-    }
-    if (!data) {
-        return <>nodata</>
-    }
     return (
-        <MainLayout>
-            <div className={'flex flex-col items-start m-2'}>
-                <Button asChild className={""}>
-                    <Link to={"/auction-list"}> /auction-list 로 이동</Link>
-                </Button>
-                {data.map((item, index) => (
-                    <Card className={'w-full p-4 my-2'} key={index}>
-                        {item.title}
-                    </Card>
-                ))}
-            </div>
-        </MainLayout>
+        <div>
+
+            <MainLayout isBanner={true}>
+                <AuthUser>
+                    <HotAuctionList/>
+                </AuthUser>
+            </MainLayout>
+            <img className={"my-20"} src={"/img/eventbanner.png"}/>
+            <Row>
+                <Col span={2}/>
+                <Col span={20}>
+                    <HotFeedList/>
+                </Col>
+                <Col span={2}/>
+            </Row>
+        </div>
     )
 }
 export default HomePage;

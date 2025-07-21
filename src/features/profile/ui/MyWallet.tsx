@@ -1,0 +1,44 @@
+const MyWallet = () => {
+    return (
+        <div>
+            <h2 className="font-semibold mb-4" style={{color: '#f26522', fontSize: 24, fontWeight: 'bold'}}>
+                MY 지갑
+            </h2>
+
+            <div className="text-center flex justify-between h-40">
+                {/* 보유 캐시 영역 */}
+                <div className="w-4/5 rounded-xl shadow border text-sm flex items-center justify-center">
+                    <div className="pr-60">
+            <span style={{fontSize: 24, color: '#7E7E7E', fontWeight: 'bold'}}>
+              보유 캐시
+            </span>
+                    </div>
+                    <div className="text-3xl font-bold">
+                        <label style={{fontSize: 48, color: '#ED6C37', fontWeight: 'bold'}}>
+                            5,500
+                        </label>
+                    </div>
+                </div>
+
+                {/* 버튼 영역 */}
+                <div className="w-1/5 rounded-xl shadow border text-sm flex flex-col items-center justify-center"
+                     style={{backgroundColor: '#FFE7DD'}}>
+                    <div>
+                        <button className="px-4 py-2 rounded-xl border"
+                                style={{backgroundColor: '#FFF3EE', color: '#F88A5B'}}>
+                            충전하기
+                        </button>
+                    </div>
+                    <div>
+                        <button className="px-4 py-2 mt-3 rounded-xl border"
+                                style={{backgroundColor: '#FFF3EE', color: '#F88A5B'}}>
+                            이용내역
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default MyWallet;

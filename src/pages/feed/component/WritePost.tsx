@@ -1,13 +1,13 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEllipsisH, faFaceSmile, faImage} from "@fortawesome/free-solid-svg-icons";
 
-const WritePost = () => {
+const WritePost = ({ onClick }: { onClick: () => void }) => {
     return (
         <div className="flex justify-center px-4 py-2">
-            <div className="flex items-center justify-between bg-white w-full max-w-[800px] rounded-lg shadow px-4 py-3">
+            <div  onClick={onClick} className="flex items-center justify-between bg-white w-full max-w-[800px] rounded-lg shadow px-4 py-3">
                 <div className="flex items-center gap-3 w-full">
                     <img
-                        src="/images/profile.jpg"
+                        src="/img/default.png"
                         className="rounded-full w-10 h-10 bg-[#F7F7F7]"
                     />
                     <input

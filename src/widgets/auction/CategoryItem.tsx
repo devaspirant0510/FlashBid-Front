@@ -1,12 +1,13 @@
 import React, {act, FC} from "react";
 
 type Props = {
-    value:string
-    active:boolean
+    value: string
+    active: boolean
 }
-const CategoryItem:FC<Props> = ({value,active}) => {
+const CategoryItem: FC<Props> = ({value, active}) => {
     return (
-        <div className={`flex items-center justify-center text-center border rounded-full w-24 h-24 text-black ${active ? 'bg-orange-400 text-white' : 'bg-white'}`}>
+        <div
+            className={`flex items-center justify-center text-center border rounded-full py-3 px-5 text-xl text-black ${active ? 'bg-white text-black' : 'border-none bg-[#F3F4F6]'}`}>
             {value}
         </div>
     )

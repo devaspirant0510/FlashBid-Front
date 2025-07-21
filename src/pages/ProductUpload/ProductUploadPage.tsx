@@ -8,6 +8,8 @@ import AuctionInfoInputs from "@/pages/ProductUpload/components/AuctionInfoInput
 import DeliveryOptions from "@/pages/ProductUpload/components/DeliveryOptions";
 import SubmitButtons from "@/pages/ProductUpload/components/SubmitButtons";
 import CategorySelect from "@/pages/ProductUpload/components/CategorySelect";
+import Cookies from "js-cookie";
+
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState("");
@@ -27,9 +29,9 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-    const token = import.meta.env.VITE_API_TOKEN;
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+    const token = Cookies.get("access_token");
 
 
     const handleSubmit = async () => {
