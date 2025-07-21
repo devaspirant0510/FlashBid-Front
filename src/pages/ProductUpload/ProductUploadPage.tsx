@@ -7,7 +7,9 @@ import AuctionTypeSelector from "@/pages/ProductUpload/components/AuctionTypeSel
 import AuctionInfoInputs from "@/pages/ProductUpload/components/AuctionInfoInputs";
 import DeliveryOptions from "@/pages/ProductUpload/components/DeliveryOptions";
 import SubmitButtons from "@/pages/ProductUpload/components/SubmitButtons";
+import CategorySelect from "@/pages/ProductUpload/components/CategorySelect";
 import Cookies from "js-cookie";
+
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState("");
@@ -27,8 +29,9 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-    const token = Cookies.get("access_token");
 
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+    const token = Cookies.get("access_token");
 
 
     const handleSubmit = async () => {
@@ -37,19 +40,38 @@ export default function ProductUploadPage() {
             const endTime = new Date(startTime);
             endTime.setDate(endTime.getDate() + Number(auctionPeriod));
 
+            // 💡 배송비 유효성 검사
+            const numericDeliveryFee = Number(deliveryFee.replace(/,/g, ""));
+            if (deliveryMethod === "택배" && numericDeliveryFee > 20000) {
+                alert("배송비는 최대 20,000원까지만 입력할 수 있습니다.");
+                return;
+            }
+
             const data = {
                 title,
                 description,
+                categoryId: selectedCategoryId,
                 startPrice: Number(startPrice),
                 bidUnit: Number(bidUnit),
                 startTime: startTime.toISOString(),
                 endTime: endTime.toISOString(),
-                deliveryType:
-                    deliveryMethod === "택배"
-                        ? "PARCEL"
-                        : deliveryMethod === "협의 후 결정"
-                            ? "NEGOTIATE"
-                            : "DIRECT",
+                deliveryType: deliveryMethod === "택배"
+                    ? "PARCEL"
+                    : deliveryMethod === "협의 후 결정"
+                        ? "NEGOTIATE"
+                        : "DIRECT",
+                deliveryInfo: {
+                    deliveryFee: Number(deliveryFee.replace(/,/g, ""))
+                },
+                tradingArea:
+                    deliveryMethod === "직거래" && selectedLocation
+                        ? {
+                            latitude: selectedLocation.lat,
+                            longitude: selectedLocation.lng,
+                            radius: 3000, // 3km
+                            address: selectedLocation.address ?? ""
+                        }
+                        : null
             };
 
             const formData = new FormData();
@@ -87,6 +109,7 @@ export default function ProductUploadPage() {
 
                 <ImageUploader images={images} setImages={setImages} />
                 <TitleInput title={title} onChange={(e) => setTitle(e.target.value)} />
+                <CategorySelect selectedCategoryId={selectedCategoryId} setSelectedCategoryId={setSelectedCategoryId} token={token}/>
                 <DescriptionInput description={description} onChange={(e) => setDescription(e.target.value)} />
                 <AuctionTypeSelector auctionType={auctionType} setAuctionType={setAuctionType} />
                 <AuctionInfoInputs
