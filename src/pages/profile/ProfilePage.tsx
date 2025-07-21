@@ -5,36 +5,62 @@ import MyFeedList from "@/features/profile/ui/MyFeedList.tsx";
 import MySales from "@/features/profile/ui/MySales.tsx";
 import MyBuys from "@/features/profile/ui/MyBuys.tsx";
 import {Header} from "@widgets/ui"
-import {useQuery} from "@tanstack/react-query";
-import {httpFetcher} from "@shared/lib";
-import {ApiResult} from "@entities/common";
-import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
+// import {useQuery} from "@tanstack/react-query";
+// import {httpFetcher} from "@shared/lib";
+// import {ApiResult} from "@entities/common";
+// import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 export const ProfilePage = () => {
-    const [_,id] = useAuthUser()
-    const { isLoading, data, isError,error } = useQuery({queryKey:["api","v1","profile",id],
-        queryFn:httpFetcher<ApiResult<any>>});
+    // const [_,id] = useAuthUser();
+    // const { isLoading, data, isError,error } = useQuery({queryKey:["api","v1","profile",id],
+    //     queryFn:httpFetcher<ApiResult<any>>});
+    //
+    // if(isLoading) {
+    //     return <>loading</>
+    // }
+    // if(isError) {
+    //     return <>error</>
+    // }
+    // if(!data || !data.data){
+    //     return <>nodata</>
+    // }
+    // console.log(data);
 
-    if(isLoading) {
-        return <>loading</>
-    }
-    if(isError) {
-        return <>error</>
-    }
-    if(!data || !data.data){
-        return <>nodata</>
-    }
-    console.log(data);
+    // const { isLoading, data, isError, error } = useQuery(...);
+
+// 가짜 데이터
+    const data = {
+        data: {
+            user: {
+                nickname: "이승엽",
+                email: "seungyup@example.com",
+                profileUrl: "https://example.com/avatar.png",
+            },
+            followerCount: 100,
+            followingCount: 50,
+            feedCount: 15,
+        },
+    };
+
+    const nickname = localStorage.getItem("nickname") ?? data.data.user.nickname;
+    const profileUrl = localStorage.getItem("profileUrl") ?? data.data.user.profileUrl;
+
     return (
         <>
             <Header />
 
             <div className="max-w-screen-xl mx-auto px-4">
                 <section className="grid grid-cols-12 gap-6">
+                    {/*<MyProfile*/}
+                    {/*    nickname={data.data.user.nickname}*/}
+                    {/*    email={data.data.user.email}*/}
+                    {/*    url={data.data.user.profileUrl}*/}
+                    {/*/>*/}
+
                     <MyProfile
-                        nickname={data.data.user.nickname}
+                        nickname={nickname}
                         email={data.data.user.email}
-                        url={data.data.user.profileUrl}
+                        url={profileUrl}
                     />
 
                     {/* 오른쪽 콘텐츠 */}

@@ -15,6 +15,8 @@ import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
 import RegisterPage from "@/pages/register/RegisterPage";
 import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
 import BlindAuctionPage from "@pages/auction/blind/BlindAuctionPage.tsx";
+import EditProfilePage from "@/pages/profile/EditProfilePage";
+import PointChargePage from "@/pages/profile/PointChargePage";
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
                     <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
                     <Route path="/FeedInfo/:id" element={<FeedInfo />} />
                     <Route path={"/register"} element={<RegisterPage/>}/>
+                    <Route path="/Profile/edit" element={<EditProfilePage />}/>
+                    <Route path="/Charge" element={<PointChargePage />}/>
                 </Routes>
             </BrowserRouter>
         </RQProvider>

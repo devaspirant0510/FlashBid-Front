@@ -96,7 +96,7 @@ const FollowerModal: React.FC<Props> = ({
                     </button>
                 </div>
 
-                <div className="max-h-[360px] overflow-y-auto space-y-7 pr-2 pl-7">
+                <div className="max-h-[360px] overflow-y-scroll space-y-7 pr-2 pl-7">
                     {list.map((user) => (
                         <div key={user.id} className="flex justify-between items-center">
                             <div className="flex items-center space-x-3">
