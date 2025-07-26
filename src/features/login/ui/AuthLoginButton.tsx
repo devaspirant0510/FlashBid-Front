@@ -2,12 +2,13 @@ import React, {FC, useCallback, useEffect} from "react";
 import {useLocation, useNavigate} from "react-router";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {r} from "@faker-js/faker/dist/airline-BUL6NtOJ";
 
+
+const redirectUrl = import.meta.env.MODE === "development" ? "http://localhost:5173" : "http://172.27.226.250:5173";
 const authInfo = {
-    kakao: "https://kauth.kakao.com/oauth/authorize?client_id=6dd9ea5522b7f44e998e97e22ded8997&redirect_uri=http://172.27.226.250:5173/login&response_type=code",
-    google: "https://accounts.google.com/o/oauth2/v2/auth?client_id=457079463805-msvl2bh4v77e8odtf924sbc2trrn8338.apps.googleusercontent.com&redirect_uri=http://172.27.226.250:5173/login&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-    naver: "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=e9ePxNUxjz6dgFiyrxta&redirect_uri=http://172.27.226.250:5173/login&state=1234",
+    kakao: `https://kauth.kakao.com/oauth/authorize?client_id=6dd9ea5522b7f44e998e97e22ded8997&redirect_uri=${redirectUrl}/login&response_type=code`,
+    google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=457079463805-msvl2bh4v77e8odtf924sbc2trrn8338.apps.googleusercontent.com&redirect_uri=${redirectUrl}/login&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email`,
+    naver: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=e9ePxNUxjz6dgFiyrxta&redirect_uri=${redirectUrl}/login&state=1234`,
 }
 
 type Props = {
@@ -21,7 +22,8 @@ const AuthLoginButton: FC<Props> = ({auth}) => {
         const code = queryParams.get("code");
         console.log(code)
         if (code) {
-            axios.get(`http://172.27.226.250:8080/auth/callback/${auth}?code=${code}`,{withCredentials:true}).then(r => {
+            axios.get(`http://172.27.226.250:8080/auth/callback/${auth}?code=${code}&redirect=${redirectUrl}`,{withCredentials:true} as any).then(r => {
+                console.log(r.data)
                 console.log(r.headers)
                 Cookies.set("access_token", r.headers.authorization.split(' ')[1]);
 
