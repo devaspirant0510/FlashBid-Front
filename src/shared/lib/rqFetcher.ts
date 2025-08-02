@@ -12,8 +12,8 @@ export const httpFetcher = async <T>(queryContext: QueryFunctionContext): Promis
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            withCredentials:true
-        })
+            withCredentials: true
+        } as any);
 
         console.log(keys)
         console.log("http fetcher" + result)
