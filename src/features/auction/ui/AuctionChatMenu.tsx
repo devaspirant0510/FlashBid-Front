@@ -1,16 +1,12 @@
 import React, {FC} from "react";
 import {
     CalendarDaysIcon,
-    DotIcon,
     EllipsisIcon,
-    GavelIcon,
-    ListCheck,
-    ListCheckIcon,
-    MenuIcon,
     TriangleAlertIcon
 } from "lucide-react";
 import BiddingDialog from "@widgets/auction/dialog/BiddingDialog.tsx";
 import {Client} from "stompjs";
+import AuctionHistoryDialog from "@widgets/auction/dialog/AuctionHistoryDialog.tsx";
 
 type Props = {
     client:Client
@@ -27,15 +23,7 @@ const AuctionChatMenu:FC<Props> = ({client}) => {
                     더보기
                 </span>
             </div>
-            <div
-                className={"bg-white border-[#FFD1BE] border-solid border-1 flex justify-center items-center flex-col py-3 px-2"}>
-                <div className={'w-10 h-10 bg-[#FFD1BE] rounded-full flex justify-center items-center '}>
-                    <ListCheckIcon className={'text-[#FEFDFD] border-0.5 border-[#DADADA]'}/>
-                </div>
-                <span className={'text-xs mt-1'}>
-                    입찰내역
-                </span>
-            </div>
+            <AuctionHistoryDialog />
             <div
                 className={"bg-white border-[#FFD1BE] border-solid border-1 flex justify-center items-center flex-col py-3 px-2"}>
                 <div className={'w-10 h-10 bg-[#FFD1BE] rounded-full flex justify-center items-center '}>
