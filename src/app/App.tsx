@@ -1,4 +1,4 @@
-
+import React from 'react';
 import {BrowserRouter, Routes} from "react-router";
 import {Route} from "react-router-dom";
 import {HomePage} from "@pages/home";
@@ -15,6 +15,7 @@ import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
 import RegisterPage from "@/pages/register/RegisterPage";
 import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
 import BlindAuctionPage from "@pages/auction/blind/BlindAuctionPage.tsx";
+import LiveAuctionBidHistoryPage from "@pages/auction/realtime/LiveAuctionBidHistoryPage.tsx";
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
                     <Route path="/FeedInfo/:id" element={<FeedInfo />} />
                     <Route path={"/register"} element={<RegisterPage/>}/>
+                    <Route path={"/auction/live/:id/bid-history"} element={<LiveAuctionBidHistoryPage/>}/>
                 </Routes>
             </BrowserRouter>
         </RQProvider>
