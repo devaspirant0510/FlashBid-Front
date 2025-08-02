@@ -9,6 +9,8 @@ import {Link, useNavigate} from "react-router";
 import {axiosClient} from "@shared/lib";
 import {useCookies} from "react-cookie";
 import Cookies from "js-cookie";
+import {ChartLine} from "lucide-react";
+import AuctionInfoStatus from "@widgets/auction/AuctionInfoStatus.tsx";
 
 type Props = {
     id: number
@@ -52,8 +54,14 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 </Badge>
                 <div>경매번호 {data.data.auction.id}</div>
             </div>
-            <div className={"mt-4 text-2xl font-bold"}>
-                {data.data.auction.goods.title}
+            <div className={"mt-4 text-2xl font-bold flex justify-between"}>
+                <div>
+                    {data.data.auction.goods.title}
+                </div>
+                <Button onClick={()=>navigate(`/auction/live/${id}/bid-history`)}>
+                    <ChartLine />
+                    거래 내역 상세보기
+                </Button>
             </div>
             <div className={'text-[#E36E3E]'}>경매 기간 :{data.data.auction.startTime} ~ {data.data.auction.endTime}</div>
             <AuctionImageCarousel images={data.data.images}/>
