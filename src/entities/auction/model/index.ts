@@ -67,3 +67,19 @@ export interface BiddingLogEntity {
     price: number ;
     prevPrice: number ;
 }
+export type BidLog =  {
+    id: number
+    bidderId: number
+    bidderName: string
+    profileUrl: string
+    price: number
+    prevPrice: number
+    createdAt: string
+}
+
+export type AuctionParticipateUser = {
+    nickname: string,
+    participantId: number,
+    id: number,
+    profileUrl: string
+}
