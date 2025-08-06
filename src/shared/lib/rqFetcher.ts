@@ -1,6 +1,6 @@
 import {QueryFunctionContext} from "@tanstack/react-query";
 import {axiosClient} from "@shared/lib/axiosClient.ts";
-import {AxiosError} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import Cookies from "js-cookie";
 
 export const httpFetcher = async <T>(queryContext: QueryFunctionContext): Promise<T> => {
@@ -12,8 +12,8 @@ export const httpFetcher = async <T>(queryContext: QueryFunctionContext): Promis
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            withCredentials:true
-        })
+            withCredentials: true
+        } as any);
 
         console.log(keys)
         console.log("http fetcher" + result)
@@ -21,5 +21,8 @@ export const httpFetcher = async <T>(queryContext: QueryFunctionContext): Promis
     } catch (err: AxiosError) {
         throw new Error(err.response.data.message)
     }
+}
 
+export function pageSegmentBuilder(segment: string, page: number, size: number = 10) {
+    return `${segment}?size=${size}&page=${page}`;
 }

@@ -1,4 +1,5 @@
 import React, {FC} from "react";
+import {getServerURL} from "@shared/lib";
 
 type Props = {
     src?: string,
@@ -10,7 +11,7 @@ const ProfileImage: FC<Props> = ({size = 36, src, onClick}) => {
         <div style={{width:size,height:size}}>
             <img
                 onClick={onClick}
-                src={src ? import.meta.env.VITE_SERVER_URL + src : "/img/default.png"}
+                src={src ? getServerURL() + src : "/img/default.png"}
                 className={`rounded-full object-cover w-full h-full`}
                 alt="profile image"/>
         </div>

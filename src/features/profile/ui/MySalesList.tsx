@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useQueryGetAuctionById } from "@/features/auction/lib";
+import {getServerURL} from "@shared/lib";
 
 type Props = {
     id: number;
@@ -17,7 +18,7 @@ const MyPostProduct: FC<Props> = ({ id }) => {
         <div>
             <div className="h-[160px] w-[160px] relative overflow-hidden">
                 <img className="h-full w-full object-cover"
-                    src={"http://172.27.226.250:8080"+data.data.images[0].url}/>
+                    src={`${getServerURL()}`+(data.data.images[0].url)}/>
             </div>
 
             <div>

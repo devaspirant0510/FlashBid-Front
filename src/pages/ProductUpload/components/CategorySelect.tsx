@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {getServerURL} from "@shared/lib";
 
 type Props = {
     selectedCategoryId: number | null; // null 허용으로 수정
@@ -12,7 +13,7 @@ export default function CategorySelect({ selectedCategoryId, setSelectedCategory
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("http://172.27.226.250:8080/api/v1/category", {
+                const res = await fetch(`${getServerURL()}/api/v1/category`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,

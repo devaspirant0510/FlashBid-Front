@@ -1,6 +1,7 @@
 import React, {FC} from "react";
 import {AuctionData} from "@entities/auction/model";
 import {UserIcon} from "lucide-react";
+import {getServerURL} from "@shared/lib";
 
 type Props ={
     item:AuctionData
@@ -11,7 +12,7 @@ const HotAuctionItem:FC<Props> = ({item}) => {
             <div className="w-full aspect-square overflow-hidden">
                 <img
                     className="w-full h-full object-cover rounded-2xl"
-                    src={import.meta.env.VITE_SERVER_URL + item.images[0].url}
+                    src={getServerURL() + item.images[0].url}
                     alt=""
                 />
             </div>

@@ -11,6 +11,7 @@ import {
     MessageSquareMoreIcon,
     ViewIcon
 } from "lucide-react";
+import {getServerURL} from "@shared/lib";
 
 const AuctionList = () => {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const AuctionList = () => {
                             <CardContent className={'flex'}>
                                 <div className={'flex-1'}>
                                     <img className={" rounded-xl w-full h-48 object-fill border-1"}
-                                         src={import.meta.env.VITE_SERVER_URL + v.images[0].url}/>
+                                         src={getServerURL() + v.images[0].url}/>
                                 </div>
                                 <div className={'flex-4 ml-4 flex flex-col gap-2 justify-between'}>
                                     <div

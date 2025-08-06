@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
+import {getServerURL} from "@shared/lib";
 
 interface ModalProps {
     onClose: () => void;
@@ -26,13 +27,13 @@ export const Modal = ({ onClose }: ModalProps) => {
                 formData.append("files", file);
             }
 
-            const response = await fetch("http://172.27.226.250:8080/api/v1/feed", {
+            const response = await fetch(`${getServerURL()}/api/v1/feed`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 body: formData,
-            });
+            } as any);
 
             const result = await response.json();
 
