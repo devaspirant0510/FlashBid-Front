@@ -80,7 +80,7 @@ const FeedList = () => {
                                     {v.images.map((img, idx) => (
                                         <img
                                             key={idx}
-                                            src={`http://172.27.226.250:8080${img.url}`}
+                                            src={`${getServerURL()}${img.url}`}
                                             alt={img.fileName}
                                             className="h-60 rounded-md object-cover"
                                         />

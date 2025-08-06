@@ -68,7 +68,7 @@ const AuctionHistoryDialog = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.data.map((history) => (
+                {data.data?.map((history) => (
                   <TableRow key={history.id}>
                     <TableCell>
                       <div className={'flex items-center'}>

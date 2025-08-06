@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {useLocation} from "react-router";
 import axios from "axios";
+import {getServerURL} from "@shared/lib";
 
 const TestKakao = () => {
     const location = useLocation();
@@ -9,7 +10,7 @@ const TestKakao = () => {
         const code = queryParams.get("code");
         console.log(code)
         if(code){
-            axios.get("http://172.27.226.250:8080/auth/callback/kakao?code="+code).then(r=>{
+            axios.get(`${getServerURL()}/auth/callback/kakao?code=`+code).then(r=>{
                 console.log(r)
                 console.log(r.headers);
             })

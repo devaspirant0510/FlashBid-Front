@@ -9,6 +9,7 @@ import DeliveryOptions from "@/pages/ProductUpload/components/DeliveryOptions";
 import SubmitButtons from "@/pages/ProductUpload/components/SubmitButtons";
 import CategorySelect from "@/pages/ProductUpload/components/CategorySelect";
 import Cookies from "js-cookie";
+import {getServerURL} from "@shared/lib";
 
 
 export default function ProductUploadPage() {
@@ -83,13 +84,13 @@ export default function ProductUploadPage() {
             console.log("전송 데이터", data);
             console.log("formData 확인", formData.get("files"), formData.get("data"));
 
-            const response = await fetch("http://172.27.226.250:8080/api/v1/auction/live", {
+            const response = await fetch(`${getServerURL()}/api/v1/auction/live`, {
                 method: "POST",
                 body: formData,
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
-            });
+            } as any);
 
             if (!response.ok) throw new Error("업로드 실패");
 
