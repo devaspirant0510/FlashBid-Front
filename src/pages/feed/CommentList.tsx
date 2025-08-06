@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTime } from "@pages/feed/getTime.ts";
 import CommentReplyInput from "@pages/feed/CommentReplyInput.tsx";
+import {getServerURL} from "@shared/lib";
 
 interface Comment {
     id: number;
@@ -13,7 +14,7 @@ interface Comment {
 
 const fetchComments = async (feedId: number): Promise<Comment[]> => {
     const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y";
-    const res = await fetch(`http://172.27.226.250:8080/api/v1/feed/comment/${feedId}/root`, {
+    const res = await fetch(`${getServerURL()}/api/v1/feed/comment/${feedId}/root`, {
         headers: { Authorization: token },
     });
     const json = await res.json();
@@ -22,7 +23,7 @@ const fetchComments = async (feedId: number): Promise<Comment[]> => {
 
 const fetchReplies = async (commentId: number): Promise<Comment[]> => {
     const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y";
-    const res = await fetch(`http://172.27.226.250:8080/api/v1/feed/comment/reply/${commentId}`, {
+    const res = await fetch(`${getServerURL()}/api/v1/feed/comment/reply/${commentId}`, {
         headers: { Authorization: token },
     });
     const json = await res.json();

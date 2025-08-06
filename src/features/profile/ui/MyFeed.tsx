@@ -1,7 +1,8 @@
-import { FC, useEffect, useRef, useState } from "react";
+import React,{ FC, useEffect, useRef, useState } from "react";
 import { useQueryGetAuctionById } from "@/features/auction/lib";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faEye } from "@fortawesome/free-solid-svg-icons";
+import {getServerURL} from "@shared/lib";
 
 type Props = {
     id: number;
@@ -38,7 +39,7 @@ const MyFeed: FC<Props> = ({ id }) => {
             <div className="h-[200px] w-[200px] relative overflow-hidden rounded-md">
                 <img
                     className="h-full w-full object-cover"
-                    src={"http://172.27.226.250:8080" + product.images[0].url}
+                    src={`${getServerURL()}` + product.images[0].url}
                     alt="product"
                 />
 

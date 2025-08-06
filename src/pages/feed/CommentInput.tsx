@@ -1,6 +1,7 @@
 // components/CommentInput.tsx
 import { useState } from "react";
 import Cookies from "js-cookie";
+import {getServerURL} from "@shared/lib";
 
 interface CommentInputProps {
     feedId: number | string;
@@ -18,7 +19,7 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
         }
 
         try {
-            const response = await fetch("http://172.27.226.250:8080/api/v1/feed/comment", {
+            const response = await fetch(`${getServerURL()}/api/v1/feed/comment`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

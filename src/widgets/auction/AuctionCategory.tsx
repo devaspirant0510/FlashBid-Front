@@ -56,7 +56,7 @@ const AuctionCategory: FC<Props> = ({category}) => {
             </div>
             <div className={'flex justify-between items-center w-full px-4 mb-4'}>
                 <div>
-                    카테고리 > {category[current].name}
+                    카테고리 - {category[current].name}
                 </div>
                 <div className={'border-1 flex justify-between p-2 rounded-full text-sm items-center'}>
                     필터

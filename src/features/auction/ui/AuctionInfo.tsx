@@ -9,6 +9,8 @@ import {Link, useNavigate} from "react-router";
 import {axiosClient} from "@shared/lib";
 import {useCookies} from "react-cookie";
 import Cookies from "js-cookie";
+import {ChartLine} from "lucide-react";
+import AuctionInfoStatus from "@widgets/auction/AuctionInfoStatus.tsx";
 
 type Props = {
     id: number
@@ -52,8 +54,14 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 </Badge>
                 <div>경매번호 {data.data.auction.id}</div>
             </div>
-            <div className={"mt-4 text-2xl font-bold"}>
-                {data.data.auction.goods.title}
+            <div className={"mt-4 text-2xl font-bold flex justify-between"}>
+                <div>
+                    {data.data.auction.goods.title}
+                </div>
+                <Button onClick={()=>navigate(`/auction/live/${id}/bid-history`)}>
+                    <ChartLine />
+                    거래 내역 상세보기
+                </Button>
             </div>
             <div className={'text-[#E36E3E]'}>경매 기간 :{data.data.auction.startTime} ~ {data.data.auction.endTime}</div>
             <AuctionImageCarousel images={data.data.images}/>
@@ -89,32 +97,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                             </div>
                         </div>
                     </button>
-                    <div>
-                        <div className={'flex  rounded-full justify-between items-center mt-4'}>
-                            <div className={'bg-ubackground2 rounded-full flex items-center'}>
-                                <div className={'bg-usecondary rounded-full text-white py-1 px-3'}>참여자</div>
-                                <div className={'text-uprimary px-3'}>{data.data.participateCount}명</div>
-                            </div>
-                            <div className={'rounded-full text-usecondary bg-ubackground2 py-1 px-3'}>
-                                3분전
-                            </div>
-                        </div>
-                        <div className={'flex  rounded-full justify-between items-center mt-4'}>
-                            <div className={'bg-ubackground2 rounded-full flex items-center'}>
-                                <div className={'bg-usecondary rounded-full text-white py-1 px-3'}>입찰</div>
-                                <div className={'text-uprimary px-3'}>{data.data.chatCount}명</div>
-                            </div>
-                            <div className={'rounded-full text-usecondary bg-ubackground2 py-1 px-3'}>
-                                입찰내역
-                            </div>
-                        </div>
-                        <div className={'flex  rounded-full justify-start items-center mt-4'}>
-                            <div className={'bg-ubackground2 rounded-full flex items-center'}>
-                                <div className={'bg-usecondary rounded-full text-white py-1 px-3'}>배송</div>
-                                <div className={'text-uprimary px-3'}>{data.data.auction.goods.deliveryType}명</div>
-                            </div>
-                        </div>
-                    </div>
+                    <AuctionInfoStatus data={data.data}/>
                 </article>
 
             </section>
