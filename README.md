@@ -1,4 +1,4 @@
-# Unknown Auction 
+# Unknown Auction
 ## 프론트엔드 아키텍쳐
 Layer	설명  
 Shared	전체 앱에서 재사용되는 공통 코드 (예: UI Kit, 공통 API 클라이언트 등)  
