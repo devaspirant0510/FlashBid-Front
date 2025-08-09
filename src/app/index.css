@@ -18,3 +18,15 @@
     scrollbar-width: thin; /* Firefox에서 얇게 */
     scrollbar-color: rgba(0,0,0,0.3) transparent; /* Firefox 손잡이 색 */
 }
+
+/* Chrome, Safari, Edge, Opera */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.no-spinner {
+    -moz-appearance: textfield;
+}
