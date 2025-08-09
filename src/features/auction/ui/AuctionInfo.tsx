@@ -6,11 +6,12 @@ import UserProfile from "@/features/user/ui/UserProfile.tsx";
 import SellerCard from "@widgets/user/SellerCard.tsx";
 import {Button} from "@shared/components/ui/button.tsx";
 import {Link, useNavigate} from "react-router";
-import {axiosClient} from "@shared/lib";
+import {axiosClient, DateUtil} from "@shared/lib";
 import {useCookies} from "react-cookie";
 import Cookies from "js-cookie";
 import {ChartLine} from "lucide-react";
 import AuctionInfoStatus from "@widgets/auction/AuctionInfoStatus.tsx";
+import AuctionBiddingNow from "@/features/auction/ui/AuctionBiddingNow.tsx";
 
 type Props = {
     id: number
@@ -49,7 +50,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
         <>
 
             <div className={"flex gap-2"}>
-                <Badge className={'bg-[var(--uprimary)] text-white'}>카테고리 - 전자제품
+                <Badge className={'bg-[var(--uprimary)] text-white'}>카테고리 - {data.data.auction.category.name}
                     {/*{data.data.goods.category}*/}
                 </Badge>
                 <div>경매번호 {data.data.auction.id}</div>
@@ -63,7 +64,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                     거래 내역 상세보기
                 </Button>
             </div>
-            <div className={'text-[#E36E3E]'}>경매 기간 :{data.data.auction.startTime} ~ {data.data.auction.endTime}</div>
+            <div className={'text-[#E36E3E]'}>경매 기간 :{DateUtil.convertDateFormat(data.data.auction.startTime,"yyyy년MM월dd일 hh시mm분")} ~ {DateUtil.convertDateFormat(data.data.auction.endTime,"yyyy년MM월dd일 hh시mm분")}</div>
             <AuctionImageCarousel images={data.data.images}/>
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
@@ -83,7 +84,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 <article className={'flex-2'}>
                     <div> 현재 판매 가격</div>
                     <div
-                        className={'text-uprimary font-bold text-4xl'}>{data.data.currentPrice ? data.data.currentPrice.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
+                        className={'text-uprimary font-bold text-4xl'}>{data.data.lastBiddingLog? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
                     </div>
 
                     <button
@@ -101,31 +102,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 </article>
 
             </section>
-            <section className={'flex flex-col bg-ubackground1 p-4'}>
-                <div>
-                    바로 입찰하기
-                </div>
-                <div className={'flex justify-between mb-2'}>
-                    <div className={'text-usecondary'}>현재가
-                        :{data.data.currentPrice ? data.data.currentPrice.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
-                    </div>
-                    <div className={'text-usecondary'}>입찰단위 : 10,000p</div>
-                </div>
-                <div className={'rounded-full bg-ubackground2 flex justify-between items-center'}>
-                    <div className={'bg-usecondary rounded-full text-white py-2 px-8'}>
-                        입찰 가격
-                    </div>
-                    <div className={'text-uprimary pr-4 text-xl font-bold'}>
-                        300,000p
-                    </div>
-
-                </div>
-                <Button className={'bg-uprimary py-6 text-xl mt-4'}>
-                    입찰하기
-
-                </Button>
-
-            </section>
+            <AuctionBiddingNow data={data.data}/>
 
         </>
     );
