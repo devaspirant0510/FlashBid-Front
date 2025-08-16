@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import {ChartLine} from "lucide-react";
 import AuctionInfoStatus from "@widgets/auction/AuctionInfoStatus.tsx";
 import AuctionBiddingNow from "@/features/auction/ui/AuctionBiddingNow.tsx";
+import {useMutation} from "@tanstack/react-query";
 
 type Props = {
     id: number
@@ -22,29 +23,41 @@ const AuctionInfo: FC<Props> = ({id}) => {
     const {isLoading, isError, error, data} = useQueryGetAuctionById(id);
     const token = Cookies.get("access_token");
     const navigate = useNavigate();
-    const onClickAuctionChat = useCallback(async () => {
-        try{
-            await axiosClient.post("api/v1/auction/participate", {
+    // POST 요청 mutation
+    const {isPending, mutate} = useMutation({
+        mutationFn: async () => {
+            return axiosClient.post("api/v1/auction/participate", {
                 auctionId: id
             }, {
                 headers: {
-                    Authorization: "Bearer " +token
+                    Authorization: "Bearer " + token
                 }
-            } as any)
-        }catch (e){
-            console.log(e)
+            } as any);
+        },
+        onSuccess: () => {
+            // 성공 시 채팅방 이동
+            navigate(`/auction/chat/${id}`);
+        },
+        onError: (error) => {
+            console.error("경매 참여 실패", error);
+            navigate(`/auction/chat/${id}`);
         }
-        navigate("/auction/chat/" + id)
-    }, [id,token])
+    });
+
+    const onClickAuctionChat = useCallback(() => {
+        mutate();
+    }, [mutate]);
     if (isLoading) {
         return <>loading</>
     }
-    console.log(data)
     if (isError) {
         return <>aa</>
     }
     if (!data || !data.data) {
         return <>no data</>
+    }
+    if(isPending){
+        return <>참여하는중</>
     }
     return (
         <>
@@ -59,13 +72,14 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 <div>
                     {data.data.auction.goods.title}
                 </div>
-                <Button onClick={()=>navigate(`/auction/live/${id}/bid-history`)}>
-                    <ChartLine />
+                <Button onClick={() => navigate(`/auction/live/${id}/bid-history`)}>
+                    <ChartLine/>
                     거래 내역 상세보기
                 </Button>
             </div>
-            <div className={'text-[#E36E3E]'}>경매 기간 :{DateUtil.convertDateFormat(data.data.auction.startTime,"yyyy년MM월dd일 hh시mm분")} ~ {DateUtil.convertDateFormat(data.data.auction.endTime,"yyyy년MM월dd일 hh시mm분")}</div>
-            <AuctionImageCarousel images={data.data.images}/>
+            <div className={'text-[#E36E3E]'}>경매 기간
+                :{DateUtil.convertDateFormat(data.data.auction.startTime, "yyyy년MM월dd일 hh시mm분")} ~ {DateUtil.convertDateFormat(data.data.auction.endTime, "yyyy년MM월dd일 hh시mm분")}</div>
+            <AuctionImageCarousel images={data.data.images} isWishListed={data.data.isWishListed}/>
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
                     <UserProfile userId={data.data.auction.user.id}>
@@ -84,7 +98,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 <article className={'flex-2'}>
                     <div> 현재 판매 가격</div>
                     <div
-                        className={'text-uprimary font-bold text-4xl'}>{data.data.lastBiddingLog? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
+                        className={'text-uprimary font-bold text-4xl'}>{data.data.lastBiddingLog ? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
                     </div>
 
                     <button

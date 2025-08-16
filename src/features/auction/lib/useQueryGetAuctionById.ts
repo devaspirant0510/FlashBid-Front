@@ -5,7 +5,7 @@ import {ApiResult} from "@entities/common";
 
 export const useQueryGetAuctionById = (id:number)=>{
     return useQuery({
-        queryKey:['api','v1','auction',id],
+        queryKey:['api','v1','auction',Number(id)],
         queryFn:httpFetcher<ApiResult<AuctionInfoData>>
     })
 }

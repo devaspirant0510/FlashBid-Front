@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { httpFetcher } from "@shared/lib";
+import {getServerURL, httpFetcher} from "@shared/lib";
 import { ApiResult } from "@entities/common";
 import { useNavigate } from "react-router";
 import {
