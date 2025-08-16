@@ -16,6 +16,7 @@ import RegisterPage from "@/pages/register/RegisterPage";
 import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
 import BlindAuctionPage from "@pages/auction/blind/BlindAuctionPage.tsx";
 import LiveAuctionBidHistoryPage from "@pages/auction/realtime/LiveAuctionBidHistoryPage.tsx";
+import RegisterSnsPage from "@pages/register/RegisterSnsPage.tsx";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
                     <Route path="/FeedInfo/:id" element={<FeedInfo />} />
                     <Route path={"/register"} element={<RegisterPage/>}/>
+                    <Route path={"/register/sns"} element={<RegisterSnsPage/>}/>
                     <Route path={"/auction/live/:id/bid-history"} element={<LiveAuctionBidHistoryPage/>}/>
                 </Routes>
             </BrowserRouter>

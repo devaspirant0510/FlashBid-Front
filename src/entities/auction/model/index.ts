@@ -1,9 +1,14 @@
 import {Account, User} from "@entities/user/model";
 
+export enum DELIVERY_TYPE {
+    DIRECT = "DIRECT",
+    PARCEL = "PARCEL",
+    NEGOTIATE = "NEGOTIATE",
+}
 export type Goods = {
     title: string;
     description: string;
-    deliveryType: '직거래' | '택배' | '협의후 결정';
+    deliveryType: DELIVERY_TYPE;
     images: string[],
     category: string,
 }
@@ -14,8 +19,28 @@ export type AuctionData = {
     bidCount: number;
     chatCount: number;
     likeCount: number;
+    chatMessagingCount:number;
     participateCount:number;
     currentPrice:number;
+    wishListCount:number;
+}
+export type Category ={
+    createdAt:string;
+    id:number;
+    name:string
+    root:string
+    updatedAt:Date;
+}
+export type AuctionInfoData = {
+    auction: Auction;
+    images: FileEntity[];
+    biddingCount: number;
+    chatCount: number;
+    likeCount: number;
+    participateCount:number;
+    lastBiddingLog:BiddingLogEntity;
+    wishListCount:number;
+    isWishListed:boolean;
 }
 
 export type FileEntity = {
@@ -32,6 +57,7 @@ export type Auction = {
     id: number;
     goods: Goods;
     user: Account;
+    category:Category;
     viewCount: number;
     auctionType: 'live';
     startPrice: number;
@@ -39,16 +65,21 @@ export type Auction = {
     startTime: string;
     endTime: string;
     createdAt: string;
+    tradingArea:TradingArea
+    deliveryInfo:DeliveryInfo
+}
+export type TradingArea = {
+    id: number,
+    latitude: number,
+    longitude: number,
+    radius: number,
+    address: number
 }
 
-export type Category = {
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-    name: string;
-    rootId: Category
+type DeliveryInfo = {
+    id: number,
+    deliveryFee: number
 }
-
 export type ChatEntity = {
     id:number;
     chatType:"MESSAGE"|"BID_LOG";

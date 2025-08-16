@@ -4,14 +4,14 @@ import {Divider} from "@shared/ui";
 import {useCallback} from "react";
 import {useNavigate} from "react-router";
 import {
-    Clock3Icon,
+    Clock3Icon, CreditCardIcon,
     EyeIcon, HeartIcon,
     MessageSquareDiffIcon,
     MessageSquareIcon,
     MessageSquareMoreIcon,
     ViewIcon
 } from "lucide-react";
-import {getServerURL} from "@shared/lib";
+import {DateUtil, getServerURL} from "@shared/lib";
 
 const AuctionList = () => {
     const navigate = useNavigate();
@@ -50,7 +50,7 @@ const AuctionList = () => {
                                 </div>
                                 <div className={'flex-4 ml-4 flex flex-col gap-2 justify-between'}>
                                     <div
-                                        className={'text-gray-400'}>[{["패션의류/잡화", "스포츠/레저", "피규어", "IT기기"][Math.ceil(Math.random() * 3)]}]
+                                        className={'text-gray-400'}>[{v.auction.category.name}]
                                     </div>
                                     <div className={'text-xl font-bold'}>
                                         {v.auction.goods.title}
@@ -72,29 +72,25 @@ const AuctionList = () => {
                                         </span>
                                     </div>
                                     <div>
-                                        참여자수 <strong>{Math.ceil(Math.random()*10)+5} 명</strong> | 입찰 <strong>{Math.ceil(Math.random() * 50)}</strong>
+                                        참여자수 <strong>{v.participateCount} 명</strong> | 입찰 <strong>{Math.ceil(Math.random() * 50)}</strong>
                                     </div>
                                     <div className={' text-gray-400 text-sm flex gap-1 items-center'}>
                                         <Clock3Icon size={20}/>
-                                        {Math.ceil(Math.random() * 11)}
-                                        시간
-                                        {Math.ceil(Math.random() * 50)}
-                                        분 후 마감
-
+                                        {DateUtil.timeAgo(v.auction.createdAt)}
                                     </div>
                                 </div>
                                 <div className={'flex h-full items-center flex-col'}>
                                     <div className={'flex gap-1 justify-between w-16'}>
                                         <EyeIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 300) + 50}
+                                        0
                                     </div>
                                     <div className={'flex gap-1 justify-between w-16'}>
                                         <MessageSquareIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 100) + 20}
+                                        {v.chatMessagingCount}
                                     </div>
                                     <div className={'flex gap-1 justify-between w-16'}>
                                         <HeartIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 10) + 4}
+                                        {v.wishListCount}
                                     </div>
                                 </div>
                             </CardContent>

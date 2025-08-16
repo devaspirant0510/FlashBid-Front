@@ -25,20 +25,27 @@ const AuthLoginButton: FC<Props> = ({auth}) => {
         if (code) {
             console.log(import.meta.env.VITE_MODE)
             console.log(import.meta.env.VITE_SERVER_URL)
-            axios.get(`${getServerURL()}/auth/callback/${auth}?code=${code}&redirect=${redirectUrl}`,{withCredentials:true} as any).then(r => {
+            axios.get(`${getServerURL()}/auth/callback/${auth}?code=${code}&redirect=${redirectUrl}`, {withCredentials: true} as any).then(r => {
                 console.log(r.data)
                 console.log(r.headers)
+                // 회원가입 상태가 UN_REGISTERED인 경우 회원가입 페이지로 이동
+                console.log(r?.data.data.userType)
+                if (r?.data.data.userType === "UN_REGISTER") {
+                    window.history.replaceState(null, "", "/register");
+                    // navigate 에 uuid 넘겨주기
+                    navigate("/register/sns", {state: {uuid: r.data.data.uuid}} as any);
+                    return;
+                }
                 Cookies.set("access_token", r.headers.authorization.split(' ')[1]);
-
                 window.history.replaceState(null, "", "/login");
                 navigate("/")
-            }).catch(e=>{
+            }).catch(e => {
                 console.log(e)
-             //   Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk1NzEzODEsImV4cCI6MTc4MTEwNzM4MSwiaWQiOjUsIm5pY2tuYW1lIjoiVDEg64-E656AIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.x55zMfmgd57LRZZC-0yzcGNfwM7AxWid9bAYQ2D0MD4");
+                //   Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTIyOTU0NzA5ODA0MzQyOTI0OTUiLCJpYXQiOjE3NDk1NzEzODEsImV4cCI6MTc4MTEwNzM4MSwiaWQiOjUsIm5pY2tuYW1lIjoiVDEg64-E656AIiwidWlkIjoiMTEyMjk1NDcwOTgwNDM0MjkyNDk1IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.x55zMfmgd57LRZZC-0yzcGNfwM7AxWid9bAYQ2D0MD4");
             })
         }
 
-    }, [location,auth])
+    }, [location, auth])
     const onClickAuth = useCallback(() => {
         window.location.href = authInfo[auth];
     }, [])
@@ -48,10 +55,10 @@ const AuthLoginButton: FC<Props> = ({auth}) => {
     } else if (auth === "naver") {
         return <img src={"/img/naver_icon.png"} className={"rounded-full w-12 h-12"} alt={"네이버 로그인"}
                     onClick={onClickAuth}/>
-    } else if(auth === 'kakao') {
+    } else if (auth === 'kakao') {
         return <img src={"/img/kakao_logo.png"} className={"rounded-full w-12 h-12"} alt={"카카오 로그인"}
                     onClick={onClickAuth}/>
-    }else{
+    } else {
         return <img src={"/img/apple_logo.png"} className={"rounded-full w-12 h-12"} alt={"카카오 로그인"}/>
     }
 };
