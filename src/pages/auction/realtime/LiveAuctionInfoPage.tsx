@@ -18,7 +18,7 @@ const LiveAuctionInfoPage = ()=>{
     return (
         <MainLayout>
             <AuctionInfo id={id}/>
-            <RecommendsGoods/>
+            <RecommendsGoods id={id}/>
         </MainLayout>
     )
 }

@@ -16,7 +16,7 @@ export type Goods = {
 export type AuctionData = {
     auction: Auction;
     images: FileEntity[];
-    bidCount: number;
+    biddingCount: number;
     chatCount: number;
     likeCount: number;
     chatMessagingCount:number;
