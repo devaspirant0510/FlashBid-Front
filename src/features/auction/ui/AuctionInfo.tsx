@@ -13,6 +13,8 @@ import {ChartLine} from "lucide-react";
 import AuctionInfoStatus from "@widgets/auction/AuctionInfoStatus.tsx";
 import AuctionBiddingNow from "@/features/auction/ui/AuctionBiddingNow.tsx";
 import {useMutation} from "@tanstack/react-query";
+import FetchAccountStatus from "@/features/profile/ui/FetchAccountStatus.tsx";
+import {ProfileImage} from "@shared/ui";
 
 type Props = {
     id: number
@@ -82,13 +84,23 @@ const AuctionInfo: FC<Props> = ({id}) => {
             <AuctionImageCarousel images={data.data.images} isWishListed={data.data.isWishListed}/>
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
-                    <UserProfile userId={data.data.auction.user.id}>
-                        {
-                            (user) => {
-                                return <SellerCard userDto={user}/>
-                            }
-                        }
-                    </UserProfile>
+
+                    <Badge className={'bg-[var(--uprimary)] text-white mb-1'}>판매자</Badge>
+                    <FetchAccountStatus accountId={data.data.auction.user.id}>
+                        {(data)=>{
+                            return <div className={'flex'}>
+                                <ProfileImage size={60} src={data.profileUrl}/>
+                                <div className={'ml-2'}>
+                                    <div>
+                                        {data.nickname}
+                                    </div>
+                                    <div>입찰 {data.biddingCount} | 판매 {data.sellCount} | 리뷰 {data.reviewCount ??0 }</div>
+                                    <div>팔로워 {data.followerCount} | 팔로잉 {data.followingCount}</div>
+                                </div>
+                            </div>
+
+                        }}
+                    </FetchAccountStatus>
                     <div className={'flex flex-col '}>
                         <Badge className={'bg-[var(--uprimary)] text-white'}>내용</Badge>
                         {data.data.auction.goods.description}

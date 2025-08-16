@@ -72,7 +72,7 @@ const AuctionList = () => {
                                         </span>
                                     </div>
                                     <div>
-                                        참여자수 <strong>{v.participateCount} 명</strong> | 입찰 <strong>{Math.ceil(Math.random() * 50)}</strong>
+                                        참여자수 <strong>{v.participateCount} 명</strong> | 입찰 <strong>{v.biddingCount}</strong>
                                     </div>
                                     <div className={' text-gray-400 text-sm flex gap-1 items-center'}>
                                         <Clock3Icon size={20}/>
