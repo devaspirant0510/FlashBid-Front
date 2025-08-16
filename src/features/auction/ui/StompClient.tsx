@@ -24,7 +24,7 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
 
     useEffect(() => {
         const clientdata = new StompJs.Client({
-            webSocketFactory: () => new WebSocket(`ws://${import.meta.env.VITE_MODE=="development"?"127.0.0.1":import.meta.env.VITE_SERVER_URL}:8080/ws`),
+            webSocketFactory: () => new WebSocket(`${import.meta.env.VITE_MODE=="development"?"ws":"wss"}://${import.meta.env.VITE_MODE=="development"?"127.0.0.1":import.meta.env.VITE_SERVER_URL}:8080/ws`),
             onStompError: (i) => {
                 console.log(i)
             },

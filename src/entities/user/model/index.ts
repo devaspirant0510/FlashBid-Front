@@ -27,3 +27,12 @@ export type AccountDto ={
     feedCount:number,
     profileImage:FileEntity
 }
+export type UserStats = {
+    nickname: string;
+    sellCount: number;
+    biddingCount: number;
+    followerCount: number;
+    reviewCount: number | null;
+    profileUrl: string;
+    followingCount: number;
+};
