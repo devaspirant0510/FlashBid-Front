@@ -1,14 +1,18 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useNavigate} from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
 import LoginPan from './loginpan';
 import {MainLayout} from "@shared/layout";
 import {AuthLoginButton} from "@/features/login/ui";
 import Cookies from "js-cookie";
+import useInput from "@shared/hooks/useInput.ts";
+import {axiosClient} from "@shared/lib";
 
 
 function LoginPage() {
     const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
     const navigate = useNavigate(); // useNavigate 훅 호출
+    const [email,onChangeEmail] = useInput({initialValue:''})
+    const [password,onChangePassword] = useInput({initialValue:''})
 
     const handleLoginPanOpen = () => {
         setIsLoginPanOpen(true);
@@ -22,6 +26,16 @@ function LoginPage() {
     const handleSignUpClick = () => {
         navigate('/register');
     };
+    const onClickLogin = useCallback(async ()=>{
+        const result = await axiosClient.post('/auth/login', {
+            email: email,
+            password: password,
+        },{
+            withCredentials:true
+        } as any);
+        console.log(result.headers)
+        navigate("/",{replace:true} as any)
+    },[email,password])
 
     return (
         <MainLayout>
@@ -40,6 +54,8 @@ function LoginPage() {
                     <input
                         type="email"
                         placeholder="아이디"
+                        value={email}
+                        onChange={onChangeEmail}
                         style={{
                             width: '100%',
                             boxSizing: 'border-box',
@@ -53,6 +69,8 @@ function LoginPage() {
                     <input
                         type="password"
                         placeholder="비밀번호"
+                        value={password}
+                        onChange={onChangePassword}
                         style={{
                             width: '100%',
                             boxSizing: 'border-box',
@@ -87,6 +105,7 @@ function LoginPage() {
                         </div>
                     </div>
                     <button
+                        onClick={onClickLogin}
                         style={{
                             width: '100%',
                             padding: '10px',
