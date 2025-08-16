@@ -19,8 +19,10 @@ export type AuctionData = {
     bidCount: number;
     chatCount: number;
     likeCount: number;
+    chatMessagingCount:number;
     participateCount:number;
     currentPrice:number;
+    wishListCount:number;
 }
 export type Category ={
     createdAt:string;
@@ -37,6 +39,8 @@ export type AuctionInfoData = {
     likeCount: number;
     participateCount:number;
     lastBiddingLog:BiddingLogEntity;
+    wishListCount:number;
+    isWishListed:boolean;
 }
 
 export type FileEntity = {

@@ -17,7 +17,7 @@ const DeliveryTypeInfoDialog:FC<Props> = ({children,data}) => {
                 <DialogHeader>{data.goods.deliveryType===DELIVERY_TYPE.PARCEL?<div className={'text-usecondary'}>택배 배송</div>:
                     data.goods.deliveryType===DELIVERY_TYPE.DIRECT?<div className={'text-usecondary'}>직거래</div>:<div className={'text-usecondary'}>협의 후 결정</div>
                 }</DialogHeader>
-                {data.goods.deliveryType===DELIVERY_TYPE.DIRECT &&
+                {data.goods.deliveryType===DELIVERY_TYPE.DIRECT && data.tradingArea &&
                     <>
                     <DirectMapInfo lat={data.tradingArea.latitude} lng={data.tradingArea.longitude} radius={data.tradingArea.radius}>
                     </DirectMapInfo>

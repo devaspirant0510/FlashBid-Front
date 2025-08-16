@@ -50,8 +50,8 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
                                 입찰시간 : <span>{data.createdAt}</span>
                             </div>
                             <div className="text-xs">
-                                입찰가 : <span>{data.biddingLog.prevPrice}</span>→
-                                <span>{data.biddingLog.price}</span>
+                                입찰가 : <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
+                                <span>{data.biddingLog.price.toLocaleString()}</span>
                             </div>
                             <div className="text-[#FA9870] text-[8px] text-end">
                                 {new Date(data.createdAt).toUTCString()}
@@ -102,8 +102,8 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
                             입찰시간 : <span>{data.createdAt}</span>
                         </div>
                         <div className="text-xs">
-                            입찰가 : <span>{data.biddingLog.prevPrice}</span>→
-                            <span>{data.biddingLog.price}</span>
+                            입찰가 : <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
+                            <span>{data.biddingLog.price.toLocaleString()}</span>
                         </div>
                         <div className="text-[#b2b2b2] text-[8px]">
                             {new Date(data.createdAt).toUTCString()}

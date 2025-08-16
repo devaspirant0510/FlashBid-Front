@@ -17,6 +17,7 @@ import {
     PaginationPrevious
 } from "@shared/components/ui/pagination.tsx";
 import {BidHistoryTable} from "@widgets/auction/bid-history";
+import BackButton from "@shared/ui/BackButton.tsx";
 
 type Params = {
     id: number
@@ -29,9 +30,16 @@ const LiveAuctionBidHistoryPage = () => {
     }
     return (
         <MainLayout>
+            <div className={'flex items-center mb-4'}>
+                <BackButton/>
+                <div className={'text-2xl text-uprimary ml-2'}>거래 내역 상세보기</div>
+            </div>
             <FetchAuctionBidHistoryChart auctionId={id}>
                 {
                     (data) => {
+                        if(data.length===0) {
+                            return <>거래 내역이 없습니다</>
+                        }
                         return <ResponsiveContainer width={"100%"} height={400}>
 
                             <LineChart
@@ -64,7 +72,7 @@ const LiveAuctionBidHistoryPage = () => {
             </FetchAuctionBidHistoryChart>
             <FetchAuctionBidHistory auctionId={id}>
                 {
-                    (data, next, prev,page,setPage) => {
+                    (data, next, prev, page, setPage) => {
                         console.log(data)
                         return <>
                             <BidHistoryTable data={data.content}/>
