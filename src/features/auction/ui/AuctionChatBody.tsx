@@ -36,13 +36,13 @@ const AuctionChatBody: FC<Props> = ({auctionId}) => {
                     if (v.user.id === id) {
                         return (
                             <div className={'my-1 flex flex-end justify-end'} key={index}>
-                                <AuctionChatItem key={index} data={v} isMe={true}/>
+                                <AuctionChatItem  data={v} isMe={true}/>
                             </div>
                         );
                     } else {
                         return (
                             <div className={'my-1 flex'} key={index}>
-                                <AuctionChatItem key={index} data={v} isMe={false}/>
+                                <AuctionChatItem  data={v} isMe={false}/>
                             </div>
                         )
                     }
