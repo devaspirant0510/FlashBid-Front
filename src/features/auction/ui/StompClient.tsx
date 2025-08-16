@@ -47,18 +47,20 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
                     const chatEntity = JSON.parse(data.body) as ChatEntity;
                     console.log("chatenti")
                     console.log(chatEntity)
-                    if (chatEntity.biddingLog !== null) {
-                        queryClient.setQueryData(["api", "v1", "auction", auctionId], (prev) => {
+                    if (!chatEntity.biddingLog) {
+                        queryClient.setQueryData(["api", "v1", "auction", Number(auctionId)], (prev) => {
+                            console.log("preev")
+                            console.log(prev)
                             return {
                                 ...prev,
                                 data: {
-                                    ...prev.data,
-                                    currentPrice: chatEntity.biddingLog.price
+                                    ...prev?.data,
+                                    lastBiddingLog: chatEntity.biddingLog
                                 }
                             }
                         })
                     }
-                    queryClient.setQueryData(["api", "v1", "auction", "chat", auctionId], (prev) => {
+                    queryClient.setQueryData(["api", "v1", "auction", "chat", Number(auctionId)], (prev) => {
                         return {
                             ...prev,
                             data: [...prev.data, JSON.parse(data.body)]
@@ -66,7 +68,6 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
 
                     })
                 });
-                setClient(1)
 
                 clientRef.current = clientdata;
             }

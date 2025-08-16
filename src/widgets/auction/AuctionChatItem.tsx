@@ -4,11 +4,10 @@ import {ProfileImage} from "@shared/ui";
 import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 type Props = {
-    key: number
     data: ChatEntity,
     isMe: boolean
 }
-const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
+const AuctionChatItem: FC<Props> = ({data, isMe}) => {
 
     const isMessage = data.chatType === "MESSAGE";
 
@@ -16,7 +15,7 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
     if (isMe) {
         if (isMessage) {
             return (
-                <div key={key} className="flex items-end gap-2">
+                <div className="flex items-end gap-2">
                     <div>
                         <div className="text-sm text-end mr-3 mb-1">나</div>
                         <div className="bg-[#FFE2D6] p-4 text-sm rounded-xl">
@@ -26,13 +25,13 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
                             </div>
                         </div>
                     </div>
-                    <ProfileImage src={data.user.profileUrl} size={40} />
+                    <ProfileImage src={data.user.profileUrl} size={40}/>
                 </div>
             );
         } else {
             // 내 경매 메시지
             return (
-                <div key={key} className="flex items-end gap-2">
+                <div className="flex items-end gap-2">
                     <div>
                         <div className="text-sm text-end mr-3 mb-1">나</div>
                         <div className="flex flex-col bg-[#FFE2D6] p-4 text-sm rounded-xl gap-1">
@@ -58,7 +57,7 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
                             </div>
                         </div>
                     </div>
-                    <ProfileImage src={data.user.profileUrl} size={40} />
+                    <ProfileImage src={data.user.profileUrl} size={40}/>
                 </div>
             );
         }
@@ -67,8 +66,8 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
     // 상대 메시지
     if (isMessage) {
         return (
-            <div key={key} className="flex items-end gap-2">
-                <ProfileImage src={data.user.profileUrl} size={40} />
+            <div className="flex items-end gap-2">
+                <ProfileImage src={data.user.profileUrl} size={40}/>
                 <div>
                     <div className="text-sm">{data.user.nickname}</div>
                     <div className="bg-[#F1F1F1] p-4 text-sm rounded-xl">
@@ -83,8 +82,8 @@ const AuctionChatItem: FC<Props> = ({data, key, isMe}) => {
     } else {
         // 상대 경매 메시지
         return (
-            <div key={key} className="flex items-end gap-2">
-                <ProfileImage src={data.user.profileUrl} size={40} />
+            <div className="flex items-end gap-2">
+                <ProfileImage src={data.user.profileUrl} size={40}/>
                 <div>
                     <div className="text-sm">{data.user.nickname}</div>
                     <div className="flex flex-col bg-[#F1F1F1] p-4 text-sm rounded-xl gap-1">
