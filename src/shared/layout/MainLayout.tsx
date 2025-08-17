@@ -28,11 +28,11 @@ const MainLayout: FC<Props> = ({children, isBanner}) => {
 
             </div>
             <Row>
-                <Col span={2}/>
-                <Col span={20}>
+                <Col lg={2} md={1} span={0}/>
+                <Col lg={20} md={22} span={24}>
                     {children}
                 </Col>
-                <Col span={2}/>
+                <Col lg={2} md={1} span={0}/>
             </Row>
         </>
     )

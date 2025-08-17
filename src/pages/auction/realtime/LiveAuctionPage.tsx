@@ -5,8 +5,8 @@ import {AuctionList} from "@/features/auction/ui";
 const LiveAuctionPage = () => {
     return (
         <MainLayout>
-            <CategoryLists/>
-            <AuctionList/>
+            <CategoryLists type={'live'}/>
+            <AuctionList type={'live'}/>
         </MainLayout>
     )
 }

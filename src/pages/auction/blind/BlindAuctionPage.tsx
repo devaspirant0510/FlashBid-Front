@@ -1,11 +1,11 @@
 import {MainLayout} from "@shared/layout";
-import {AuctionList} from "@/features/auction/ui";
+import {AuctionList, CategoryList} from "@/features/auction/ui";
 
 const BlindAuctionPage = ()=>{
     return (
         <MainLayout>
-            <AuctionList/>
-
+            <CategoryList type={'blind'}/>
+            <AuctionList type={'blind'}/>
         </MainLayout>
 
     )

@@ -84,7 +84,7 @@ export default function ProductUploadPage() {
             console.log("전송 데이터", data);
             console.log("formData 확인", formData.get("files"), formData.get("data"));
 
-            const response = await fetch(`${getServerURL()}/api/v1/auction/live`, {
+            const response = await fetch(`${getServerURL()}/api/v1/auction/${auctionType}`, {
                 method: "POST",
                 body: formData,
                 headers: {
