@@ -71,7 +71,7 @@ const Header = () => {
                     <nav className="  text-[#f26522]">
                         <ul className="flex items-center gap-5">
                             <li><FontAwesomeIcon icon={faBars} className="text-[#f26522] text-lg"/></li>
-                            <li><Link to="/blind" className="hover:underline">블라인드 경매</Link></li>
+                            <li><Link to="/auction/blind" className="hover:underline">블라인드 경매</Link></li>
                             <li><Link to="/auction/live" className="hover:underline">실시간 경매</Link></li>
                             <li><Link to="/community" className="hover:underline">커뮤니티</Link></li>
                             <li><Link to="/auction/productUpload" className="hover:underline">상품판매</Link></li>
