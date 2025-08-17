@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CommentInput from "@pages/feed/CommentInput.tsx";
 import CommentList from "@pages/feed/CommentList.tsx";
-import { useState } from "react";
+import React,{ useState } from "react";
 import {ProfileImage} from "@shared/ui";
 
 interface User {

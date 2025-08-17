@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import { MainLayout } from "@shared/layout";
 import ImageUploader from "@/pages/ProductUpload/components/ImageUploader";
 import TitleInput from "@/pages/ProductUpload/components/TitleInput";

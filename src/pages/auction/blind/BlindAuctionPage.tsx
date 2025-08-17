@@ -1,3 +1,4 @@
+import React from 'react';
 import {MainLayout} from "@shared/layout";
 import {AuctionList, CategoryList} from "@/features/auction/ui";
 

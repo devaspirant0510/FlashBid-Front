@@ -1,6 +1,6 @@
 import WritePost from "@pages/feed/component/WritePost.tsx";
 import FeedList from "@pages/feed/component/FeedList.tsx";
-import {useState} from "react";
+import React,{useState} from "react";
 import {Modal} from "@pages/feed/component/Modal.tsx";
 import {Header} from "@widgets/ui";
 

@@ -1,3 +1,4 @@
+import React from "react";
 import MyProfile from "@/features/profile/ui/MyProfile.tsx";
 import MyWallet from "@/features/profile/ui/MyWallet.tsx";
 import MyActive from "@/features/profile/ui/MyActive.tsx";

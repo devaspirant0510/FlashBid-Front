@@ -1,5 +1,6 @@
 import {MainLayout} from "@shared/layout";
 import {AuctionInfo, RecommendsGoods} from "@/features/auction/ui";
+import React from "react";
 import {useParams} from "react-router";
 
 type Params ={
