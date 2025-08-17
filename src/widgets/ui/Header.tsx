@@ -1,149 +1,118 @@
 import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBars} from '@fortawesome/free-solid-svg-icons';
-import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 import {Link, useNavigate} from "react-router";
 import Cookies from "js-cookie";
 import {parseJwtPayload} from "@shared/lib/jwtUtils.ts";
 
-
 const Header = () => {
     const [query, setQuery] = useState("");
     const token = Cookies.get("access_token");
-    const [userInfo,setUserInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState<any>(null);
     const navigate = useNavigate();
-    useEffect(()=>{
-        if(token){
-            setUserInfo({...parseJwtPayload(token)})
+
+    useEffect(() => {
+        if (token) {
+            setUserInfo({...parseJwtPayload(token)});
         }
-
-
-    },[token])
+    }, [token]);
 
     const handleSearch = () => {
         if (query.trim() !== "") {
             console.log("검색어:", query);
-            // window.location.href = `/search?q=${query}`; // 검색 이동 로직 (선택)
+            // navigate(`/search?q=${query}`);
         }
     };
+
     return (
-        <>
-            <div className={'rounded-br-[120px] border border-[#eeeee] shadow-sm bg-white'}>
-                <div className={"flex justify-end gap-3 px-8 py-1 text-xs "}>
-                    <Link to="/help" style={{textDecoration: 'none', color: '#666'}}>고객센터</Link>
-                    <span style={{color: '#666'}}>|</span>
-                    {!userInfo?
-                        <>
-                            <a href="/signup" style={{textDecoration: 'none', color: '#666'}}>회원가입</a>
-                            <span style={{color: '#666'}}>|</span>
-                            <a href="/login" style={{textDecoration: 'none', color: '#666'}}>로그인</a>
-                        </> :
-                        <>
-                            <a href="/Profile" style={{textDecoration: 'none', color: '#666'}}>{userInfo?.nickname}</a>
-                            <span style={{color: '#666'}}>|</span>
-                            <span onClick={()=>{
+        <div className="rounded-br-[120px] border border-[#eee] shadow-sm bg-white">
+            {/* 상단 작은 네비 */}
+            <div className="flex justify-end gap-3 px-8 py-1 text-xs text-gray-600">
+                <Link to="/help" className="hover:text-gray-800">고객센터</Link>
+                <span>|</span>
+                {!userInfo ? (
+                    <>
+                        <Link to="/signup" className="hover:text-gray-800">회원가입</Link>
+                        <span>|</span>
+                        <Link to="/login" className="hover:text-gray-800">로그인</Link>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/Profile" className="hover:text-gray-800">
+                            {userInfo?.nickname}
+                        </Link>
+                        <span>|</span>
+                        <button
+                            onClick={() => {
                                 Cookies.remove("access_token");
                                 Cookies.remove("refresh_token");
-                                navigate("/login")
-                            }} style={{textDecoration: 'none', color: '#666'}}>로그아웃</span>
-                        </>
-                    }
+                                navigate("/login");
+                            }}
+                            className="hover:text-gray-800"
+                        >
+                            로그아웃
+                        </button>
+                    </>
+                )}
+            </div>
+
+            {/* 메인 헤더 */}
+            <header className="px-[110px] pt-[10px] pb-[20px]">
+                {/* 로고 */}
+                <div className="text-2xl font-bold">
+                    <Link to="/">
+                        <img src="/img/logo.svg" alt="logo" className="h-[45px]"/>
+                    </Link>
                 </div>
 
-                {/* 메인 헤더 */}
-                <header style={{
-                    padding: '10px 110px 20px',  // ← 좌우 padding 110px
-                }}>
-                    {/* 로고 */}
-                    <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                        <Link to={"/"}><img src={"/img/logo.svg"} alt="" style={{height: '45px'}}/></Link>
-                    </div>
+                {/* 메뉴, 검색, 아이콘들 */}
+                <div className="flex items-center justify-between mt-2 flex-wrap gap-5 ">
+                    {/* 네비게이션 */}
+                    <nav className="  text-[#f26522]">
+                        <ul className="flex items-center gap-5">
+                            <li><FontAwesomeIcon icon={faBars} className="text-[#f26522] text-lg"/></li>
+                            <li><Link to="/blind" className="hover:underline">블라인드 경매</Link></li>
+                            <li><Link to="/auction/live" className="hover:underline">실시간 경매</Link></li>
+                            <li><Link to="/community" className="hover:underline">커뮤니티</Link></li>
+                            <li><Link to="/auction/productUpload" className="hover:underline">상품판매</Link></li>
+                        </ul>
+                    </nav>
 
-                    {/* AUCTION 아래 메뉴들 */}
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: '10px',
-                        flexWrap: 'wrap',
-                        gap: '20px'
-                    }}>
-                        {/* 네비게이션 */}
-                        <nav>
-                            <ul style={{
-                                display: 'flex',
-                                gap: '20px',
-                                listStyle: 'none',
-                                margin: 0,
-                                padding: 0,
-                                alignItems: 'center'
-                            }}>
-                                <li>
-                                    <FontAwesomeIcon icon={faBars} style={{color: '#f26522', fontSize: '18px'}}/>
-                                </li>
-                                <li><a href="/blind" style={{color: '#f26522', textDecoration: 'none'}}>블라인드 경매</a></li>
-                                <li><Link to="/auction/live" style={{color: '#f26522', textDecoration: 'none'}}>실시간 경매</Link></li>
-                                <li><a href="/community" style={{color: '#f26522', textDecoration: 'none'}}>커뮤니티</a>
-                                </li>
-                                <li><a href="/auction/productUpload" style={{color: '#f26522', textDecoration: 'none'}}>상품판매</a></li>
-                            </ul>
-                        </nav>
-
-                        {/* 검색 박스 */}
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            borderBottom: '2px solid #f26522',
-                            paddingBottom: '5px',
-                            width: '400px',
-                            marginLeft: 'auto'
-                        }}>
-                            <input
-                                type="text"
-                                placeholder="검색어를 입력해주세요"
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                style={{
-                                    flex: 1,
-                                    border: 'none',
-                                    outline: 'none',
-                                    fontSize: '14px',
-                                    padding: '5px 0',
-                                    backgroundColor: 'transparent',
-                                    color: '#333'
-                                }}
-                            />
-                            <span
-                                onClick={handleSearch}
-                                style={{
-                                    color: '#f26522',
-                                    fontSize: '18px',
-                                    marginLeft: '8px',
-                                    cursor: 'pointer'
-                                }}
-                            >
+                    <div className="lg:bg-red-400 lg:flex-grow w-0  bg-green-400"></div>
+                    <div className="flex items-center border-b-2 border-[#f26522] pb-1 flex-grow ml-auto">
+                        <input
+                            type="text"
+                            placeholder="검색어를 입력해주세요"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            className="flex-1 bg-transparent border-none outline-none text-sm text-gray-700 placeholder-gray-400 py-1"
+                        />
+                        <button
+                            onClick={handleSearch}
+                            className="ml-2 text-[#f26522] text-lg"
+                        >
                             <FontAwesomeIcon icon={faMagnifyingGlass}/>
-                        </span>
-                        </div>
-
-                        {/* 아이콘들 */}
-                        <div style={{display: 'flex', gap: '70px', alignItems: 'center', marginLeft: '70px'}}>
-                            <a href="/cart">
-                                <img src={"/img/point.svg"} alt="" style={{height: '20px'}}/>
-                            </a>
-                            <a href="/mypage">
-                                <img src={"/img/notification.svg"} alt="" style={{height: '20px'}}/>
-                            </a>
-                            <a href="/Profile">
-                                <img src={"/img/user.svg"} alt="" style={{height: '20px'}}/>
-                            </a>
-                        </div>
+                        </button>
                     </div>
-                </header>
-            </div>
-        </>
-    )
 
-}
+                    {/* 오른쪽 아이콘들 */}
+                    <div className="flex items-center gap-10 ml-4">
+                        <Link to="/cart">
+                            <img src="/img/point.svg" alt="cart" className="h-5"/>
+                        </Link>
+                        <Link to="/mypage">
+                            <img src="/img/notification.svg" alt="notification" className="h-5"/>
+                        </Link>
+                        <Link to="/Profile">
+                            <img src="/img/user.svg" alt="user" className="h-5"/>
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
+        </div>
+    );
+};
+
 export default Header;

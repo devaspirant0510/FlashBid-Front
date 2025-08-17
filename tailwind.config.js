@@ -9,6 +9,7 @@ export default {
                 usecondary: 'var(--usecondary)',
                 background1: 'var(--background1)',
                 background2: 'var(--background2)',
+                udark: 'var(--udark)',
             },
         },
     },

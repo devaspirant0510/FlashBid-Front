@@ -1,7 +1,11 @@
 import {useQueryGetCategories} from "@/features/auction/lib";
 import AuctionCategory from "@widgets/auction/AuctionCategory.tsx";
+import React,{FC} from "react";
 
-const CategoryLists = ()=>{
+type Props = {
+    type: "blind" | "live"
+}
+const CategoryLists:FC<Props> = ({type})=>{
     const {isLoading,data,isError,error} =useQueryGetCategories();
     if(isLoading){
         return <>loading</>
@@ -15,7 +19,7 @@ const CategoryLists = ()=>{
 
     return (
         <div className={"flex "}>
-            <AuctionCategory category={data?.data!!}/>
+            <AuctionCategory type={type} category={data?.data!!}/>
         </div>
     )
 }
