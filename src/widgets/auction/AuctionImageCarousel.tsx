@@ -12,6 +12,7 @@ import {FileEntity} from "@entities/auction/model";
 import {HeartIcon} from "lucide-react";
 import AuctionWishListButton from "@/features/auction/ui/AuctionWishListButton.tsx";
 import {useParams} from "react-router";
+import {getServerURL} from "@shared/lib";
 
 type Props = {
     images: FileEntity[],
@@ -51,7 +52,7 @@ const AuctionImageCarousel: FC<Props> = ({images,isWishListed}) => {
                             <CarouselItem className={"w-full"} key={index}>
                                 <Card>
                                     <CardContent className="flex aspect-square items-center justify-center p-6 relative">
-                                        <img className="w-full h-full object-cover" src={import.meta.env.VITE_SERVER_URL + image.url} />
+                                        <img className="w-full h-full object-cover" src={getServerURL() + image.url} />
                                         <div className="absolute right-4 bottom-4 bg-white rounded-full p-1 flex items-center justify-center shadow">
                                             <AuctionWishListButton isWishListed={isWishListed} auctionId={auctionId}/>
                                         </div>

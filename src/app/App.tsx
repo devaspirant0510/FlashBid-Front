@@ -20,6 +20,7 @@ const AuctionChatPage = React.lazy(() => import("@pages/auction/chat/AuctionChat
 const BlindAuctionPage = React.lazy(() => import("@pages/auction/blind/BlindAuctionPage.tsx"));
 const LiveAuctionBidHistoryPage = React.lazy(() => import("@pages/auction/realtime/LiveAuctionBidHistoryPage.tsx"));
 const RegisterSnsPage = React.lazy(() => import("@pages/register/RegisterSnsPage.tsx"));
+const AdminHomePage = React.lazy(() => import("@pages/admin/home/AdminHomePage.tsx"));
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
                         <Route path={"/register"} element={<RegisterPage/>}/>
                         <Route path={"/register/sns"} element={<RegisterSnsPage/>}/>
                         <Route path={"/auction/live/:id/bid-history"} element={<LiveAuctionBidHistoryPage/>}/>
+                        <Route path={"/admin/home"} element={<AdminHomePage/>}/>
                     </Routes>
                 </Suspense>
             </BrowserRouter>
