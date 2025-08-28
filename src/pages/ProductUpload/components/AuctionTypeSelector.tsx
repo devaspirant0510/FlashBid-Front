@@ -9,7 +9,7 @@ const AuctionTypeSelector = ({
     <div className="mb-6 pb-6 border-b border-orange-500">
         <label className="block font-semibold mb-2 text-orange-500">경매 유형 *</label>
         <div className="flex gap-4">
-            {["realtime", "blind"].map((type) => (
+            {["live", "blind"].map((type) => (
                 <button
                     key={type}
                     type="button"
