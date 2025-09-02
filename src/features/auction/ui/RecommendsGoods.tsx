@@ -35,7 +35,7 @@ const RecommendsGoods: FC<Props> = ({id}) => {
                                         className="w-full aspect-square object-cover rounded-md mb-4"
                                     />
                                     <p className="text-gray-800 font-bold">
-                                        Starting Price: ${auction.auction.startPrice}
+                                        시작가격 {auction.auction.startPrice.toLocaleString()}p
                                     </p>
                                 </div>
                             </div>
