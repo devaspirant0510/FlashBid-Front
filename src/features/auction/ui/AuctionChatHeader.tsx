@@ -6,9 +6,11 @@ import {DateUtil} from "@shared/lib";
 
 
 type Props = {
-    auctionId: number
+    auctionId: number,
+    type: 'blind' | 'live'
+
 }
-const AuctionChatHeader: FC<Props> = ({auctionId}) => {
+const AuctionChatHeader: FC<Props> = ({auctionId,type}) => {
     const {isLoading, data, isError, error} = useQueryGetAuctionById(auctionId);
     if (isLoading) {
         return <>loading</>
@@ -31,10 +33,18 @@ const AuctionChatHeader: FC<Props> = ({auctionId}) => {
                 <div className={"flex justify-between "}>
                     <div className={'flex items-end'}>
                         <span className={'text-[#E9AB91] mr-2'}>현재가</span>
-                        <span
-                            className={'text-[#E47547] text-2xl font-bold'}>{data.data.lastBiddingLog ? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice}p</span>
+                        {type === 'live' ?
+                            <span className={'text-[#E47547] text-2xl font-bold'}>
+                            {data.data.lastBiddingLog ? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice}p
+                        </span>:
+                            <span className={'text-[#E47547] text-2xl font-bold'}>
+                                ***,***p
+
+                            </span>
+                        }
                     </div>
-                    <div className={'text-[#C9A9A9] text-sm'}>최근 입찰 : {data.data.lastBiddingLog? DateUtil.timeAgo(data.data.lastBiddingLog.createdAt):"거래 내역 없음"}</div>
+                    <div className={'text-[#C9A9A9] text-sm'}>최근 입찰
+                        : {data.data.lastBiddingLog ? DateUtil.timeAgo(data.data.lastBiddingLog.createdAt) : "거래 내역 없음"}</div>
                 </div>
             </div>
 

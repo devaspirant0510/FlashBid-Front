@@ -23,7 +23,7 @@ const AuctionChatPage = () => {
     return (
         <MainLayout>
             <div>
-                <AuctionChatHeader auctionId={id}/>
+                <AuctionChatHeader auctionId={id} type={'live'}/>
                 <StompClient auctionId={id}>
                     {(client, auctionId) => {
                         return (
@@ -32,7 +32,7 @@ const AuctionChatPage = () => {
                                 <div className={"flex-1"}>
                                     <div className={"flex flex-col "}>
                                         <AuctionStatus auctionId={auctionId}/>
-                                        <AuctionChatBody auctionId={auctionId}/>
+                                        <AuctionChatBody auctionId={auctionId} type={'live'}/>
                                         <UserProfile userId={userId as number}>
                                             {
                                                 (user) => {

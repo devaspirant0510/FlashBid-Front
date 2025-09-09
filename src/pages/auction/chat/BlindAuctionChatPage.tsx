@@ -19,7 +19,7 @@ const BlindAuctionChatPage = () => {
     return (
         <MainLayout>
             <div>
-                <AuctionChatHeader auctionId={id}/>
+                <AuctionChatHeader auctionId={id} type={'blind'}/>
                 <StompClient auctionId={id}>
                     {(client, auctionId) => {
                         return (
