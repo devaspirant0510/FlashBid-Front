@@ -5,9 +5,10 @@ import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 type Props = {
     data: ChatEntity,
-    isMe: boolean
+    isMe: boolean,
+    type:'live' | 'blind'
 }
-const AuctionChatItem: FC<Props> = ({data, isMe}) => {
+const AuctionChatItem: FC<Props> = ({data, isMe,type}) => {
 
     const isMessage = data.chatType === "MESSAGE";
 
@@ -49,11 +50,19 @@ const AuctionChatItem: FC<Props> = ({data, isMe}) => {
                                 입찰시간 : <span>{data.createdAt}</span>
                             </div>
                             <div className="text-xs">
-                                입찰가 : <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
-                                <span>{data.biddingLog.price.toLocaleString()}</span>
+                                입찰가 :
+                                {type==='live'?
+                                    <span>
+                                        <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
+                                        <span>{data.biddingLog.price.toLocaleString()}</span>
+                                    </span>:
+                                    <span>
+                                        <span>{data.biddingLog.price.toLocaleString()}p</span>
+                                    </span>
+                                }
                             </div>
                             <div className="text-[#FA9870] text-[8px] text-end">
-                                {new Date(data.createdAt).toUTCString()}
+                            {new Date(data.createdAt).toUTCString()}
                             </div>
                         </div>
                     </div>
@@ -101,8 +110,16 @@ const AuctionChatItem: FC<Props> = ({data, isMe}) => {
                             입찰시간 : <span>{data.createdAt}</span>
                         </div>
                         <div className="text-xs">
-                            입찰가 : <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
-                            <span>{data.biddingLog.price.toLocaleString()}</span>
+                            입찰가 :
+                            {type==='live'?
+                                <div>
+                                    <span>{data.biddingLog.prevPrice.toLocaleString()}</span>→
+                                    <span>{data.biddingLog.price.toLocaleString()}</span>
+                                </div>:
+                                <div>
+                                    ***,***p
+                                </div>
+                            }
                         </div>
                         <div className="text-[#b2b2b2] text-[8px]">
                             {new Date(data.createdAt).toUTCString()}

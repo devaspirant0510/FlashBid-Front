@@ -4,9 +4,10 @@ import AuctionChatItem from "@widgets/auction/AuctionChatItem.tsx";
 import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
 
 type Props = {
-    auctionId: number
+    auctionId: number,
+    type: 'live' | 'blind'
 }
-const AuctionChatBody: FC<Props> = ({auctionId}) => {
+const AuctionChatBody: FC<Props> = ({auctionId,type}) => {
     const {isLoading, data, isError, error} = useQueryGetAllAuctionChat(auctionId);
     const scrollRef = useRef(null);
 
@@ -36,13 +37,13 @@ const AuctionChatBody: FC<Props> = ({auctionId}) => {
                     if (v.user.id === id) {
                         return (
                             <div className={'my-1 flex flex-end justify-end'} key={index}>
-                                <AuctionChatItem  data={v} isMe={true}/>
+                                <AuctionChatItem  data={v} isMe={true} type={type}/>
                             </div>
                         );
                     } else {
                         return (
                             <div className={'my-1 flex'} key={index}>
-                                <AuctionChatItem  data={v} isMe={false}/>
+                                <AuctionChatItem  data={v} isMe={false} type={type}/>
                             </div>
                         )
                     }
