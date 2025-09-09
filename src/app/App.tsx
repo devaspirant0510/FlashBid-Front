@@ -5,6 +5,7 @@ import {BrowserRouter, Routes} from "react-router";
 import {Route} from "react-router-dom";
 import {RQProvider} from "@app/provider";
 import {LoadingPage} from "@pages/common";
+import BlindAuctionInfoPage from "@pages/auction/blind/BlindAuctionInfoPage.tsx";
 
 
 const HomePage = React.lazy(() => import("@pages/home/HomePage.tsx"));
@@ -21,6 +22,7 @@ const BlindAuctionPage = React.lazy(() => import("@pages/auction/blind/BlindAuct
 const LiveAuctionBidHistoryPage = React.lazy(() => import("@pages/auction/realtime/LiveAuctionBidHistoryPage.tsx"));
 const RegisterSnsPage = React.lazy(() => import("@pages/register/RegisterSnsPage.tsx"));
 const AdminHomePage = React.lazy(() => import("@pages/admin/home/AdminHomePage.tsx"));
+const BlindAuctionChatPage = React.lazy(() => import("@pages/auction/chat/BlindAuctionChatPage.tsx"));
 
 
 function App() {
@@ -35,10 +37,13 @@ function App() {
                         <Route path="/auction/live" element={<LiveAuctionPage/>}/>
                         <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                         <Route path="/auction/blind" element={<BlindAuctionPage/>}/>
+                        <Route path="/auction/blind/:id" element={<BlindAuctionInfoPage/>}/>
                         <Route path="/Login" element={<LoginPage/>}/>
+
                         <Route path="/Profile" element={<ProfilePage/>}/>
                         <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
                         <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
+                        <Route path="/auction/blind/chat/:id" element={<BlindAuctionChatPage/>}/>
                         <Route path="/FeedInfo/:id" element={<FeedInfo/>}/>
                         <Route path={"/register"} element={<RegisterPage/>}/>
                         <Route path={"/register/sns"} element={<RegisterSnsPage/>}/>

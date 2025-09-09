@@ -18,10 +18,11 @@ import {ProfileImage} from "@shared/ui";
 
 type Props = {
     id: number
+    type: 'blind' | 'live'
 
 }
 
-const AuctionInfo: FC<Props> = ({id}) => {
+const AuctionInfo: FC<Props> = ({id, type}) => {
     const {isLoading, isError, error, data} = useQueryGetAuctionById(id);
     const token = Cookies.get("access_token");
     const navigate = useNavigate();
@@ -42,7 +43,11 @@ const AuctionInfo: FC<Props> = ({id}) => {
         },
         onError: (error) => {
             console.error("경매 참여 실패", error);
-            navigate(`/auction/chat/${id}`);
+            if (type === "live") {
+                navigate(`/auction/chat/${id}`);
+            } else {
+                navigate(`/auction/blind/chat/${id}`);
+            }
         }
     });
 
@@ -58,7 +63,7 @@ const AuctionInfo: FC<Props> = ({id}) => {
     if (!data || !data.data) {
         return <>no data</>
     }
-    if(isPending){
+    if (isPending) {
         return <>참여하는중</>
     }
     return (
@@ -87,14 +92,14 @@ const AuctionInfo: FC<Props> = ({id}) => {
 
                     <Badge className={'bg-[var(--uprimary)] text-white mb-1'}>판매자</Badge>
                     <FetchAccountStatus accountId={data.data.auction.user.id}>
-                        {(data)=>{
+                        {(data) => {
                             return <div className={'flex'}>
                                 <ProfileImage size={60} src={data.profileUrl}/>
                                 <div className={'ml-2'}>
                                     <div>
                                         {data.nickname}
                                     </div>
-                                    <div>입찰 {data.biddingCount} | 판매 {data.sellCount} | 리뷰 {data.reviewCount ??0 }</div>
+                                    <div>입찰 {data.biddingCount} | 판매 {data.sellCount} | 리뷰 {data.reviewCount ?? 0}</div>
                                     <div>팔로워 {data.followerCount} | 팔로잉 {data.followingCount}</div>
                                 </div>
                             </div>
@@ -109,9 +114,16 @@ const AuctionInfo: FC<Props> = ({id}) => {
                 <div className={'w-24'}></div>
                 <article className={'flex-2'}>
                     <div> 현재 판매 가격</div>
-                    <div
-                        className={'text-uprimary font-bold text-4xl'}>{data.data.lastBiddingLog ? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
-                    </div>
+                    {
+                        type === 'live' ?
+                            <div
+                                className={'text-uprimary font-bold text-4xl'}>{data.data.lastBiddingLog ? data.data.lastBiddingLog.price.toLocaleString() : data.data.auction.startPrice.toLocaleString()}p
+                            </div> :
+                            <div className={'text-uprimary font-bold text-4xl'}>
+                                ***,***p
+                            </div>
+
+                    }
 
                     <button
                         onClick={onClickAuctionChat}

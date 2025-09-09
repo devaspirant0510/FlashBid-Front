@@ -22,7 +22,7 @@ const AuctionList: FC<Props> = ({type}) => {
     const {isLoading, isError, data, error} = useQueryGetAuctionList(type);
 
     const onClickAuctionItem = useCallback((id: number) => {
-        navigate("/auction/live/" + id);
+        navigate(`/auction/${type}/` + id);
     }, [])
     console.log(data)
 
@@ -66,7 +66,11 @@ const AuctionList: FC<Props> = ({type}) => {
                                     </div>
                                     <div className="text-xl font-bold flex gap-2">
                                         <span className="text-[#F7A17E]">현재가</span>
-                                        <span>{v.currentPrice ? v.currentPrice.toLocaleString() : v.auction.startPrice.toLocaleString()}p</span>
+                                        {type === 'blind' ?
+                                            <>***,***p</>
+                                            :
+                                            <span>{v.currentPrice ? v.currentPrice.toLocaleString() : v.auction.startPrice.toLocaleString()}p</span>
+                                        }
                                     </div>
                                     <div>
                                         참여자수 <strong>{v.participateCount} 명</strong> | 입찰{" "}

@@ -10,7 +10,7 @@ import {ImageIcon, MessageSquareIcon, MessageSquareTextIcon, SendIcon, SmileIcon
 type Props = {
     client: Client,
     auctionId: number,
-    account: Account
+    account: Account,
 }
 const AuctionChatInput: FC<Props> = ({client, auctionId, account}) => {
     const [message, onChangeMessage,setMessage] = useInput({initialValue: ""});
