@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import MyProfile from "@/features/profile/ui/MyProfile.tsx";
 import MyWallet from "@/features/profile/ui/MyWallet.tsx";
 import MyActive from "@/features/profile/ui/MyActive.tsx";
@@ -10,11 +10,17 @@ import {useQuery} from "@tanstack/react-query";
 import {httpFetcher} from "@shared/lib";
 import {ApiResult} from "@entities/common";
 import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
+import {useQueryGetAccountStatus} from "@/features/profile/lib/useQueryGetAccountStatus.ts";
+import {EditProfileModal} from "@/features/profile/ui/EditProfileModal.tsx";
 
 export const ProfilePage = () => {
     const [_,id] = useAuthUser()
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
     const { isLoading, data, isError,error } = useQuery({queryKey:["api","v1","profile",id],
         queryFn:httpFetcher<ApiResult<any>>});
+
+    const { data: statusData } = useQueryGetAccountStatus(Number(id));
 
     if(isLoading) {
         return <>loading</>
@@ -25,7 +31,7 @@ export const ProfilePage = () => {
     if(!data || !data.data){
         return <>nodata</>
     }
-    console.log(data);
+
     return (
         <>
             <Header />
@@ -36,31 +42,38 @@ export const ProfilePage = () => {
                         nickname={data.data.user.nickname}
                         email={data.data.user.email}
                         url={data.data.user.profileUrl}
+                        cash={statusData?.data?.cash}
+                        interestedCount={statusData?.data?.interestedCount}
+                        biddingCount={statusData?.data?.biddingCount}
+                        onEditClick={() => setIsEditModalOpen(true)}
                     />
 
-                    {/* 오른쪽 콘텐츠 */}
                     <section className="col-span-9 space-y-6 mt-30">
-                        {/* MY 지갑 */}
-                        <MyWallet/>
+                        <MyWallet cash={statusData?.data?.cash} />
 
-                        {/* MY 활동 */}
                         <MyActive
                             followercount={data.data.followerCount}
                             followingcount={data.data.followingCount}
                             feedcount={data.data.feedCount}
                         />
 
-                        {/* MY 게시글 */}
                         <MyFeedList/>
 
-                        {/* MY 판매 목록 */}
                         <MySales/>
 
-                        {/* MY 구매 목록 */}
                         <MyBuys/>
                     </section>
                 </section>
             </div>
+
+            {isEditModalOpen && (
+                <EditProfileModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    currentNickname={data.data.user.nickname}
+                    currentProfileUrl={data.data.user.profileUrl}
+                />
+            )}
         </>
     );
 }
