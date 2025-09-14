@@ -51,6 +51,7 @@ export const ProfilePage = () => {
                     <section className="col-span-9 space-y-6 mt-30">
                         <MyWallet cash={statusData?.data?.cash} />
 
+                        {/* 👇 MyActive 컴포넌트에 필요한 모든 데이터를 정확히 전달합니다. */}
                         <MyActive
                             followercount={data.data.followerCount}
                             followingcount={data.data.followingCount}
