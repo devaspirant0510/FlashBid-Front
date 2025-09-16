@@ -1,4 +1,8 @@
-const MyWallet = () => {
+interface MyWalletProps {
+    cash?: number;
+}
+
+const MyWallet = ({ cash }: MyWalletProps) => {
     return (
         <div>
             <h2 className="font-semibold mb-4" style={{color: '#f26522', fontSize: 24, fontWeight: 'bold'}}>
@@ -15,7 +19,7 @@ const MyWallet = () => {
                     </div>
                     <div className="text-3xl font-bold">
                         <label style={{fontSize: 48, color: '#ED6C37', fontWeight: 'bold'}}>
-                            5,500
+                            {cash?.toLocaleString() || 0}
                         </label>
                     </div>
                 </div>

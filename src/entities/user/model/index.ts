@@ -1,5 +1,11 @@
 import {FileEntity} from "@entities/auction/model";
 
+export type FollowUser = {
+    id: number;
+    nickname: string;
+    profileUrl: string;
+}
+
 export type User ={
     id: number;
     userName: string;
