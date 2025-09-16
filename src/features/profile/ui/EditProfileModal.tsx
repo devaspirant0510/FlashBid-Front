@@ -46,7 +46,7 @@ export const EditProfileModal = ({isOpen, onClose, currentNickname, currentProfi
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="w-full max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle style={{fontWeight: 'bold'}}>프로필 수정</DialogTitle>
                 </DialogHeader>
