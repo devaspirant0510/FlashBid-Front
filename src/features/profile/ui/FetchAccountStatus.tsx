@@ -1,6 +1,6 @@
 import React, {FC} from "react";
-import {useQueryGetAllAuctionChat} from "@/features/profile/lib/useQueryGetAccountStatus.ts";
 import {UserStats} from "@entities/user/model";
+import {useQueryGetAllAuctionChat} from "@/features/auction/lib";
 
 type Props = {
     accountId:number,
