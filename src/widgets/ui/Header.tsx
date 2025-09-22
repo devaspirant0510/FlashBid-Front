@@ -98,7 +98,7 @@ const Header = () => {
 
                     {/* 오른쪽 아이콘들 */}
                     <div className="flex items-center gap-10 ml-4">
-                        <Link to="/cart">
+                        <Link to="/shop">
                             <img src="/img/point.svg" alt="cart" className="h-5"/>
                         </Link>
                         <Link to="/mypage">
