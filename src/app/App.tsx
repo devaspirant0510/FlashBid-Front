@@ -1,11 +1,10 @@
 import "./global.css"
 import React, {Suspense} from 'react';
 
-import {BrowserRouter, Routes} from "react-router";
-import {Route} from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {RQProvider} from "@app/provider";
 import {LoadingPage} from "@pages/common";
-import BlindAuctionInfoPage from "@pages/auction/blind/BlindAuctionInfoPage.tsx";
+import PointPage from "@pages/profile/PointPage.tsx";
 
 
 const HomePage = React.lazy(() => import("@pages/home/HomePage.tsx"));
@@ -14,6 +13,7 @@ const LoginPage = React.lazy(() => import("@pages/login/LoginPage.tsx"));
 const ProfilePage = React.lazy(() => import("@pages/profile/ProfilePage.tsx"));
 const LiveAuctionPage = React.lazy(() => import("@pages/auction/realtime/LiveAuctionPage.tsx"));
 const LiveAuctionInfoPage = React.lazy(() => import("@pages/auction/realtime/LiveAuctionInfoPage.tsx"));
+const BlindAuctionInfoPage = React.lazy(() => import("@pages/auction/blind/BlindAuctionInfoPage.tsx"));
 const ProductUploadPage = React.lazy(() => import("@pages/ProductUpload/ProductUploadPage.tsx"));
 const FeedInfo = React.lazy(() => import("@pages/feed/component/FeedInfo.tsx"));
 const RegisterPage = React.lazy(() => import("@pages/register/RegisterPage.tsx"));
@@ -23,6 +23,7 @@ const LiveAuctionBidHistoryPage = React.lazy(() => import("@pages/auction/realti
 const RegisterSnsPage = React.lazy(() => import("@pages/register/RegisterSnsPage.tsx"));
 const AdminHomePage = React.lazy(() => import("@pages/admin/home/AdminHomePage.tsx"));
 const BlindAuctionChatPage = React.lazy(() => import("@pages/auction/chat/BlindAuctionChatPage.tsx"));
+const ShopPage = React.lazy(() => import("@pages/shop/ShopPage.tsx"));
 
 
 function App() {
@@ -38,9 +39,9 @@ function App() {
                         <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
                         <Route path="/auction/blind" element={<BlindAuctionPage/>}/>
                         <Route path="/auction/blind/:id" element={<BlindAuctionInfoPage/>}/>
-                        <Route path="/Login" element={<LoginPage/>}/>
 
                         <Route path="/Profile" element={<ProfilePage/>}/>
+                        <Route path={"/profile/point"} element={<PointPage/>}/>
                         <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
                         <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
                         <Route path="/auction/blind/chat/:id" element={<BlindAuctionChatPage/>}/>
@@ -49,6 +50,7 @@ function App() {
                         <Route path={"/register/sns"} element={<RegisterSnsPage/>}/>
                         <Route path={"/auction/live/:id/bid-history"} element={<LiveAuctionBidHistoryPage/>}/>
                         <Route path={"/admin/home"} element={<AdminHomePage/>}/>
+                        <Route path={"/shop"} element={<ShopPage/>}/>
                     </Routes>
                 </Suspense>
             </BrowserRouter>

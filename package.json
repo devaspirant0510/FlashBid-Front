@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bootpay/client-js": "^5.1.5",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@stomp/stompjs": "^7.1.1",
     "@tailwindcss/vite": "^4.1.8",
     "@tanstack/react-query": "^5.68.0",
