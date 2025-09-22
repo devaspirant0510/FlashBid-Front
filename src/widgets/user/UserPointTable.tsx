@@ -44,7 +44,7 @@ const UserPointTable: React.FC<Props> = ({ rows, totalCount, formatDate, getChar
                 <TableHead className="text-white font-semibold text-center">구분</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="divide-y divide-gray-200">
               {rows.length > 0 ? (
                 rows.map((pointRecord, index) => {
                   const isPositive = pointRecord.chargeType === "CHARGE" || pointRecord.chargeType === "GIFT";
@@ -52,10 +52,7 @@ const UserPointTable: React.FC<Props> = ({ rows, totalCount, formatDate, getChar
                   const typeInfo = getChargeTypeInfo(pointRecord.chargeType);
 
                   return (
-                    <TableRow
-                      key={index}
-                      className="hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100"
-                    >
+                    <TableRow key={index} className="hover:bg-gray-50 transition-colors duration-200">
                       <TableCell className="font-medium text-gray-700">
                         <div className="space-y-1">
                           <div className="text-sm">{formatDate(pointRecord.createdAt)}</div>
@@ -112,4 +109,3 @@ const UserPointTable: React.FC<Props> = ({ rows, totalCount, formatDate, getChar
 };
 
 export default UserPointTable;
-
