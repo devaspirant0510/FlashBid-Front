@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from 'react';
 
-
 type ColProps = {
     span?: number; // 기본 24분할
     sm?: number;
@@ -30,11 +29,7 @@ const Col: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
 
     const width = `${(currentSpan / 24) * 100}%`;
 
-    return (
-        <div style={{ width, padding: '8px', boxSizing: 'border-box' }}>
-            {children}
-        </div>
-    );
+    return <div style={{ width, padding: '8px', boxSizing: 'border-box' }}>{children}</div>;
 };
 
 export default Col;

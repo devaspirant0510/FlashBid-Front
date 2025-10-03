@@ -1,17 +1,17 @@
-import {differenceInDays, differenceInHours, differenceInMinutes, format} from 'date-fns';
+import { differenceInDays, differenceInHours, differenceInMinutes, format } from 'date-fns';
 
-export namespace DateUtil{
+export namespace DateUtil {
     const defaultDateFormat = 'yyyy-MM-dd';
-    export function convertDateFormat(date:string,formatString:string ){
+    export function convertDateFormat(date: string, formatString: string) {
         const dateTime = new Date(date);
-        return format(dateTime,formatString);
+        return format(dateTime, formatString);
     }
     export function timeAgo(date: string): string {
         const now = new Date();
         const past = new Date(date);
 
         const diffMinutes = differenceInMinutes(now, past);
-        if (diffMinutes < 1) return '방금 전';   // 1분 미만이면 방금 전
+        if (diffMinutes < 1) return '방금 전'; // 1분 미만이면 방금 전
 
         if (diffMinutes < 60) {
             return `${diffMinutes}분 전`;

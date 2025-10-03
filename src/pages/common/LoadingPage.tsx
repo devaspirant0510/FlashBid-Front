@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from 'react';
 
 const LoadingPage = () => {
     const [show, setShow] = useState(true);
@@ -15,7 +15,7 @@ const LoadingPage = () => {
     return (
         <div className={'h-screen w-screen flex items-center justify-center bg-uprimary'}>
             <div className={'text-center'}>
-                <img src={"/img/loading.gif"} alt="로딩중" className={'h-64 w-64 mb-4'}/>
+                <img src={'/img/loading.gif'} alt='로딩중' className={'h-64 w-64 mb-4'} />
                 <div className={'text-white'}>로딩중</div>
             </div>
         </div>

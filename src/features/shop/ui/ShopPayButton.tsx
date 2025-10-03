@@ -1,9 +1,9 @@
 // filepath: /Users/kotlinandnode/seungho/capstone/FlashBid-Front/src/features/shop/ui/ShopPayButton.tsx
-import React from "react";
-import {Bootpay} from "@bootpay/client-js";
-import {useMutationPaymentSuccess} from "@/features/shop/lib/useMutationPaymentSuccess.ts";
-import Cookies from "js-cookie";
-import {parseJwtPayload} from "@shared/lib/jwtUtils.ts";
+import React from 'react';
+import { Bootpay } from '@bootpay/client-js';
+import { useMutationPaymentSuccess } from '@/features/shop/lib/useMutationPaymentSuccess.ts';
+import Cookies from 'js-cookie';
+import { parseJwtPayload } from '@shared/lib/jwtUtils.ts';
 
 export type ShopPayButtonProps = {
     price: number; // KRW price in won
@@ -19,16 +19,16 @@ export type ShopPayButtonProps = {
 };
 
 const ShopPayButton: React.FC<ShopPayButtonProps> = ({
-                                                         price,
-                                                         pointAmount,
-                                                         orderName,
-                                                         pg,
-                                                         method,
-                                                         enabled = true,
-                                                         className,
-                                                         onSuccess,
-                                                         onError,
-                                                     }) => {
+    price,
+    pointAmount,
+    orderName,
+    pg,
+    method,
+    enabled = true,
+    className,
+    onSuccess,
+    onError,
+}) => {
     const { mutateAsync: postPaymentSuccess } = useMutationPaymentSuccess();
 
     const getUserId = (): string => {
@@ -45,30 +45,30 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
             const orderId = `POINT_RECHARGE_${Date.now()}`;
 
             const payload: any = {
-                application_id: "68cff793836e97280fee80fb",
+                application_id: '68cff793836e97280fee80fb',
                 price,
-                order_name:orderName,
-                order_id:orderId,
+                order_name: orderName,
+                order_id: orderId,
                 pg,
                 method,
                 tax_free: 0,
                 user: {
                     id: getUserId(),
-                    username: "",
-                    phone: "",
-                    email: "",
+                    username: '',
+                    phone: '',
+                    email: '',
                 },
                 items: [
                     {
-                        id: "point_charge",
+                        id: 'point_charge',
                         name: orderName,
                         qty: 1,
                         price,
                     },
                 ],
                 extra: {
-                    open_type: "iframe",
-                    card_quota: method === '카드' ? "0,2,3,6,12" : "0",
+                    open_type: 'iframe',
+                    card_quota: method === '카드' ? '0,2,3,6,12' : '0',
                     escrow: false,
                 },
             };
@@ -82,7 +82,7 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
             switch (response?.event) {
                 case 'done': {
                     const paymentPayload = {
-                        paymentKey: "test payment key",//response.payment_key || response.receipt_id || '',
+                        paymentKey: 'test payment key', //response.payment_key || response.receipt_id || '',
                         orderId: response.order_id || orderId,
                         receiptId: response.receipt_id || '',
                         receiptUrl: response.receipt_url || '',
@@ -91,7 +91,10 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
                         pointAmount: pointAmount,
                         paymentAmount: price,
                         method: response.method || method,
-                        purchaseAt: (response.purchased_at && new Date(response.purchased_at).toISOString()) || new Date().toISOString(),
+                        purchaseAt:
+                            (response.purchased_at &&
+                                new Date(response.purchased_at).toISOString()) ||
+                            new Date().toISOString(),
                     };
 
                     await postPaymentSuccess(paymentPayload);
@@ -113,10 +116,11 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
         } catch (error: any) {
             if (onError) onError(error);
             else {
-                console.error("결제 실패:", error);
-                if (error?.event === "cancel") alert("결제가 취소되었습니다.");
-                else if (error?.event === "error") alert(`결제 중 오류가 발생했습니다: ${error?.message || "알 수 없는 오류"}`);
-                else alert("결제 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+                console.error('결제 실패:', error);
+                if (error?.event === 'cancel') alert('결제가 취소되었습니다.');
+                else if (error?.event === 'error')
+                    alert(`결제 중 오류가 발생했습니다: ${error?.message || '알 수 없는 오류'}`);
+                else alert('결제 처리 중 문제가 발생했습니다. 다시 시도해주세요.');
             }
         }
     };
@@ -128,7 +132,9 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
             className={
                 className ??
                 `w-full py-4 rounded-xl font-bold text-lg transition-all ${
-                    enabled ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    enabled
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`
             }
         >

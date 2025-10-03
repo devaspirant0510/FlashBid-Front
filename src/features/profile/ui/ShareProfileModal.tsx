@@ -1,8 +1,8 @@
 // src/features/profile/ui/ShareProfileModal.tsx
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@shared/components/ui/dialog.tsx";
-import { Button } from "@shared/components/ui/button.tsx";
-import { Input } from "@shared/components/ui/input.tsx";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@shared/components/ui/dialog.tsx';
+import { Button } from '@shared/components/ui/button.tsx';
+import { Input } from '@shared/components/ui/input.tsx';
 
 interface ShareProfileModalProps {
     isOpen: boolean;
@@ -10,7 +10,11 @@ interface ShareProfileModalProps {
     profileUrl: string;
 }
 
-export const ShareProfileModal: React.FC<ShareProfileModalProps> = ({ isOpen, onClose, profileUrl }) => {
+export const ShareProfileModal: React.FC<ShareProfileModalProps> = ({
+    isOpen,
+    onClose,
+    profileUrl,
+}) => {
     const [isCopied, setIsCopied] = useState(false);
 
     const handleCopyLink = async () => {
@@ -26,23 +30,16 @@ export const ShareProfileModal: React.FC<ShareProfileModalProps> = ({ isOpen, on
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="w-full max-w-[425px]">
+            <DialogContent className='w-full max-w-[425px]'>
                 <DialogHeader>
-                    <DialogTitle className="font-bold text-lg">프로필 공유</DialogTitle>
+                    <DialogTitle className='font-bold text-lg'>프로필 공유</DialogTitle>
                 </DialogHeader>
 
-                <div className="py-4">
-                    <h3 className="text-md font-semibold mb-3">링크 복사</h3>
-                    <div className="flex w-full items-center space-x-2">
-                        <Input
-                            type="text"
-                            value={profileUrl}
-                            readOnly
-                            className="flex-1"
-                        />
-                        <Button onClick={handleCopyLink}>
-                            {isCopied ? '복사됨!' : '복사'}
-                        </Button>
+                <div className='py-4'>
+                    <h3 className='text-md font-semibold mb-3'>링크 복사</h3>
+                    <div className='flex w-full items-center space-x-2'>
+                        <Input type='text' value={profileUrl} readOnly className='flex-1' />
+                        <Button onClick={handleCopyLink}>{isCopied ? '복사됨!' : '복사'}</Button>
                     </div>
                 </div>
             </DialogContent>

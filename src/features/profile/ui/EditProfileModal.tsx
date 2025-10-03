@@ -1,9 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@shared/components/ui/dialog.tsx";
-import {Button} from "@shared/components/ui/button.tsx";
-import {Input} from "@shared/components/ui/input.tsx";
-import {ProfileImage} from "@shared/ui";
-import {useMutationUpdateProfile} from "@/features/profile/lib/useMutationUpdateProfile.ts";
+import React, { useEffect, useState } from 'react';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from '@shared/components/ui/dialog.tsx';
+import { Button } from '@shared/components/ui/button.tsx';
+import { Input } from '@shared/components/ui/input.tsx';
+import { ProfileImage } from '@shared/ui';
+import { useMutationUpdateProfile } from '@/features/profile/lib/useMutationUpdateProfile.ts';
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -12,7 +18,12 @@ interface EditProfileModalProps {
     currentProfileUrl: string;
 }
 
-export const EditProfileModal = ({isOpen, onClose, currentNickname, currentProfileUrl}: EditProfileModalProps) => {
+export const EditProfileModal = ({
+    isOpen,
+    onClose,
+    currentNickname,
+    currentProfileUrl,
+}: EditProfileModalProps) => {
     const [nickname, setNickname] = useState(currentNickname);
     const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string>(currentProfileUrl);
@@ -33,58 +44,66 @@ export const EditProfileModal = ({isOpen, onClose, currentNickname, currentProfi
     };
 
     const handleSubmit = async () => {
-        await updateProfileMutation.mutateAsync({
-            nickname: nickname !== currentNickname ? nickname : undefined,
-            profileImage: profileImageFile ?? undefined,
-        }, {
-            onSuccess: () => {
-                alert("프로필이 성공적으로 업데이트되었습니다.");
-                onClose();
-            }
-        });
+        await updateProfileMutation.mutateAsync(
+            {
+                nickname: nickname !== currentNickname ? nickname : undefined,
+                profileImage: profileImageFile ?? undefined,
+            },
+            {
+                onSuccess: () => {
+                    alert('프로필이 성공적으로 업데이트되었습니다.');
+                    onClose();
+                },
+            },
+        );
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="w-full max-w-[425px]">
+            <DialogContent className='w-full max-w-[425px]'>
                 <DialogHeader>
-                    <DialogTitle style={{fontWeight: 'bold'}}>프로필 수정</DialogTitle>
+                    <DialogTitle style={{ fontWeight: 'bold' }}>프로필 수정</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-6 py-4">
-                    <div className="flex flex-col items-center gap-4">
-                        <label htmlFor="profile-image-upload" className="cursor-pointer">
-                            <ProfileImage size={120} src={previewUrl}/>
+                <div className='grid gap-6 py-4'>
+                    <div className='flex flex-col items-center gap-4'>
+                        <label htmlFor='profile-image-upload' className='cursor-pointer'>
+                            <ProfileImage size={120} src={previewUrl} />
                         </label>
                         <input
-                            id="profile-image-upload"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
+                            id='profile-image-upload'
+                            type='file'
+                            accept='image/*'
+                            className='hidden'
                             onChange={handleImageChange}
                         />
-                        <Button variant="outline" onClick={() => document.getElementById('profile-image-upload')?.click()}>
+                        <Button
+                            variant='outline'
+                            onClick={() => document.getElementById('profile-image-upload')?.click()}
+                        >
                             사진 변경
                         </Button>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="nickname" className="text-right font-semibold">
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                        <label htmlFor='nickname' className='text-right font-semibold'>
                             닉네임
                         </label>
                         <Input
-                            id="nickname"
+                            id='nickname'
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
-                            className="col-span-3"
+                            className='col-span-3'
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="secondary" onClick={onClose}>취소</Button>
+                    <Button variant='secondary' onClick={onClose}>
+                        취소
+                    </Button>
                     <Button
-                        type="submit"
+                        type='submit'
                         onClick={handleSubmit}
                         disabled={updateProfileMutation.isPending}
-                        style={{backgroundColor: '#f26522', color: 'white'}}
+                        style={{ backgroundColor: '#f26522', color: 'white' }}
                     >
                         {updateProfileMutation.isPending ? '저장 중...' : '저장하기'}
                     </Button>

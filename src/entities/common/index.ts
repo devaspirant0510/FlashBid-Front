@@ -1,12 +1,12 @@
 export type ApiHeader = {
-    code: number,
-    status: string,
-}
+    code: number;
+    status: string;
+};
 
 export type ApiError = {
-    errorCode: string,
-    errorMessage: string
-}
+    errorCode: string;
+    errorMessage: string;
+};
 
 export type ApiResult<T> = {
     apiHeader: ApiHeader;
@@ -16,7 +16,7 @@ export type ApiResult<T> = {
     data: T | null;
     error: ApiError | null;
     message: string;
-}
+};
 
 export type Sort = {
     sorted: boolean;
@@ -46,17 +46,17 @@ export type Page<T> = {
     sort: Sort;
     empty: boolean;
 };
-export function ApiResultBuilder<T>(data:T):ApiResult<T>{
+export function ApiResultBuilder<T>(data: T): ApiResult<T> {
     return {
         apiHeader: {
             code: 200,
-            status:"OK"
+            status: 'OK',
         },
-        data:data,
-        error:null,
-        message:"ok",
-        method:"GET",
-        path:"/",
+        data: data,
+        error: null,
+        message: 'ok',
+        method: 'GET',
+        path: '/',
         timestamp: Date.now().toString(),
-    }
+    };
 }

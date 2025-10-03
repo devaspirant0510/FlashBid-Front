@@ -1,1 +1,1 @@
-export {default as AuctionList}  from "./AuctionListLegacy.tsx";
+export { default as AuctionList } from './AuctionListLegacy.tsx';
