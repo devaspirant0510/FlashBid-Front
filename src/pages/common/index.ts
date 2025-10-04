@@ -1,1 +1,1 @@
-export {default as LoadingPage} from "./LoadingPage.tsx"
+export { default as LoadingPage } from './LoadingPage.tsx';

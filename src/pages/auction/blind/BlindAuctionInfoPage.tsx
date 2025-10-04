@@ -1,20 +1,20 @@
-import React, {FC} from "react";
-import {useParams} from "react-router";
-import {AuctionInfo, RecommendsGoods} from "@/features/auction/ui";
-import {MainLayout} from "@shared/layout";
+import React, { FC } from 'react';
+import { useParams } from 'react-router';
+import { AuctionInfo, RecommendsGoods } from '@/features/auction/ui';
+import { MainLayout } from '@shared/layout';
 
 type Params = {
-    id: number
-}
+    id: number;
+};
 const BlindAuctionInfoPage = () => {
-    const {id} = useParams<Params>();
+    const { id } = useParams<Params>();
     if (!id) {
-        return <>error</>
+        return <>error</>;
     }
     return (
         <MainLayout>
-            <AuctionInfo id={id} type={'blind'}/>
-            <RecommendsGoods id={id}/>
+            <AuctionInfo id={id} type={'blind'} />
+            <RecommendsGoods id={id} />
         </MainLayout>
     );
 };

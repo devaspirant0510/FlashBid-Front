@@ -1,1 +1,1 @@
-export {default as BidHistoryTable} from "./BidHistoryTable.tsx";
+export { default as BidHistoryTable } from './BidHistoryTable.tsx';

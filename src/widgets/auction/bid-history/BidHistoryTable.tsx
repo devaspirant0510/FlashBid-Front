@@ -1,12 +1,19 @@
-import React, {FC} from "react";
-import {BidLog} from "@entities/auction/model";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@shared/components/ui/table.tsx";
-import ProfileImage from "@shared/ui/ProfileImage.tsx";
+import React, { FC } from 'react';
+import { BidLog } from '@entities/auction/model';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@shared/components/ui/table.tsx';
+import ProfileImage from '@shared/ui/ProfileImage.tsx';
 
 type Props = {
-    data:BidLog[]
-}
-const BidHistoryTable:FC<Props> = ({data}) => {
+    data: BidLog[];
+};
+const BidHistoryTable: FC<Props> = ({ data }) => {
     return (
         <Table>
             <TableHeader>
@@ -21,14 +28,12 @@ const BidHistoryTable:FC<Props> = ({data}) => {
                     <TableRow key={history.id}>
                         <TableCell>
                             <div className={'flex items-center'}>
-                                <ProfileImage size={30} src={history.profileUrl}/>
-                                <span className="ml-2">{history.bidderName}</span>
+                                <ProfileImage size={30} src={history.profileUrl} />
+                                <span className='ml-2'>{history.bidderName}</span>
                             </div>
                         </TableCell>
                         <TableCell>{history.price.toLocaleString()}p</TableCell>
-                        <TableCell>
-                            {new Date(history.createdAt).toLocaleString()}
-                        </TableCell>
+                        <TableCell>{new Date(history.createdAt).toLocaleString()}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

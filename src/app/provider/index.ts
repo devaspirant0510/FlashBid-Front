@@ -1,1 +1,1 @@
-export {default as RQProvider} from "./RQProvider.tsx"
+export { default as RQProvider } from './RQProvider.tsx';

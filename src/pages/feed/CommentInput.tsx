@@ -1,7 +1,7 @@
 // components/CommentInput.tsx
-import { useState } from "react";
-import Cookies from "js-cookie";
-import {getServerURL} from "@shared/lib";
+import { useState } from 'react';
+import Cookies from 'js-cookie';
+import { getServerURL } from '@shared/lib';
 
 interface CommentInputProps {
     feedId: number | string;
@@ -9,20 +9,20 @@ interface CommentInputProps {
 }
 
 const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
-    const [contents, setContents] = useState("");
-    const token = Cookies.get("access_token");
+    const [contents, setContents] = useState('');
+    const token = Cookies.get('access_token');
 
     const handleSubmit = async () => {
         if (!contents.trim()) {
-            alert("댓글을 입력하세요.");
+            alert('댓글을 입력하세요.');
             return;
         }
 
         try {
             const response = await fetch(`${getServerURL()}/api/v1/feed/comment`, {
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
@@ -31,28 +31,28 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
                 }),
             });
 
-            if (!response.ok) throw new Error("댓글 등록 실패");
+            if (!response.ok) throw new Error('댓글 등록 실패');
 
-            setContents("");
-            alert("댓글이 등록되었습니다.");
+            setContents('');
+            alert('댓글이 등록되었습니다.');
             onCommentPosted?.();
         } catch (err: any) {
-            alert(err.message || "에러 발생");
+            alert(err.message || '에러 발생');
         }
     };
 
     return (
-        <div className="mt-4 border-t pt-3 flex items-center">
+        <div className='mt-4 border-t pt-3 flex items-center'>
             <input
-                type="text"
-                placeholder="댓글 작성하기"
+                type='text'
+                placeholder='댓글 작성하기'
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-600 placeholder-gray-400 outline-none focus:ring-1"
+                className='w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-600 placeholder-gray-400 outline-none focus:ring-1'
                 onClick={(e) => e.stopPropagation()}
             />
             <button
-                className="px-2 py-2.5 text-black rounded-md text-sm font-semibold whitespace-nowrap leading-normal bg-transparent"
+                className='px-2 py-2.5 text-black rounded-md text-sm font-semibold whitespace-nowrap leading-normal bg-transparent'
                 onClick={(e) => {
                     e.stopPropagation();
                     handleSubmit();
@@ -61,7 +61,6 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
                 등록
             </button>
         </div>
-
     );
 };
 

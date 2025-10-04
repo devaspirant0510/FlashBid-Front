@@ -1,14 +1,13 @@
 import React from 'react';
-import {MainLayout} from "@shared/layout";
-import {AuctionList, CategoryList} from "@/features/auction/ui";
+import { MainLayout } from '@shared/layout';
+import { AuctionList, CategoryList } from '@/features/auction/ui';
 
-const BlindAuctionPage = ()=>{
+const BlindAuctionPage = () => {
     return (
         <MainLayout>
-            <CategoryList type={'blind'}/>
-            <AuctionList type={'blind'}/>
+            <CategoryList type={'blind'} />
+            <AuctionList type={'blind'} />
         </MainLayout>
-
-    )
-}
-export default BlindAuctionPage
+    );
+};
+export default BlindAuctionPage;

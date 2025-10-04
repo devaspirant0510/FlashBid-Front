@@ -1,6 +1,6 @@
-import axios from "axios";
-import {useAuthStore} from "@shared/store/AuthStore.ts";
-import {getServerURL} from "@shared/lib/config.ts";
+import axios from 'axios';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { getServerURL } from '@shared/lib/config.ts';
 
 export const axiosClient = axios.create({
     baseURL: `${getServerURL()}/`,

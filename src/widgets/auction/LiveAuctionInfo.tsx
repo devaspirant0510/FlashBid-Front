@@ -1,10 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const LiveAuction = () => {
-  return (
-    <>
-    </>
-  );
+    return <></>;
 };
 
 export default LiveAuction;
