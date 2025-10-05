@@ -1,4 +1,15 @@
-export function parseJwtPayload(token) {
+export type AccessTokenPayload = {
+    email: string;
+    exp: number;
+    iat: number;
+    id: number;
+    nickname: string;
+    profileUrl: string;
+    role: 'CUSTOMER' | 'ADMIN' | 'SELLER';
+    sub: string;
+};
+
+export function parseJwtPayload<T>(token: string): T | null {
     if (!token) {
         return null;
     }
@@ -13,7 +24,7 @@ export function parseJwtPayload(token) {
                 .join(''),
         );
 
-        return JSON.parse(jsonPayload);
+        return JSON.parse(jsonPayload) as T;
     } catch (error) {
         console.error('토큰 파싱 오류:', error);
         return null;

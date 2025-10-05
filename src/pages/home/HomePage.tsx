@@ -22,9 +22,7 @@ const HomePage = () => {
     return (
         <div>
             <MainLayout isBanner={true}>
-                <AuthUser>
-                    <HotAuctionList />
-                </AuthUser>
+                <HotAuctionList />
             </MainLayout>
             <img className={'my-20'} src={'/img/eventbanner.png'} />
             <Row>

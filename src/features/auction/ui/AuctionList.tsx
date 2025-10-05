@@ -33,7 +33,7 @@ const AuctionList: FC<Props> = ({ type }) => {
         return <>loading</>;
     }
     if (isError) {
-        return <>{error}</>;
+        return <>error</>;
     }
     if (!data || !data.data) {
         return <>nodata</>;

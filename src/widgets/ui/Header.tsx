@@ -4,18 +4,13 @@ import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router';
 import Cookies from 'js-cookie';
 import { parseJwtPayload } from '@shared/lib/jwtUtils.ts';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 const Header = () => {
     const [query, setQuery] = useState('');
-    const token = Cookies.get('access_token');
-    const [userInfo, setUserInfo] = useState<any>(null);
+    const { userAuth } = useAuthStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (token) {
-            setUserInfo({ ...parseJwtPayload(token) });
-        }
-    }, [token]);
+    console.log(userAuth);
 
     const handleSearch = () => {
         if (query.trim() !== '') {
@@ -32,7 +27,7 @@ const Header = () => {
                     고객센터
                 </Link>
                 <span>|</span>
-                {!userInfo ? (
+                {!userAuth ? (
                     <>
                         <Link to='/signup' className='hover:text-gray-800'>
                             회원가입
@@ -45,13 +40,11 @@ const Header = () => {
                 ) : (
                     <>
                         <Link to='/Profile' className='hover:text-gray-800'>
-                            {userInfo?.nickname}
+                            {userAuth?.nickname}
                         </Link>
                         <span>|</span>
                         <button
                             onClick={() => {
-                                Cookies.remove('access_token');
-                                Cookies.remove('refresh_token');
                                 navigate('/login');
                             }}
                             className='hover:text-gray-800'
