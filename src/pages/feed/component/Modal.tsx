@@ -32,6 +32,7 @@ export const Modal = ({ onClose }: ModalProps) => {
                 Authorization: `Bearer ${token}`,
             },
             body: formData,
+            credentials:'include'
         } as any);
 
         const result = await response.json();

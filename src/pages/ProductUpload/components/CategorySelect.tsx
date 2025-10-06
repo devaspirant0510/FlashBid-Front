@@ -19,9 +19,7 @@ export default function CategorySelect({
             try {
                 const res = await fetch(`${getServerURL()}/api/v1/category`, {
                     method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    credentials:'include'
                 });
 
                 if (!res.ok) throw new Error('카테고리 불러오기 실패');

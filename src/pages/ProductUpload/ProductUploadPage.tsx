@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MainLayout } from '@shared/layout';
+import React, {useState} from 'react';
+import {MainLayout} from '@shared/layout';
 import ImageUploader from '@/pages/ProductUpload/components/ImageUploader';
 import TitleInput from '@/pages/ProductUpload/components/TitleInput';
 import DescriptionInput from '@/pages/ProductUpload/components/DescriptionInput';
@@ -9,7 +9,7 @@ import DeliveryOptions from '@/pages/ProductUpload/components/DeliveryOptions';
 import SubmitButtons from '@/pages/ProductUpload/components/SubmitButtons';
 import CategorySelect from '@/pages/ProductUpload/components/CategorySelect';
 import Cookies from 'js-cookie';
-import { getServerURL } from '@shared/lib';
+import {getServerURL} from '@shared/lib';
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState('');
@@ -60,19 +60,19 @@ export default function ProductUploadPage() {
                     deliveryMethod === '택배'
                         ? 'PARCEL'
                         : deliveryMethod === '협의 후 결정'
-                          ? 'NEGOTIATE'
-                          : 'DIRECT',
+                            ? 'NEGOTIATE'
+                            : 'DIRECT',
                 deliveryInfo: {
                     deliveryFee: Number(deliveryFee.replace(/,/g, '')),
                 },
                 tradingArea:
                     deliveryMethod === '직거래' && selectedLocation
                         ? {
-                              latitude: selectedLocation.lat,
-                              longitude: selectedLocation.lng,
-                              radius: 3000, // 3km
-                              address: selectedLocation.address ?? '',
-                          }
+                            latitude: selectedLocation.lat,
+                            longitude: selectedLocation.lng,
+                            radius: 3000, // 3km
+                            address: selectedLocation.address ?? '',
+                        }
                         : null,
             };
 
@@ -80,7 +80,7 @@ export default function ProductUploadPage() {
             images.forEach((img) => {
                 formData.append('files', img.file);
             });
-            formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+            formData.append('data', new Blob([JSON.stringify(data)], {type: 'application/json'}));
 
             console.log('전송 데이터', data);
             console.log('formData 확인', formData.get('files'), formData.get('data'));
@@ -91,6 +91,7 @@ export default function ProductUploadPage() {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
+                credentials: 'include'
             } as any);
 
             if (!response.ok) throw new Error('업로드 실패');
@@ -109,18 +110,17 @@ export default function ProductUploadPage() {
             <div className='max-w-2xl mx-auto p-6'>
                 <h1 className='text-2xl font-bold mb-6 text-orange-600'>상품 등록</h1>
 
-                <ImageUploader images={images} setImages={setImages} />
-                <TitleInput title={title} onChange={(e) => setTitle(e.target.value)} />
+                <ImageUploader images={images} setImages={setImages}/>
+                <TitleInput title={title} onChange={(e) => setTitle(e.target.value)}/>
                 <CategorySelect
                     selectedCategoryId={selectedCategoryId}
                     setSelectedCategoryId={setSelectedCategoryId}
-                    token={token}
                 />
                 <DescriptionInput
                     description={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <AuctionTypeSelector auctionType={auctionType} setAuctionType={setAuctionType} />
+                <AuctionTypeSelector auctionType={auctionType} setAuctionType={setAuctionType}/>
                 <AuctionInfoInputs
                     startPrice={startPrice}
                     setStartPrice={setStartPrice}
@@ -144,7 +144,7 @@ export default function ProductUploadPage() {
                     setSelectedLocation={setSelectedLocation}
                 />
 
-                <SubmitButtons onSubmit={handleSubmit} />
+                <SubmitButtons onSubmit={handleSubmit}/>
             </div>
         </MainLayout>
     );

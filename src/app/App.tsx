@@ -1,10 +1,12 @@
 import './global.css';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RQProvider } from '@app/provider';
 import { LoadingPage } from '@pages/common';
 import PointPage from '@pages/profile/PointPage.tsx';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { axiosClient } from '@shared/lib';
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -33,6 +35,22 @@ const BlindAuctionChatPage = React.lazy(
 const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
 
 function App() {
+    const { setAccessToken } = useAuthStore();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axiosClient
+            .post('auth/token')
+            .then((r) => {
+                setAccessToken(r.data.data);
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) {
+        return <>loading</>;
+    }
     return (
         <RQProvider>
             <BrowserRouter>

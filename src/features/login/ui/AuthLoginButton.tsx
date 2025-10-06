@@ -43,7 +43,6 @@ const AuthLoginButton: FC<Props> = ({ auth }) => {
                         navigate('/register/sns', { state: { uuid: r.data.data.uuid } } as any);
                         return;
                     }
-                    Cookies.set('access_token', r.headers.authorization.split(' ')[1]);
                     window.history.replaceState(null, '', '/login');
                     navigate('/');
                 })

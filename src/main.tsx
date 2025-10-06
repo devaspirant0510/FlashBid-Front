@@ -11,6 +11,5 @@ async function enableMocking() {
     //
     // }
 }
-enableMocking().then(() => {
-    createRoot(document.getElementById('root')).render(<App />);
-});
+
+createRoot(document.getElementById('root')).render(<App />);
