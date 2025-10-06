@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { getServerURL } from '@shared/lib';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 const redirectUrl =
     import.meta.env.VITE_MODE === 'development'
@@ -20,6 +21,7 @@ type Props = {
 const AuthLoginButton: FC<Props> = ({ auth }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { setAccessToken } = useAuthStore();
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const code = queryParams.get('code');
@@ -34,7 +36,6 @@ const AuthLoginButton: FC<Props> = ({ auth }) => {
                 )
                 .then((r) => {
                     console.log(r.data);
-                    console.log(r.headers);
                     // 회원가입 상태가 UN_REGISTERED인 경우 회원가입 페이지로 이동
                     console.log(r?.data.data.userType);
                     if (r?.data.data.userType === 'UN_REGISTER') {
@@ -43,6 +44,8 @@ const AuthLoginButton: FC<Props> = ({ auth }) => {
                         navigate('/register/sns', { state: { uuid: r.data.data.uuid } } as any);
                         return;
                     }
+                    const accessToken = r.headers['authorization'] as string;
+                    setAccessToken(accessToken);
                     window.history.replaceState(null, '', '/login');
                     navigate('/');
                 })

@@ -4,7 +4,7 @@ import { AccessTokenPayload, parseJwtPayload } from '@shared/lib';
 
 interface AuthState {
     accessToken: string | null;
-    setAccessToken: (token: string) => void;
+    setAccessToken: (token: string | null) => void;
     getAccessToken: () => string | null;
     userAuth: AccessTokenPayload | null;
     setUserAuth: (data: AccessTokenPayload) => void;

@@ -1,14 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router';
-import Cookies from 'js-cookie';
-import { parseJwtPayload } from '@shared/lib/jwtUtils.ts';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+    AlertDialogDescription,
+} from '@shared/components/ui/alert-dialog';
+import { axiosClient } from '@shared/lib/axiosClient.ts';
+import { Button } from '@shared/components/ui/button.tsx';
 
 const Header = () => {
     const [query, setQuery] = useState('');
-    const { userAuth } = useAuthStore();
+    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+    const { userAuth, setAccessToken, setAuthUser } = useAuthStore();
     const navigate = useNavigate();
     console.log(userAuth);
 
@@ -19,8 +30,46 @@ const Header = () => {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            console.log('aa');
+            await axiosClient.post('/auth/logout');
+            console.log('bb');
+            console.log('naviaget login ');
+            navigate('/login');
+            setAccessToken(null);
+            setAuthUser(null);
+            setLogoutDialogOpen(false);
+        } catch (e) {
+            // 에러 핸들링 필요시 추가
+            setLogoutDialogOpen(false);
+        }
+    };
+
     return (
         <div className='rounded-br-[120px] border border-[#eee] shadow-sm bg-white'>
+            {/* 로그아웃 모달 */}
+            <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+                <AlertDialogContent className='w-[90vw] max-w-sm'>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            로그아웃하면 다시 로그인해야 서비스를 이용할 수 있습니다.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className='bg-gray-100 text-gray-700 hover:bg-gray-200'>
+                            취소
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleLogout}
+                            className='bg-[#f26522] text-white hover:bg-[#d3541a]'
+                        >
+                            로그아웃
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             {/* 상단 작은 네비 */}
             <div className='flex justify-end gap-3 px-8 py-1 text-xs text-gray-600'>
                 <Link to='/help' className='hover:text-gray-800'>
@@ -44,9 +93,7 @@ const Header = () => {
                         </Link>
                         <span>|</span>
                         <button
-                            onClick={() => {
-                                navigate('/login');
-                            }}
+                            onClick={() => setLogoutDialogOpen(true)}
                             className='hover:text-gray-800'
                         >
                             로그아웃
