@@ -29,6 +29,7 @@ const AuctionChatInput: FC<Props> = ({ client, auctionId, account }) => {
                 profileUrl: account.profileUrl,
                 userId: account.id,
             };
+            console.log(client);
             if (client) {
                 console.log(client);
                 setMessage('');

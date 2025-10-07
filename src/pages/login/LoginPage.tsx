@@ -6,12 +6,14 @@ import { AuthLoginButton } from '@/features/login/ui';
 import Cookies from 'js-cookie';
 import useInput from '@shared/hooks/useInput.ts';
 import { axiosClient } from '@shared/lib';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 function LoginPage() {
     const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
     const navigate = useNavigate(); // useNavigate 훅 호출
     const [email, onChangeEmail] = useInput({ initialValue: '' });
     const [password, onChangePassword] = useInput({ initialValue: '' });
+    const { setAccessToken } = useAuthStore();
 
     const handleLoginPanOpen = () => {
         setIsLoginPanOpen(true);
@@ -36,7 +38,8 @@ function LoginPage() {
                 withCredentials: true,
             } as any,
         );
-        console.log(result.headers);
+        console.log(result.headers['authorization']);
+        setAccessToken(result.headers['authorization']);
         navigate('/', { replace: true } as any);
     }, [email, password]);
 
@@ -171,13 +174,6 @@ function LoginPage() {
 
                 {/* 푸터 */}
                 <footer
-                    onClick={() => {
-                        Cookies.set(
-                            'access_token',
-                            'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc1MjMxMTg1NiwiZXhwIjoxNzgzODQ3ODU2LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoiMTIzNCIsInJvbGUiOiIxMjM0In0.ZDoQCYyOzOBBRXC4c5bJ78hneZu9uFAki4OnrPzMmxE',
-                        );
-                        window.location.reload();
-                    }}
                     style={{
                         marginTop: '80px',
                         backgroundColor: '#444',
