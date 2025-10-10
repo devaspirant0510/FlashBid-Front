@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { getServerURL } from '@shared/lib';
+import { axiosClient, getServerURL } from '@shared/lib';
+import axios from 'axios';
 
 interface ModalProps {
     onClose: () => void;
@@ -9,7 +10,6 @@ interface ModalProps {
 export const Modal = ({ onClose }: ModalProps) => {
     const [content, setContent] = useState('');
     const [file, setFile] = useState<File | null>(null);
-    const token = Cookies.get('access_token');
 
     const handleSubmit = async () => {
         if (!content.trim()) {
@@ -26,18 +26,20 @@ export const Modal = ({ onClose }: ModalProps) => {
             formData.append('files', file);
         }
 
-        const response = await fetch(`${getServerURL()}/api/v1/feed`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-            credentials:'include'
-        } as any);
+        const response = await axiosClient.post(
+            `${getServerURL()}/api/v1/feed`,
 
-        const result = await response.json();
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            } as any,
+        );
 
-        if (response.ok) {
+        const result = response.data;
+
+        if (response) {
             alert('성공');
             setContent('');
             setFile(null);
