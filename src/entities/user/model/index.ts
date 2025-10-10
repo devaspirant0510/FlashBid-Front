@@ -24,6 +24,15 @@ export type Account = {
     sellCount: number;
     reviewCount: number;
     userType: string;
+    point: number;
+};
+
+export type MyInfo = {
+    id: number;
+    email: string;
+    nickname: string;
+    profileUrl: string;
+    point: number;
 };
 
 export type AccountDto = {

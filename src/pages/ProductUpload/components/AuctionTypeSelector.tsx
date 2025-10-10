@@ -18,7 +18,7 @@ const AuctionTypeSelector = ({
                         auctionType === type ? 'bg-orange-500 text-white' : ''
                     }`}
                 >
-                    {type === 'realtime' ? '실시간 경매' : '블라인드 경매'}
+                    {type === 'live' ? '실시간 경매' : '블라인드 경매'}
                 </button>
             ))}
         </div>

@@ -7,6 +7,7 @@ import { LoadingPage } from '@pages/common';
 import PointPage from '@pages/profile/PointPage.tsx';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
 import { axiosClient } from '@shared/lib';
+import { ToastContainer } from 'react-toastify';
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -64,7 +65,7 @@ function App() {
                         <Route path='/auction/blind' element={<BlindAuctionPage />} />
                         <Route path='/auction/blind/:id' element={<BlindAuctionInfoPage />} />
 
-                        <Route path='/Profile' element={<ProfilePage />} />
+                        <Route path='/profile' element={<ProfilePage />} />
                         <Route path={'/profile/point'} element={<PointPage />} />
                         <Route path='/auction/productUpload' element={<ProductUploadPage />} />
                         <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
@@ -79,6 +80,7 @@ function App() {
                         <Route path={'/admin/home'} element={<AdminHomePage />} />
                         <Route path={'/shop'} element={<ShopPage />} />
                     </Routes>
+                    <ToastContainer />
                 </Suspense>
             </BrowserRouter>
         </RQProvider>

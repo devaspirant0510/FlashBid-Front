@@ -12,7 +12,7 @@ const HotAuctionItem: FC<Props> = ({ item }) => {
             <div className='w-full aspect-square overflow-hidden'>
                 <img
                     className='w-full h-full object-cover rounded-2xl'
-                    src={getServerURL() + item.images[0].url}
+                    src={getServerURL() + (item.images.length > 0 ? item.images[0].url : '')}
                     alt=''
                 />
             </div>
