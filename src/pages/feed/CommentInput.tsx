@@ -1,7 +1,7 @@
 // components/CommentInput.tsx
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { getServerURL } from '@shared/lib';
+import { axiosClient, getServerURL } from '@shared/lib';
 
 interface CommentInputProps {
     feedId: number | string;
@@ -19,19 +19,21 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
         }
 
         try {
-            const response = await fetch(`${getServerURL()}/api/v1/feed/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
+            console.log('asdf');
+            const response = await axiosClient.post(
+                `${getServerURL()}/api/v1/feed/comment`,
+                JSON.stringify({
                     contents,
                     feedId,
                 }),
-            });
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                },
+            );
 
-            if (!response.ok) throw new Error('댓글 등록 실패');
+            if (!response.data) throw new Error('댓글 등록 실패');
 
             setContents('');
             alert('댓글이 등록되었습니다.');
