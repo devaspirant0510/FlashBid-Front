@@ -4,6 +4,7 @@ import { Divider } from '@shared/ui';
 import React, { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import {
+    Clock1Icon,
     Clock3Icon,
     CreditCardIcon,
     ExpandIcon,
@@ -82,8 +83,12 @@ const AuctionList: FC<Props> = ({ type }) => {
                                     <strong>{v.biddingCount}</strong>
                                 </div>
                                 <div className='text-gray-400 text-sm flex gap-1 items-center'>
-                                    <Clock3Icon size={20} />
-                                    {DateUtil.timeAgo(v.auction.createdAt)}
+                                    {DateUtil.timeUntil(v.auction.endTime).includes('분') ? (
+                                        <Clock1Icon size={20} className={'text-uprimary'} />
+                                    ) : (
+                                        <Clock3Icon size={20} />
+                                    )}
+                                    {DateUtil.timeUntil(v.auction.endTime)}
                                 </div>
                             </div>
 

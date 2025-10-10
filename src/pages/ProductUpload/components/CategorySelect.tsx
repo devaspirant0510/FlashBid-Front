@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getServerURL } from '@shared/lib';
+import { axiosClient, getServerURL } from '@shared/lib';
 
 type Props = {
     selectedCategoryId: number | null; // null 허용으로 수정
     setSelectedCategoryId: (id: number | null) => void; // null 허용
-    token: string;
 };
 
 export default function CategorySelect({
@@ -17,14 +16,11 @@ export default function CategorySelect({
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`${getServerURL()}/api/v1/category`, {
-                    method: 'GET',
-                    credentials:'include'
-                });
+                const res = await axiosClient.get(`/api/v1/category`, {
+                    withCredentials: true,
+                } as any);
 
-                if (!res.ok) throw new Error('카테고리 불러오기 실패');
-
-                const result = await res.json();
+                const result = await res.data;
                 setCategories(result.data);
             } catch (error) {
                 console.error('카테고리 가져오기 에러:', error);

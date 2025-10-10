@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useQueryGetAuctionById } from '@/features/auction/lib';
 import { ClockIcon, UserIcon } from 'lucide-react';
 import AuctionParticipantsDialog from '@widgets/auction/dialog/AuctionParticipantsDialog.tsx';
+import { DateUtil } from '@shared/lib';
 
 type Props = {
     auctionId: number;
@@ -21,7 +22,7 @@ const AuctionStatus: FC<Props> = ({ auctionId }) => {
         <div className={'flex justify-between mb-2 mx-2'}>
             <div className={'flex text-[#BFA0A0] font-bold items-center gap-1'}>
                 <ClockIcon size={'17px'} className={' text-[#BFA0A0]'} />
-                <div>3일 5시간</div>
+                <div>{DateUtil.timeUntil(data.data.auction.endTime)}</div>
             </div>
             <AuctionParticipantsDialog auctionId={auctionId}>
                 <div className={'flex text-[#BFA0A0] font-bold items-center gap-1'}>

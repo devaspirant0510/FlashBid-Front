@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryGetAuctionById } from '@/features/auction/lib';
 import { Badge } from '@shared/components/ui/badge.tsx';
 import AuctionImageCarousel from '@widgets/auction/AuctionImageCarousel.tsx';
@@ -57,6 +57,38 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
     const onClickAuctionChat = useCallback(() => {
         mutate();
     }, [mutate]);
+    // 남은 시간 상태 및 실시간 갱신
+    const [remainTime, setRemainTime] = useState('');
+    // 경매 종료 여부
+    const isEnded = data && data.data && new Date(data.data.auction.endTime).getTime() < Date.now();
+    useEffect(() => {
+        if (!data || !data.data) return;
+        const endTime = data.data.auction.endTime;
+        let interval: NodeJS.Timeout | null = null;
+        const updateRemain = () => {
+            const remain = DateUtil.timeUntilDetail(endTime);
+            setRemainTime(remain);
+            // 1일 이하면 초단위, 1일 초과면 interval 해제
+            if (!/\d+일/.test(remain)) {
+                if (!interval) {
+                    interval = setInterval(updateRemain, 1000);
+                }
+            } else {
+                if (interval) {
+                    clearInterval(interval);
+                    interval = null;
+                }
+            }
+        };
+        updateRemain();
+        // 1일 이하로 진입하면 1초마다 갱신
+        if (!/\d+일/.test(DateUtil.timeUntilDetail(endTime))) {
+            interval = setInterval(updateRemain, 1000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [data]);
     if (isLoading) {
         return <>loading</>;
     }
@@ -90,7 +122,11 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
                 {DateUtil.convertDateFormat(data.data.auction.startTime, 'yyyy년MM월dd일 hh시mm분')}{' '}
                 ~ {DateUtil.convertDateFormat(data.data.auction.endTime, 'yyyy년MM월dd일 hh시mm분')}
             </div>
-            <AuctionImageCarousel images={data.data.images} isWishListed={data.data.isWishListed} />
+            <AuctionImageCarousel
+                images={data.data.images}
+                isWishListed={data.data.isWishListed}
+                className={isEnded ? 'grayscale' : ''}
+            />
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
                     <Badge className={'bg-[var(--uprimary)] text-white mb-1'}>판매자</Badge>
@@ -136,14 +172,20 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
                     <button
                         onClick={onClickAuctionChat}
                         className={
-                            'bg-uprimary p-4 rounded-xl border-2 border-usecondary w-full mt-4 '
+                            'bg-uprimary p-4 rounded-xl border-2 border-usecondary w-full mt-4 ' +
+                            (isEnded ? ' opacity-60 cursor-not-allowed' : '')
                         }
+                        disabled={isEnded}
                     >
                         <div>
-                            <div className={'text-xl text-white'}> 채팅방 참여하기</div>
+                            <div className={'text-xl text-white'}>
+                                {isEnded ? '마감된 경매' : '채팅방 참여하기'}
+                            </div>
                             <div className={'text-white'}>
-                                {Math.ceil(Math.random() * 3)}일 {Math.ceil(Math.random() * 11)}시간
-                                남음
+                                {isEnded
+                                    ? '경매가 마감되었습니다.'
+                                    : remainTime ||
+                                      DateUtil.timeUntilDetail(data.data.auction.endTime)}
                             </div>
                         </div>
                     </button>

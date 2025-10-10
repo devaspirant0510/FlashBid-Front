@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {MainLayout} from '@shared/layout';
+import React, { useState } from 'react';
+import { MainLayout } from '@shared/layout';
 import ImageUploader from '@/pages/ProductUpload/components/ImageUploader';
 import TitleInput from '@/pages/ProductUpload/components/TitleInput';
 import DescriptionInput from '@/pages/ProductUpload/components/DescriptionInput';
@@ -9,7 +9,9 @@ import DeliveryOptions from '@/pages/ProductUpload/components/DeliveryOptions';
 import SubmitButtons from '@/pages/ProductUpload/components/SubmitButtons';
 import CategorySelect from '@/pages/ProductUpload/components/CategorySelect';
 import Cookies from 'js-cookie';
-import {getServerURL} from '@shared/lib';
+import { axiosClient, getServerURL } from '@shared/lib';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState('');
@@ -29,9 +31,8 @@ export default function ProductUploadPage() {
         lng: number;
         address?: string;
     } | null>(null);
-
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-    const token = Cookies.get('access_token');
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         try {
@@ -60,19 +61,19 @@ export default function ProductUploadPage() {
                     deliveryMethod === '택배'
                         ? 'PARCEL'
                         : deliveryMethod === '협의 후 결정'
-                            ? 'NEGOTIATE'
-                            : 'DIRECT',
+                          ? 'NEGOTIATE'
+                          : 'DIRECT',
                 deliveryInfo: {
                     deliveryFee: Number(deliveryFee.replace(/,/g, '')),
                 },
                 tradingArea:
                     deliveryMethod === '직거래' && selectedLocation
                         ? {
-                            latitude: selectedLocation.lat,
-                            longitude: selectedLocation.lng,
-                            radius: 3000, // 3km
-                            address: selectedLocation.address ?? '',
-                        }
+                              latitude: selectedLocation.lat,
+                              longitude: selectedLocation.lng,
+                              radius: 3000, // 3km
+                              address: selectedLocation.address ?? '',
+                          }
                         : null,
             };
 
@@ -80,25 +81,24 @@ export default function ProductUploadPage() {
             images.forEach((img) => {
                 formData.append('files', img.file);
             });
-            formData.append('data', new Blob([JSON.stringify(data)], {type: 'application/json'}));
+            formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
 
             console.log('전송 데이터', data);
             console.log('formData 확인', formData.get('files'), formData.get('data'));
 
-            const response = await fetch(`${getServerURL()}/api/v1/auction/${auctionType}`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                credentials: 'include'
-            } as any);
+            const response = await axiosClient.post(
+                `${getServerURL()}/api/v1/auction/${auctionType}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                } as any,
+            );
 
-            if (!response.ok) throw new Error('업로드 실패');
-
-            const result = await response.json();
-            console.log('상품 등록 성공:', result);
-            alert('상품이 성공적으로 등록되었습니다!');
+            const result = response.data;
+            toast('상품 등록 성공', { type: 'success' });
+            navigate('/profile');
         } catch (err) {
             console.error(err);
             alert('상품 등록 중 오류가 발생했습니다.');
@@ -110,8 +110,8 @@ export default function ProductUploadPage() {
             <div className='max-w-2xl mx-auto p-6'>
                 <h1 className='text-2xl font-bold mb-6 text-orange-600'>상품 등록</h1>
 
-                <ImageUploader images={images} setImages={setImages}/>
-                <TitleInput title={title} onChange={(e) => setTitle(e.target.value)}/>
+                <ImageUploader images={images} setImages={setImages} />
+                <TitleInput title={title} onChange={(e) => setTitle(e.target.value)} />
                 <CategorySelect
                     selectedCategoryId={selectedCategoryId}
                     setSelectedCategoryId={setSelectedCategoryId}
@@ -120,7 +120,7 @@ export default function ProductUploadPage() {
                     description={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <AuctionTypeSelector auctionType={auctionType} setAuctionType={setAuctionType}/>
+                <AuctionTypeSelector auctionType={auctionType} setAuctionType={setAuctionType} />
                 <AuctionInfoInputs
                     startPrice={startPrice}
                     setStartPrice={setStartPrice}
@@ -144,7 +144,7 @@ export default function ProductUploadPage() {
                     setSelectedLocation={setSelectedLocation}
                 />
 
-                <SubmitButtons onSubmit={handleSubmit}/>
+                <SubmitButtons onSubmit={handleSubmit} />
             </div>
         </MainLayout>
     );

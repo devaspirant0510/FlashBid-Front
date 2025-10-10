@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router';
@@ -15,6 +15,8 @@ import {
 } from '@shared/components/ui/alert-dialog';
 import { axiosClient } from '@shared/lib/axiosClient.ts';
 import { Button } from '@shared/components/ui/button.tsx';
+import UserProfile from '@/features/user/ui/UserProfile.tsx';
+import AuctionChatInput from '@/features/auction/ui/AuctionChatInput.tsx';
 
 const Header = () => {
     const [query, setQuery] = useState('');
@@ -78,7 +80,7 @@ const Header = () => {
                 <span>|</span>
                 {!userAuth ? (
                     <>
-                        <Link to='/signup' className='hover:text-gray-800'>
+                        <Link to='/register' className='hover:text-gray-800'>
                             회원가입
                         </Link>
                         <span>|</span>
@@ -88,8 +90,19 @@ const Header = () => {
                     </>
                 ) : (
                     <>
-                        <Link to='/Profile' className='hover:text-gray-800'>
+                        <Link to='/profile' className='hover:text-gray-800'>
                             {userAuth?.nickname}
+                            <UserProfile userId={userAuth.id}>
+                                {(user) => {
+                                    return (
+                                        <>
+                                            <span className={'text-[10px]'}>
+                                                (포인트: {user.user.point}p)
+                                            </span>
+                                        </>
+                                    );
+                                }}
+                            </UserProfile>
                         </Link>
                         <span>|</span>
                         <button
