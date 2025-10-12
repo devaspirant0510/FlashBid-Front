@@ -1,109 +1,125 @@
-import {useQueryGetAuctionList} from "@/features/auction/lib";
-import {Card, CardContent, CardHeader} from "@shared/components/ui/card.tsx";
-import {Divider} from "@shared/ui";
-import {useCallback} from "react";
-import {useNavigate} from "react-router";
+import { useQueryGetAuctionList } from '@/features/auction/lib';
+import { Card, CardContent, CardHeader } from '@shared/components/ui/card.tsx';
+import { Divider } from '@shared/ui';
+import React, { FC, useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import {
+    Clock1Icon,
     Clock3Icon,
-    EyeIcon, HeartIcon,
+    CreditCardIcon,
+    ExpandIcon,
+    EyeIcon,
+    HeartIcon,
     MessageSquareDiffIcon,
     MessageSquareIcon,
     MessageSquareMoreIcon,
-    ViewIcon
-} from "lucide-react";
+    ViewIcon,
+} from 'lucide-react';
+import { DateUtil, getServerURL } from '@shared/lib';
+import { Button } from '@shared/components/ui/button.tsx';
 
-const AuctionList = () => {
+type Props = {
+    type: 'live' | 'blind';
+};
+const AuctionList: FC<Props> = ({ type }) => {
     const navigate = useNavigate();
-    const {isLoading, isError, data, error} = useQueryGetAuctionList();
+    const { isLoading, isError, data, error } = useQueryGetAuctionList(type);
 
     const onClickAuctionItem = useCallback((id: number) => {
-        navigate("/auction/live/" + id);
-    }, [])
-    console.log(data)
+        navigate(`/auction/${type}/` + id);
+    }, []);
+    console.log(data);
 
     if (isLoading) {
-        return (
-            <>
-                loading
-            </>
-        )
+        return <>loading</>;
     }
     if (isError) {
-        return (
-            <>{error}</>
-        );
+        return <>error</>;
     }
     if (!data || !data.data) {
-        return <>nodata</>
+        return <>nodata</>;
     }
     return (
         <>
-            {
-                data.data.map((v, index) => {
-                    return (
-                        <Card key={index} className={'my-4'} onClick={() => onClickAuctionItem(v.auction.id)}>
-                            <CardContent className={'flex'}>
-                                <div className={'flex-1'}>
-                                    <img className={" rounded-xl w-full h-48 object-fill border-1"}
-                                         src={import.meta.env.VITE_SERVER_URL + v.images[0].url}/>
-                                </div>
-                                <div className={'flex-4 ml-4 flex flex-col gap-2 justify-between'}>
-                                    <div
-                                        className={'text-gray-400'}>[{["패션의류/잡화", "스포츠/레저", "피규어", "IT기기"][Math.ceil(Math.random() * 3)]}]
-                                    </div>
-                                    <div className={'text-xl font-bold'}>
-                                        {v.auction.goods.title}
-                                    </div>
-                                    <div className={'text-gray-500 flex gap-1 text-sm'}>
-                                       <span className={'text-[#F7A17E]'}>
-                                           판매자
-                                       </span>
-                                        <span>
-                                            {v.auction.user.nickname}
-                                        </span>
-                                    </div>
-                                    <div className={'text-xl font-bold flex gap-2'}>
-                                        <span className={'text-[#F7A17E]'}>
-                                         현재가
-                                        </span>
-                                        <span>
-                                            {v.currentPrice?v.currentPrice.toLocaleString():v.auction.startPrice.toLocaleString()}p
-                                        </span>
-                                    </div>
-                                    <div>
-                                        참여자수 <strong>{Math.ceil(Math.random()*10)+5} 명</strong> | 입찰 <strong>{Math.ceil(Math.random() * 50)}</strong>
-                                    </div>
-                                    <div className={' text-gray-400 text-sm flex gap-1 items-center'}>
-                                        <Clock3Icon size={20}/>
-                                        {Math.ceil(Math.random() * 11)}
-                                        시간
-                                        {Math.ceil(Math.random() * 50)}
-                                        분 후 마감
+            {data.data.map((v, index) => {
+                return (
+                    <Card
+                        key={index}
+                        className='my-4'
+                        onClick={() => onClickAuctionItem(v.auction.id)}
+                    >
+                        <CardContent className='flex'>
+                            {/* 왼쪽 이미지 */}
+                            <div className='flex-1'>
+                                <img
+                                    className='rounded-xl w-full h-48 object-fill border-1'
+                                    src={getServerURL() + v.images[0].url}
+                                />
+                            </div>
 
-                                    </div>
+                            {/* 가운데 텍스트 */}
+                            <div className='flex-4 ml-4 flex flex-col gap-2 justify-between'>
+                                <div className='text-gray-400'>[{v.auction.category.name}]</div>
+                                <div className='text-xl font-bold'>{v.auction.goods.title}</div>
+                                <div className='text-gray-500 flex gap-1 text-sm'>
+                                    <span className='text-[#F7A17E]'>판매자</span>
+                                    <span>{v.auction.user.nickname}</span>
                                 </div>
-                                <div className={'flex h-full items-center flex-col'}>
-                                    <div className={'flex gap-1 justify-between w-16'}>
-                                        <EyeIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 300) + 50}
-                                    </div>
-                                    <div className={'flex gap-1 justify-between w-16'}>
-                                        <MessageSquareIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 100) + 20}
-                                    </div>
-                                    <div className={'flex gap-1 justify-between w-16'}>
-                                        <HeartIcon className={'text-black'}/>
-                                        {Math.ceil(Math.random() * 10) + 4}
-                                    </div>
+                                <div className='text-xl font-bold flex gap-2'>
+                                    <span className='text-[#F7A17E]'>현재가</span>
+                                    {type === 'blind' ? (
+                                        <>***,***p</>
+                                    ) : (
+                                        <span>
+                                            {v.currentPrice
+                                                ? v.currentPrice.toLocaleString()
+                                                : v.auction.startPrice.toLocaleString()}
+                                            p
+                                        </span>
+                                    )}
                                 </div>
-                            </CardContent>
-                        </Card>
+                                <div>
+                                    참여자수 <strong>{v.participateCount} 명</strong> | 입찰{' '}
+                                    <strong>{v.biddingCount}</strong>
+                                </div>
+                                <div className='text-gray-400 text-sm flex gap-1 items-center'>
+                                    {DateUtil.timeUntil(v.auction.endTime).includes('분') ? (
+                                        <Clock1Icon size={20} className={'text-uprimary'} />
+                                    ) : (
+                                        <Clock3Icon size={20} />
+                                    )}
+                                    {DateUtil.timeUntil(v.auction.endTime)}
+                                </div>
+                            </div>
 
-                    )
-                })
-            }
+                            {/* 오른쪽 아이콘 + 버튼 */}
+                            <div className='flex flex-col justify-between items-center h-48'>
+                                <div className='flex flex-col gap-2 items-center'>
+                                    <div className='flex gap-1 justify-between w-16'>
+                                        <EyeIcon className='text-uprimary' />0
+                                    </div>
+                                    <div className='flex gap-1 justify-between w-16'>
+                                        <MessageSquareIcon className='text-uprimary' />
+                                        {v.chatMessagingCount}
+                                    </div>
+                                    <div className='flex gap-1 justify-between w-16'>
+                                        <HeartIcon className='text-uprimary' />
+                                        {v.wishListCount}
+                                    </div>
+                                </div>
+
+                                <div className='w-full flex justify-center'>
+                                    <Button className='bg-white text-gray-500 border-gray-400 border rounded-full'>
+                                        상세보기
+                                        <ExpandIcon className='text-uprimary' />
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                );
+            })}
         </>
-    )
-
-}
+    );
+};
 export default AuctionList;

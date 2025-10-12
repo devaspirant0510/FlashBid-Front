@@ -1,21 +1,15 @@
-import {createRoot} from 'react-dom/client'
-import React from "react";
-import "@app/index.css";
-import {App} from "@/app";
+import { createRoot } from 'react-dom/client';
+import React from 'react';
+import '@app/index.css';
+import { App } from '@/app';
 
-
-import {worker} from "@app/mocks";
+import { worker } from '@app/mocks';
 
 async function enableMocking() {
-    if (import.meta.env.MODE !== "development") {
-        await worker.start()
-
-    }
+    // if (import.meta.env.VITE_MODE === "development") {
+    //     await worker.start()
+    //
+    // }
 }
-enableMocking().then(() => {
 
-    createRoot(document.getElementById('root')).render(
-        <App/>
-    );
-
-});
+createRoot(document.getElementById('root')).render(<App />);

@@ -5,11 +5,7 @@ type RowProps = {
 };
 
 const Row: FC<RowProps> = ({ children }) => {
-    return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
-            {children}
-        </div>
-    );
+    return <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>{children}</div>;
 };
 
 export default Row;

@@ -1,25 +1,28 @@
-import React, {FC} from "react";
-import {AuctionData} from "@entities/auction/model";
-import {UserIcon} from "lucide-react";
+import React, { FC } from 'react';
+import { AuctionData } from '@entities/auction/model';
+import { UserIcon } from 'lucide-react';
+import { getServerURL } from '@shared/lib';
 
-type Props ={
-    item:AuctionData
-}
-const HotAuctionItem:FC<Props> = ({item}) => {
+type Props = {
+    item: AuctionData;
+};
+const HotAuctionItem: FC<Props> = ({ item }) => {
     return (
-        <div className={"w-full"}>
-            <div className="w-full aspect-square overflow-hidden">
+        <div className={'w-full'}>
+            <div className='w-full aspect-square overflow-hidden'>
                 <img
-                    className="w-full h-full object-cover rounded-2xl"
-                    src={import.meta.env.VITE_SERVER_URL + item.images[0].url}
-                    alt=""
+                    className='w-full h-full object-cover rounded-2xl'
+                    src={getServerURL() + (item.images.length > 0 ? item.images[0].url : '')}
+                    alt=''
                 />
             </div>
             <div className={'truncate w-64'}>
-                <div className={"truncate w-full text-[#565656] text-lg"}>{item.auction.goods.title}</div>
+                <div className={'truncate w-full text-[#565656] text-lg'}>
+                    {item.auction.goods.title}
+                </div>
             </div>
-            <div className={"mt-4 flex"}>
-                <UserIcon className={'text-xs text-[#BFA0A0]'}/>
+            <div className={'mt-4 flex'}>
+                <UserIcon className={'text-xs text-[#BFA0A0]'} />
                 <div>{item.auction.user.nickname}</div>
             </div>
         </div>

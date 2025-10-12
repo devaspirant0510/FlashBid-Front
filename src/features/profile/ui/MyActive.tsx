@@ -1,96 +1,67 @@
-import {useState} from "react";
-import FollowerModal from "@/features/profile/ui/FollowerModal.tsx";
-import {useFollowStore} from "@shared/store/myProfileStore.ts";
+import { useState } from 'react';
+import { FollowListModal } from '@/features/profile/ui/FollowListModal.tsx';
 
-interface UserActiveProps {
+type Props = {
     followercount: number;
     followingcount: number;
     feedcount: number;
-}
+};
 
-const MyActive = ({followercount, followingcount, feedcount} : UserActiveProps) => {
+const MyActive = ({ followercount, followingcount, feedcount }: Props) => {
+    const [modalState, setModalState] = useState<{
+        isOpen: boolean;
+        type: 'followers' | 'followings' | null;
+    }>({
+        isOpen: false,
+        type: null,
+    });
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const  {setTab} = useFollowStore();
+    const openModal = (type: 'followers' | 'followings') => {
+        setModalState({ isOpen: true, type });
+    };
+
+    const closeModal = () => {
+        setModalState({ isOpen: false, type: null });
+    };
 
     return (
         <div>
-            <h2 className="font-semibold mb-4"
-                style={{color: '#f26522', fontSize: 24, fontWeight: 'bold'}}>
+            <h2
+                className='font-semibold mb-4'
+                style={{ color: '#f26522', fontSize: 24, fontWeight: 'bold' }}
+            >
                 MY 활동
             </h2>
-            <div className="bg-white py-7 rounded-xl shadow border grid grid-cols-3 text-center">
-                <div>
-                    <div className="text-l text-muted-foreground">
-                        게시물
-                    </div>
-                    <div className="mt-5"
-                         style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        {feedcount}
-                    </div>
-                </div>
-                <div className="cursor-pointer"
-                     onClick={() => {
-                         setModalOpen(true);
-                         setTab("followers")
-                     }}
+            <div className='grid grid-cols-3 gap-4 text-center'>
+                <div
+                    className='bg-white rounded-xl shadow border p-6 cursor-pointer hover:bg-orange-50 transition-colors'
+                    onClick={() => openModal('followers')}
                 >
-                    <div className="text-l text-muted-foreground">
-                        팔로워
-                    </div>
-                    <div className="mt-5"
-                         style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        {followercount}
-                    </div>
+                    <div className='text-lg font-semibold text-gray-600'>팔로워</div>
+                    <div className='text-3xl font-bold text-orange-500 mt-2'>{followercount}</div>
                 </div>
-                <div className="cursor-pointer"
-                     onClick={() => {
-                         setModalOpen(true);
-                         setTab("followings")
-                     }}>
-                    <div className="text-l text-muted-foreground">
-                        팔로잉
-                    </div>
-                    <div className="mt-5"
-                         style={{fontSize: 36, color: '#ED6C37', fontWeight: 'bold'}}>
-                        {followingcount}
-                    </div>
+                <div
+                    className='bg-white rounded-xl shadow border p-6 cursor-pointer hover:bg-orange-50 transition-colors'
+                    onClick={() => openModal('followings')}
+                >
+                    <div className='text-lg font-semibold text-gray-600'>팔로잉</div>
+                    <div className='text-3xl font-bold text-orange-500 mt-2'>{followingcount}</div>
+                </div>
+                <div className='bg-white rounded-xl shadow border p-6'>
+                    <div className='text-lg font-semibold text-gray-600'>게시글</div>
+                    <div className='text-3xl font-bold text-orange-500 mt-2'>{feedcount}</div>
                 </div>
             </div>
 
-            {modalOpen && (
-                <FollowerModal
-                    username="T1 Gumayusi"
-                    followers={[
-                        { id: 1, name: "이동헌", isMutual: true, canMessage: false },
-                        { id: 2, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 3, name: "이승호", isMutual: true, canMessage: false },
-                        { id: 4, name: "이동헌", isMutual: true, canMessage: false },
-                        { id: 5, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 6, name: "이승호", isMutual: true, canMessage: false },
-                        { id: 7, name: "이동헌", isMutual: true, canMessage: false },
-                        { id: 8, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 9, name: "이승호", isMutual: true, canMessage: false },
-                        { id: 10, name: "이동헌", isMutual: true, canMessage: false },
-                        { id: 11, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 12, name: "이승호", isMutual: true, canMessage: false }
-                    ]}
-                    followings={[
-                        { id: 13, name: "김태현", isMutual: false, canMessage: true },
-                        { id: 14, name: "오지원", isMutual: true, canMessage: true },
-                        { id: 15, name: "이승호", isMutual: true, canMessage: true },
-                        { id: 16, name: "이동헌", isMutual: true, canMessage: true },
-                        { id: 17, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 18, name: "이승호", isMutual: true, canMessage: true },
-                        { id: 19, name: "이동헌", isMutual: true, canMessage: true },
-                        { id: 20, name: "이승엽", isMutual: false, canMessage: true },
-                        { id: 21, name: "이승호", isMutual: true, canMessage: true }
-                    ]}
-                    onClose={() => setModalOpen(false)}
+            {modalState.isOpen && modalState.type && (
+                <FollowListModal
+                    isOpen={modalState.isOpen}
+                    onClose={closeModal}
+                    type={modalState.type}
                 />
             )}
         </div>
-    )
-}
+    );
+};
 
 export default MyActive;

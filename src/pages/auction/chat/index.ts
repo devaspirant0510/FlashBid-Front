@@ -1,1 +1,1 @@
-export {default as AuctionPage} from "./AuctionChatPage.tsx"
+export { default as AuctionPage } from './AuctionChatPage.tsx';

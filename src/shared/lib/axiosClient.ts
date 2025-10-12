@@ -1,27 +1,49 @@
-import axios from "axios";
-import {useAuthStore} from "@shared/store/AuthStore.ts";
+import axios from 'axios';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { getServerURL } from '@shared/lib/config.ts';
 
 export const axiosClient = axios.create({
-    baseURL: "http://172.27.226.250:8080/",
-
+    baseURL: `${getServerURL()}/`,
     withCredentials: true, // 리프레시 토큰은 쿠키로 전송
 });
 
-// axiosClient.interceptors.request.use(
-//     (config) => {
-//         let token = useAuthStore.getState().getAccessToken();
-//         // todo : 임시용 토큰 세팅
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }else{
-//             // token ="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y";
-//             token="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcyNzExMTkxODA1MjE1NzExNDgiLCJpYXQiOjE3NDk0ODE1MzAsImV4cCI6MTc4MTAxNzUzMCwiaWQiOiIxIiwidWlkIjoiMTE3MjcxMTE5MTgwNTIxNTcxMTQ4IiwiZW1haWwiOiJzZXVuZ2hvMDIwNTEwQGdtYWlsLmNvbSIsInJvbGUiOiJ0b3AgZ2FwIn0.hQoRfttnHV7oGOiLgbr90VQskLhywE4wd4_gfEOVGHY";
-//             config.headers.Authorization = "Bearer "+token;
-//             useAuthStore.getState().setAccessToken(token);
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
+axiosClient.interceptors.request.use((config) => {
+    const token = useAuthStore.getState().getAccessToken();
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+axiosClient.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // 401 + 아직 재시도 안 했을 때만
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true; // 무한 루프 방지!
+
+            try {
+                // refresh token으로 새 access token 발급
+                const { data } = await axios.post(`${getServerURL()}/auth/token`, {}, {
+                    withCredentials: true,
+                } as any);
+
+                const newAccessToken = data.data;
+
+                useAuthStore.getState().setAccessToken(newAccessToken);
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return axiosClient(originalRequest);
+            } catch (refreshError) {
+                console.error('리프레시 토큰도 만료됨 👉 로그인 페이지로 이동!');
+                console.log(refreshError.response.data.error.detail);
+                // location.href = '/login?error=loginfailed';
+                return Promise.reject('error');
+            }
+        }
+        console.log('asdf');
+
+        return Promise.reject('error');
+    },
+);

@@ -1,1 +1,1 @@
-export {default as AuthLoginButton} from "./AuthLoginButton.tsx"
+export { default as AuthLoginButton } from './AuthLoginButton.tsx';

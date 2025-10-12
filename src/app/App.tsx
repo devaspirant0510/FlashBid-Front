@@ -1,46 +1,90 @@
+import './global.css';
+import React, { Suspense, useEffect, useState } from 'react';
 
-import {BrowserRouter, Routes} from "react-router";
-import {Route} from "react-router-dom";
-import {HomePage} from "@pages/home";
-import {RQProvider} from "@app/provider";
-import {AuctionList} from "@pages/auction";
-import FeedPage from "@pages/feed/FeedPage.tsx";
-import LoginPage from "@pages/login/LoginPage.tsx";
-import ProfilePage from "@pages/profile/ProfilePage.tsx";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RQProvider } from '@app/provider';
+import { LoadingPage } from '@pages/common';
+import PointPage from '@pages/profile/PointPage.tsx';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { axiosClient } from '@shared/lib';
+import { ToastContainer } from 'react-toastify';
 
-import {LiveAuctionInfoPage, LiveAuctionPage} from "@pages/auction/realtime";
-import {ProductUploadPage} from "@pages/ProductUpload";
-import "./global.css"
-import FeedInfo from "@pages/feed/component/FeedInfo.tsx";
-import RegisterPage from "@/pages/register/RegisterPage";
-import AuctionChatPage from "@pages/auction/chat/AuctionChatPage.tsx";
-import BlindAuctionPage from "@pages/auction/blind/BlindAuctionPage.tsx";
-
+const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
+const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
+const LoginPage = React.lazy(() => import('@pages/login/LoginPage.tsx'));
+const ProfilePage = React.lazy(() => import('@pages/profile/ProfilePage.tsx'));
+const LiveAuctionPage = React.lazy(() => import('@pages/auction/realtime/LiveAuctionPage.tsx'));
+const LiveAuctionInfoPage = React.lazy(
+    () => import('@pages/auction/realtime/LiveAuctionInfoPage.tsx'),
+);
+const BlindAuctionInfoPage = React.lazy(
+    () => import('@pages/auction/blind/BlindAuctionInfoPage.tsx'),
+);
+const ProductUploadPage = React.lazy(() => import('@pages/ProductUpload/ProductUploadPage.tsx'));
+const FeedInfo = React.lazy(() => import('@pages/feed/component/FeedInfo.tsx'));
+const RegisterPage = React.lazy(() => import('@pages/register/RegisterPage.tsx'));
+const AuctionChatPage = React.lazy(() => import('@pages/auction/chat/AuctionChatPage.tsx'));
+const BlindAuctionPage = React.lazy(() => import('@pages/auction/blind/BlindAuctionPage.tsx'));
+const LiveAuctionBidHistoryPage = React.lazy(
+    () => import('@pages/auction/realtime/LiveAuctionBidHistoryPage.tsx'),
+);
+const RegisterSnsPage = React.lazy(() => import('@pages/register/RegisterSnsPage.tsx'));
+const AdminHomePage = React.lazy(() => import('@pages/admin/home/AdminHomePage.tsx'));
+const BlindAuctionChatPage = React.lazy(
+    () => import('@pages/auction/chat/BlindAuctionChatPage.tsx'),
+);
+const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
 
 function App() {
+    const { setAccessToken } = useAuthStore();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axiosClient
+            .post('auth/token')
+            .then((r) => {
+                setAccessToken(r.data.data);
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) {
+        return <>loading</>;
+    }
     return (
         <RQProvider>
             <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<HomePage/>}/>
-                    <Route path="/auction-list" element={<AuctionList/>}/>
-                    <Route path="/community" element={<FeedPage/>}/>
-                    <Route path="/Login" element={<LoginPage/>}/>
-                    <Route path="/auction/live" element={<LiveAuctionPage/>}/>
-                    <Route path="/auction/live/:id" element={<LiveAuctionInfoPage/>}/>
-                    <Route path="/auction/blind" element={<AuctionList/>}/>      
-                    <Route path="/auction-list" element={<AuctionList/>}/>
-                    <Route path={"/blind"} element={<BlindAuctionPage/>}/>
-                    <Route path="/Login" element={<LoginPage/>}/>
-                    <Route path="/Profile" element={<ProfilePage/>}/>
-                    <Route path="/auction/productUpload" element={<ProductUploadPage/>}/>
-                    <Route path="/auction/chat/:id" element={<AuctionChatPage/>}/>
-                    <Route path="/FeedInfo/:id" element={<FeedInfo />} />
-                    <Route path={"/register"} element={<RegisterPage/>}/>
-                </Routes>
+                <Suspense fallback={<LoadingPage />}>
+                    <Routes>
+                        <Route path='/' element={<HomePage />} />
+                        <Route path='/community' element={<FeedPage />} />
+                        <Route path='/Login' element={<LoginPage />} />
+                        <Route path='/auction/live' element={<LiveAuctionPage />} />
+                        <Route path='/auction/live/:id' element={<LiveAuctionInfoPage />} />
+                        <Route path='/auction/blind' element={<BlindAuctionPage />} />
+                        <Route path='/auction/blind/:id' element={<BlindAuctionInfoPage />} />
+
+                        <Route path='/profile' element={<ProfilePage />} />
+                        <Route path={'/profile/point'} element={<PointPage />} />
+                        <Route path='/auction/productUpload' element={<ProductUploadPage />} />
+                        <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
+                        <Route path='/auction/blind/chat/:id' element={<BlindAuctionChatPage />} />
+                        <Route path='/FeedInfo/:id' element={<FeedInfo />} />
+                        <Route path={'/register'} element={<RegisterPage />} />
+                        <Route path={'/register/sns'} element={<RegisterSnsPage />} />
+                        <Route
+                            path={'/auction/live/:id/bid-history'}
+                            element={<LiveAuctionBidHistoryPage />}
+                        />
+                        <Route path={'/admin/home'} element={<AdminHomePage />} />
+                        <Route path={'/shop'} element={<ShopPage />} />
+                    </Routes>
+                    <ToastContainer />
+                </Suspense>
             </BrowserRouter>
         </RQProvider>
-    )
+    );
 }
 
-export default App
+export default App;

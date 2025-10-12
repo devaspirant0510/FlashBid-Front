@@ -1,11 +1,12 @@
-import {useQuery} from "@tanstack/react-query";
-import {httpFetcher} from "@shared/lib";
-import {ApiResult} from "@entities/common";
-import {AuctionData} from "@entities/auction/model";
+import { useQuery } from '@tanstack/react-query';
+import { httpFetcher } from '@shared/lib';
+import { ApiResult } from '@entities/common';
+import { AuctionData } from '@entities/auction/model';
+import React, { FC } from 'react';
 
-export const useQueryGetAuctionList = () => {
+export const useQueryGetAuctionList = (type: 'live' | 'blind') => {
     return useQuery({
-        queryKey:["api","v1","auction","test","all"],
-        queryFn:httpFetcher<ApiResult<AuctionData[]>>
-    })
-}
+        queryKey: ['api', 'v1', 'auction', 'test', 'all', type],
+        queryFn: httpFetcher<ApiResult<AuctionData[]>>,
+    });
+};
