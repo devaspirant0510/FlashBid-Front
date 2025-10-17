@@ -17,6 +17,8 @@ import { Button } from '@shared/components/ui/button.tsx';
 import useInput from '@shared/hooks/useInput.ts';
 import MyProfile from '@/features/profile/ui/MyProfile.tsx';
 import { FetchMyProfile } from '@/features/user/ui';
+import { axiosClient } from '@shared/lib';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Params = {
     id: number;
@@ -30,22 +32,30 @@ const BiddingDialog: FC<Props> = ({ client }) => {
     const [open, setOpen] = useState(false);
     const { isLoading, isError, error, data } = useQueryGetAuctionById(auctionId!);
     const [value, onChange, setValue] = useInput({ initialValue: '' });
-    const onClickBid = useCallback(() => {
-        const jsondata = {
-            contents: value,
-            nickname: userNickname,
-            userId: userId,
-            bid: {
-                price: value,
-                prevPrice: data?.data?.currentPrice
-                    ? data.data.currentPrice
-                    : data?.data?.auction.startPrice,
-            },
-        };
-        client.publish({
-            destination: '/app/chat/send/' + auctionId,
-            body: JSON.stringify(jsondata),
-        });
+    const queryClient = useQueryClient();
+    const onClickBid = useCallback(async () => {
+        try {
+            await axiosClient.post('/api/v1/auction/payment', {
+                auctionId: auctionId,
+                amount: value,
+            });
+            const jsondata = {
+                contents: value,
+                nickname: userNickname,
+                userId: userId,
+                bid: {
+                    price: value,
+                    prevPrice: data?.data?.currentPrice
+                        ? data.data.currentPrice
+                        : data?.data?.auction.startPrice,
+                },
+            };
+            client.publish({
+                destination: '/app/chat/send/' + auctionId,
+                body: JSON.stringify(jsondata),
+            });
+            await queryClient.resetQueries({ queryKey: ['api', 'v1', 'profile', 'my'] } as any);
+        } catch (e) {}
         setOpen(false);
         setValue('');
     }, [value, data]);
