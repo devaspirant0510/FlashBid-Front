@@ -41,8 +41,11 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
             );
         },
         onSuccess: () => {
-            // 성공 시 채팅방 이동
-            navigate(`/auction/chat/${id}`);
+            if (type === 'blind') {
+                navigate(`/auction/blind/chat/${id}`);
+            } else {
+                navigate(`/auction/chat/${id}`);
+            }
         },
         onError: (error) => {
             console.error('경매 참여 실패', error);

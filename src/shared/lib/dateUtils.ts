@@ -8,10 +8,36 @@ import {
 
 export namespace DateUtil {
     const defaultDateFormat = 'yyyy-MM-dd';
+
     export function convertDateFormat(date: string, formatString: string) {
         const dateTime = new Date(date);
         return format(dateTime, formatString);
     }
+
+    export function timeUntilInfo(date: string): string {
+        const now = new Date();
+        const future = new Date(date);
+
+        const diffMinutes = differenceInMinutes(future, now);
+
+        if (diffMinutes <= 0) return '종료됨'; // 이미 지남
+
+        // 1시간 미만: 분 단위만 표시
+        if (diffMinutes < 60) {
+            return `${diffMinutes}분 후`;
+        }
+
+        const diffHours = differenceInHours(future, now);
+        if (diffHours < 24) {
+            const minutes = diffMinutes % 60;
+            return minutes > 0 ? `${diffHours}시간 ${minutes}분 후` : `${diffHours}시간 후`;
+        }
+
+        const diffDays = differenceInDays(future, now);
+        const remainingHours = diffHours % 24;
+        return remainingHours > 0 ? `${diffDays}일 ${remainingHours}시간 후` : `${diffDays}일 후`;
+    }
+
     export function timeAgo(date: string): string {
         const now = new Date();
         const past = new Date(date);
@@ -40,18 +66,20 @@ export namespace DateUtil {
         if (diffMinutes <= 0) return '종료됨'; // 이미 지남
 
         if (diffMinutes < 60) {
-            return `${diffMinutes}분 남음`;
+            return `${diffMinutes}분후 마감`;
         }
 
         const diffHours = differenceInHours(future, now);
         if (diffHours < 24) {
-            return `${diffHours}시간 남음`;
+            return `${diffHours}시간후 마감`;
         }
 
         const diffDays = differenceInDays(future, now);
-        return `${diffDays}일 남음`;
+        return `${diffDays}일후 마감`;
     }
-
+    export function toKSTISOString(date: Date) {
+        return new Date(date.getTime() + 9 * 60 * 60 * 1000).toISOString();
+    }
     export function timeUntilDetail(date: string): string {
         const now = new Date();
         const future = new Date(date);

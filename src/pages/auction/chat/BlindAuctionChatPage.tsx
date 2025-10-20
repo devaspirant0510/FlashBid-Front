@@ -4,7 +4,7 @@ import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
 import { MainLayout } from '@shared/layout';
 import AuctionChatHeader from '@/features/auction/ui/AuctionChatHeader.tsx';
 import StompClient from '@/features/auction/ui/StompClient.tsx';
-import AuctionChatMenu from '@/features/auction/ui/AuctionChatMenu.tsx';
+import AuctionChatSideMenu from '@/features/auction/ui/AuctionChatSideMenu.tsx';
 import AuctionStatus from '@/features/auction/ui/AuctionStatus.tsx';
 import AuctionChatBody from '@/features/auction/ui/AuctionChatBody.tsx';
 import UserProfile from '@/features/user/ui/UserProfile.tsx';
@@ -24,7 +24,7 @@ const BlindAuctionChatPage = () => {
                     {(client, auctionId) => {
                         return (
                             <div className={'flex gap-4'}>
-                                <AuctionChatMenu client={client} />
+                                <AuctionChatSideMenu client={client} />
                                 <div className={'flex-1'}>
                                     <div className={'flex flex-col '}>
                                         <AuctionStatus auctionId={auctionId} />

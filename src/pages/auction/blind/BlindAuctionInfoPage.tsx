@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router';
 import { AuctionInfo, RecommendsGoods } from '@/features/auction/ui';
 import { MainLayout } from '@shared/layout';
+import { useIncreaseAuctionView } from '@/features/auction/hooks';
 
 type Params = {
     id: number;
@@ -11,6 +12,7 @@ const BlindAuctionInfoPage = () => {
     if (!id) {
         return <>error</>;
     }
+    useIncreaseAuctionView(id);
     return (
         <MainLayout>
             <AuctionInfo id={id} type={'blind'} />

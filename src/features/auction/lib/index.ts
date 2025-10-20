@@ -4,3 +4,5 @@ export * from './useQueryGetAuctionById.ts';
 export * from './useQueryGetAllAuctionChat.ts';
 export * from './useQueryGetAuctionHistory.ts';
 export * from './useQueryGetAllParticipants.ts';
+export * from './useQueryLastBidPrice.ts';
+export * from './useQueryConfirmedBid.ts';

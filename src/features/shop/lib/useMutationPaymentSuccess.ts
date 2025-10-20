@@ -9,7 +9,7 @@ export interface PaymentSuccessPayload {
     receiptId: string;
     receiptUrl: string;
     status: string;
-    userId: string;
+    userId: number;
     pointAmount: number;
     paymentAmount: number;
     method: string;
