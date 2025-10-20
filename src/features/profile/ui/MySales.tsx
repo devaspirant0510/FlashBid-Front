@@ -1,6 +1,28 @@
-import MySalesList from '@/features/profile/ui/MySalesList.tsx';
+import MySalesList from './MySalesList';
+import { useQueryGetMySales } from '../lib/useQueryGetMySales';
 
 const MySales = () => {
+    const { data, isLoading, isError } = useQueryGetMySales();
+
+    const renderContent = () => {
+        if (isLoading) {
+            return <div className='py-10 text-gray-500'>판매 목록을 불러오는 중...</div>;
+        }
+        if (isError) {
+            return <div className='py-10 text-red-500'>판매 목록을 불러오는데 실패했습니다.</div>;
+        }
+        if (!data?.data || data.data.length === 0) {
+            return <div className='py-10 text-gray-500'>판매 내역이 없습니다.</div>;
+        }
+        return (
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+                {data.data.map((sale) => (
+                    <MySalesList key={sale.id} item={sale} />
+                ))}
+            </div>
+        );
+    };
+
     return (
         <section className='rounded-xl shadow border text-center px-8 py-5'>
             <div className='flex justify-between items-center mb-5'>
@@ -15,23 +37,20 @@ const MySales = () => {
                         className='text-sm text-muted-foreground mr-1'
                         style={{ color: '#ED6C37' }}
                     >
-                        업로드
+                        판매 완료
                     </span>
                     <span
                         className='text-sm text-muted-foreground mr-1'
                         style={{ color: '#ED6C37' }}
                     >
-                        3
+                        {data?.data?.length || 0}
                     </span>
                 </div>
             </div>
-            <div className='grid grid-cols-5 gap-4'>
-                {[1, 2, 3, 4].map((id) => (
-                    <MySalesList key={id} id={id} />
-                ))}
-            </div>
+            {renderContent()}
         </section>
     );
 };
 
 export default MySales;
+
