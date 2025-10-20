@@ -21,6 +21,7 @@ const StompClient: FC<Props> = ({ auctionId, children }) => {
     const clientRef = useRef<any>(null);
     const [client, setClient] = useState<any>(null);
     const { accessToken } = useAuthStore();
+    // TODO : 종료된 경매 접속 막기
 
     useEffect(() => {
         const clientdata = new StompJs.Client({
@@ -45,25 +46,28 @@ const StompClient: FC<Props> = ({ auctionId, children }) => {
             heartbeatOutgoing: 4000,
             onConnect: function (frame: IFrame) {
                 console.log(frame);
-                clientdata.subscribe('/topic/public/' + auctionId, (data) => {
+                clientdata.subscribe('/topic/public/' + auctionId, async (data) => {
                     const chatEntity = JSON.parse(data.body) as ChatEntity;
                     console.log('chatenti');
                     console.log(chatEntity);
+                    await queryClient.refetchQueries({
+                        queryKey: ['api', 'v1', 'auction', Number(auctionId)],
+                    });
                     if (!chatEntity.biddingLog) {
-                        queryClient.setQueryData(
-                            ['api', 'v1', 'auction', Number(auctionId)],
-                            (prev) => {
-                                console.log('preev');
-                                console.log(prev);
-                                return {
-                                    ...prev,
-                                    data: {
-                                        ...prev?.data,
-                                        lastBiddingLog: chatEntity.biddingLog,
-                                    },
-                                };
-                            },
-                        );
+                        // queryClient.setQueryData(
+                        //     ['api', 'v1', 'auction', Number(auctionId)],
+                        //     (prev) => {
+                        //         console.log('preev');
+                        //         console.log(prev);
+                        //         return {
+                        //             ...prev,
+                        //             data: {
+                        //                 ...prev?.data,
+                        //                 lastBiddingLog: chatEntity.biddingLog,
+                        //             },
+                        //         };
+                        //     },
+                        // );
                     }
                     queryClient.setQueryData(
                         ['api', 'v1', 'auction', 'chat', Number(auctionId)],
