@@ -8,7 +8,7 @@ type ColProps = {
     children?: ReactNode;
 };
 
-const Col: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
+const Column: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
     // 브라우저 너비에 따라 span 결정
     const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
@@ -32,4 +32,4 @@ const Col: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
     return <div style={{ width, padding: '8px', boxSizing: 'border-box' }}>{children}</div>;
 };
 
-export default Col;
+export default Column;

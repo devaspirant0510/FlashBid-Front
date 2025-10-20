@@ -9,4 +9,3 @@ export const useQueryGetUserById = (id: number) => {
         queryFn: httpFetcher<ApiResult<AccountDto>>,
     });
 };
-s;

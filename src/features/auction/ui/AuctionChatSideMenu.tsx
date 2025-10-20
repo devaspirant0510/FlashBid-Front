@@ -7,7 +7,7 @@ import AuctionHistoryDialog from '@widgets/auction/dialog/AuctionHistoryDialog.t
 type Props = {
     client: Client;
 };
-const AuctionChatMenu: FC<Props> = ({ client }) => {
+const AuctionChatSideMenu: FC<Props> = ({ client }) => {
     return (
         <div className={'flex flex-col rounded-2xl bg-[#FFD1BE] pt-8 h-full mt-8'}>
             <div
@@ -58,4 +58,4 @@ const AuctionChatMenu: FC<Props> = ({ client }) => {
     );
 };
 
-export default AuctionChatMenu;
+export default AuctionChatSideMenu;
