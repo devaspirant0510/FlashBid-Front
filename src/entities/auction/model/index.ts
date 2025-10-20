@@ -121,3 +121,12 @@ export type ConfirmedBid = {
     seller: Account;
     biddingLog: BidLog;
 };
+
+export type ConfirmedBidsEntity = {
+    id: number;
+    auction: Auction;
+    buyer: Account;
+    seller: Account;
+    finalPrice: number;
+    createdAt: string;
+};

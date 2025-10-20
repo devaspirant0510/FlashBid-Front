@@ -1,36 +1,31 @@
 import { FC } from 'react';
-import { useQueryGetAuctionById } from '@/features/auction/lib';
+import { getServerURL } from '@/shared/lib';
+import { ConfirmedBidsEntity } from '@entities/auction/model';
 
 type Props = {
-    id: number;
+    item: ConfirmedBidsEntity;
 };
 
-const MyPostProduct: FC<Props> = ({ id }) => {
-    const { isLoading, isError, data } = useQueryGetAuctionById(id);
-
-    if (isLoading) return <>로딩 중...</>;
-    if (isError || !data?.data) return <>데이터 오류</>;
-
-    const product = data.data;
-    const isDev = import.meta.env.VITE_MODE === 'development';
-    const baseURL = isDev
-        ? 'http://127.0.0.1:8080'
-        : `http://${import.meta.env.VITE_SERVER_URL}:8080`;
-    const imageUrl = baseURL + (product.images?.[0]?.url || '/fallback.png');
+const MyBuysList: FC<Props> = ({ item }) => {
+    // auction.goods.images 배열에서 이미지 URL을 가져옵니다.
+    const imageUrl =
+        item.auction.goods.images && item.auction.goods.images.length > 0
+            ? getServerURL() + item.auction.goods.images[0]
+            : '/img/default.png'; // 기본 이미지
 
     return (
         <div>
-            <div className='h-[160px] w-[160px] relative overflow-hidden'>
-                <img className='h-full w-full object-cover' src={imageUrl} alt='product' />
+            <div className='h-[160px] w-[160px] relative overflow-hidden rounded-md'>
+                <img className='h-full w-full object-cover' src={imageUrl} alt='purchased product' />
             </div>
 
             <div>
-                <div className='flex mt-2 flex-col'>
-                    <div className='text-[12px] text-black font-semibold text-left pr-1'>
-                        [카테고리]
+                <div className='flex mt-2 flex-col items-start'>
+                    <div className='text-[12px] text-gray-500 font-semibold pr-1'>
+                        [{item.auction.category.name}]
                     </div>
-                    <div className='text-[12px] text-black font-semibold text-left pr-1'>
-                        {product.auction.goods.title}
+                    <div className='text-[12px] text-black font-semibold pr-1 text-left'>
+                        {item.auction.goods.title}
                     </div>
                 </div>
             </div>
@@ -38,4 +33,5 @@ const MyPostProduct: FC<Props> = ({ id }) => {
     );
 };
 
-export default MyPostProduct;
+export default MyBuysList;
+

@@ -1,6 +1,28 @@
-import MyBuysList from '@/features/profile/ui/MyBuysList.tsx';
+import MyBuysList from './MyBuysList';
+import { useQueryGetMyPurchases } from '../lib/useQueryGetMyPurchases';
 
 const MyBuys = () => {
+    const { data, isLoading, isError } = useQueryGetMyPurchases();
+
+    const renderContent = () => {
+        if (isLoading) {
+            return <div className='py-10 text-gray-500'>구매 목록을 불러오는 중...</div>;
+        }
+        if (isError) {
+            return <div className='py-10 text-red-500'>구매 목록을 불러오는데 실패했습니다.</div>;
+        }
+        if (!data?.data || data.data.length === 0) {
+            return <div className='py-10 text-gray-500'>구매 내역이 없습니다.</div>;
+        }
+        return (
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+                {data.data.map((purchase) => (
+                    <MyBuysList key={purchase.id} item={purchase} />
+                ))}
+            </div>
+        );
+    };
+
     return (
         <section className='rounded-xl shadow border text-center px-8 py-5'>
             <div className='flex justify-between items-center mb-5'>
@@ -15,23 +37,20 @@ const MyBuys = () => {
                         className='text-sm text-muted-foreground mr-1'
                         style={{ color: '#ED6C37' }}
                     >
-                        구매
+                        구매 완료
                     </span>
                     <span
                         className='text-sm text-muted-foreground mr-1'
                         style={{ color: '#ED6C37' }}
                     >
-                        5
+                        {data?.data?.length || 0}
                     </span>
                 </div>
             </div>
-            <div className='grid grid-cols-5 gap-4'>
-                {[1, 5].map((id) => (
-                    <MyBuysList key={id} id={id} />
-                ))}
-            </div>
+            {renderContent()}
         </section>
     );
 };
 
 export default MyBuys;
+
