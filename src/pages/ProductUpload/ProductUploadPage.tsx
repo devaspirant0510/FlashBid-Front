@@ -9,7 +9,7 @@ import DeliveryOptions from '@/pages/ProductUpload/components/DeliveryOptions';
 import SubmitButtons from '@/pages/ProductUpload/components/SubmitButtons';
 import CategorySelect from '@/pages/ProductUpload/components/CategorySelect';
 import Cookies from 'js-cookie';
-import { axiosClient, getServerURL } from '@shared/lib';
+import { axiosClient, DateUtil, getServerURL } from '@shared/lib';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 
@@ -55,8 +55,8 @@ export default function ProductUploadPage() {
                 categoryId: selectedCategoryId,
                 startPrice: Number(startPrice),
                 bidUnit: Number(bidUnit),
-                startTime: startTime.toISOString(),
-                endTime: endTime.toISOString(),
+                startTime: DateUtil.toKSTISOString(startTime),
+                endTime: DateUtil.toKSTISOString(endTime),
                 deliveryType:
                     deliveryMethod === '택배'
                         ? 'PARCEL'

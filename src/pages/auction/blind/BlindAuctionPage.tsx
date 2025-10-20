@@ -1,13 +1,18 @@
 import React from 'react';
-import { MainLayout } from '@shared/layout';
+import { BaseLayout, MainLayout } from '@shared/layout';
 import { AuctionList, CategoryList } from '@/features/auction/ui';
 
 const BlindAuctionPage = () => {
     return (
-        <MainLayout>
+        <div>
+            <MainLayout className={'h-0'} headerClassName={'bg-udark'}>
+                {}
+            </MainLayout>
             <CategoryList type={'blind'} />
-            <AuctionList type={'blind'} />
-        </MainLayout>
+            <BaseLayout className={'bg-[#F0F1F5]'}>
+                <AuctionList type={'blind'} />
+            </BaseLayout>
+        </div>
     );
 };
 export default BlindAuctionPage;

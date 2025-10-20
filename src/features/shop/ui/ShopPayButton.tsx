@@ -4,6 +4,7 @@ import { Bootpay } from '@bootpay/client-js';
 import { useMutationPaymentSuccess } from '@/features/shop/lib/useMutationPaymentSuccess.ts';
 import Cookies from 'js-cookie';
 import { parseJwtPayload } from '@shared/lib/jwtUtils.ts';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 export type ShopPayButtonProps = {
     price: number; // KRW price in won
@@ -30,13 +31,7 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
     onError,
 }) => {
     const { mutateAsync: postPaymentSuccess } = useMutationPaymentSuccess();
-
-    const getUserId = (): string => {
-        const token = Cookies.get('access_token');
-        const payload = parseJwtPayload(token);
-        // Prefer uid, then id, then sub
-        return payload?.uid || payload?.id || payload?.sub || '';
-    };
+    const { userAuth } = useAuthStore();
 
     const handleClick = async () => {
         if (!enabled) return;
@@ -53,10 +48,10 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
                 method,
                 tax_free: 0,
                 user: {
-                    id: getUserId(),
-                    username: '',
+                    id: userAuth?.id,
+                    username: userAuth?.nickname,
                     phone: '',
-                    email: '',
+                    email: userAuth?.email,
                 },
                 items: [
                     {
@@ -87,7 +82,7 @@ const ShopPayButton: React.FC<ShopPayButtonProps> = ({
                         receiptId: response.receipt_id || '',
                         receiptUrl: response.receipt_url || '',
                         status: response.status || 'DONE',
-                        userId: getUserId(),
+                        userId: userAuth?.id!,
                         pointAmount: pointAmount,
                         paymentAmount: price,
                         method: response.method || method,

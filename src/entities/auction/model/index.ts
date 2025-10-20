@@ -114,6 +114,13 @@ export type AuctionParticipateUser = {
     id: number;
     profileUrl: string;
 };
+export type ConfirmedBid = {
+    id: number;
+    auction: Auction;
+    bidder: Account;
+    seller: Account;
+    biddingLog: BidLog;
+};
 
 export type ConfirmedBidsEntity = {
     id: number;

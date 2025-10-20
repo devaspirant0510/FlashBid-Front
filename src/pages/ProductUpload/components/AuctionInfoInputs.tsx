@@ -80,7 +80,7 @@ const AuctionInfoInputs = ({
                 className='w-full border rounded-md px-4 py-2'
                 value={auctionDate}
                 onChange={(e) => setAuctionDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]}
             />
         </div>
 

@@ -16,14 +16,13 @@ import {
 import { axiosClient } from '@shared/lib/axiosClient.ts';
 import { Button } from '@shared/components/ui/button.tsx';
 import UserProfile from '@/features/user/ui/UserProfile.tsx';
-import AuctionChatInput from '@/features/auction/ui/AuctionChatInput.tsx';
 
 const Header = () => {
     const [query, setQuery] = useState('');
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
     const { userAuth, setAccessToken, setAuthUser } = useAuthStore();
     const navigate = useNavigate();
-    console.log(userAuth);
+    // TODO : 리렌더링 이슈
 
     const handleSearch = () => {
         if (query.trim() !== '') {
@@ -151,7 +150,13 @@ const Header = () => {
                                 <Link to='/auction/productUpload' className='hover:underline'>
                                     상품판매
                                 </Link>
+
                             </li>
+                            <li>
+                                                              <Link to='/dm' className='hover:underline'>
+                                    채팅
+                                </Link>
+                          </li>
                         </ul>
                     </nav>
 

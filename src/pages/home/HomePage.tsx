@@ -8,7 +8,7 @@ import { MainLayout } from '@shared/layout';
 import AuthUser from '@/features/user/ui/AuthUser.tsx';
 import HotAuctionList from '@/features/main/ui/HotAuctionList.tsx';
 import { Row } from '@shared/ui';
-import Col from '@shared/ui/grid/Column.tsx';
+import Column from '@shared/ui/grid/Column.tsx';
 import React from 'react';
 import HotFeedList from '@/features/feed/ui/HotFeedList.tsx';
 
@@ -26,11 +26,11 @@ const HomePage = () => {
             </MainLayout>
             <img className={'my-20'} src={'/img/eventbanner.png'} />
             <Row>
-                <Col span={2} />
-                <Col span={20}>
+                <Column span={2} />
+                <Column span={20}>
                     <HotFeedList />
-                </Col>
-                <Col span={2} />
+                </Column>
+                <Column span={2} />
             </Row>
         </div>
     );
