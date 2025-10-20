@@ -1,7 +1,7 @@
 // src/pages/feed/CommentReplyInput.tsx
 
 import { useState } from 'react';
-import { getServerURL } from '@shared/lib';
+import { axiosClient, getServerURL } from '@shared/lib';
 
 interface Props {
     feedId: number;
@@ -18,24 +18,15 @@ const CommentReplyInput = ({ feedId, commentId, onReplyPosted }: Props) => {
             return;
         }
 
-        const token =
-            'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y';
         try {
-            const res = await fetch(`${getServerURL()}/api/v1/feed/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
+            const res = await axiosClient.post(
+                `${getServerURL()}/api/v1/feed/comment`,
+                JSON.stringify({
                     contents,
                     commentId,
                     feedId,
                 }),
-            });
-
-            if (!res.ok) throw new Error('대댓글 등록 실패');
-
+            );
             setContents('');
             alert('대댓글이 등록되었습니다.');
             onReplyPosted?.();

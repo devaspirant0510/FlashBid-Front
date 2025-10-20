@@ -10,7 +10,6 @@ interface CommentInputProps {
 
 const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
     const [contents, setContents] = useState('');
-    const token = Cookies.get('access_token');
 
     const handleSubmit = async () => {
         if (!contents.trim()) {
@@ -26,11 +25,6 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
                     contents,
                     feedId,
                 }),
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                },
             );
 
             if (!response.data) throw new Error('댓글 등록 실패');
