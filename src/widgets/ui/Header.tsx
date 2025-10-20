@@ -146,13 +146,17 @@ const Header = () => {
                                     커뮤니티
                                 </Link>
                             </li>
-                            {userAuth && (
-                                <li>
-                                    <Link to='/auction/productUpload' className='hover:underline'>
-                                        상품판매
-                                    </Link>
-                                </li>
-                            )}
+                            <li>
+                                <Link to='/auction/productUpload' className='hover:underline'>
+                                    상품판매
+                                </Link>
+
+                            </li>
+                            <li>
+                                                              <Link to='/dm' className='hover:underline'>
+                                    채팅
+                                </Link>
+                          </li>
                         </ul>
                     </nav>
 

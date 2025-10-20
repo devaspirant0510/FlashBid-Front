@@ -1,6 +1,5 @@
 import './global.css';
 import React, { Suspense, useEffect, useState } from 'react';
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RQProvider } from '@app/provider';
 import { LoadingPage } from '@pages/common';
@@ -35,6 +34,8 @@ const BlindAuctionChatPage = React.lazy(
 );
 const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
 
+const DMPage = React.lazy(() => import('@pages/dm/DMPage.tsx'));
+
 function App() {
     const { setAccessToken } = useAuthStore();
     const [loading, setLoading] = useState(true);
@@ -52,33 +53,36 @@ function App() {
     if (loading) {
         return <>loading</>;
     }
+
     return (
         <RQProvider>
             <BrowserRouter>
                 <Suspense fallback={<LoadingPage />}>
                     <Routes>
-                        <Route path='/' element={<HomePage />} />
-                        <Route path='/community' element={<FeedPage />} />
-                        <Route path='/Login' element={<LoginPage />} />
-                        <Route path='/auction/live' element={<LiveAuctionPage />} />
-                        <Route path='/auction/live/:id' element={<LiveAuctionInfoPage />} />
-                        <Route path='/auction/blind' element={<BlindAuctionPage />} />
-                        <Route path='/auction/blind/:id' element={<BlindAuctionInfoPage />} />
-
-                        <Route path='/profile' element={<ProfilePage />} />
-                        <Route path={'/profile/point'} element={<PointPage />} />
-                        <Route path='/auction/productUpload' element={<ProductUploadPage />} />
-                        <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
-                        <Route path='/auction/blind/chat/:id' element={<BlindAuctionChatPage />} />
-                        <Route path='/FeedInfo/:id' element={<FeedInfo />} />
-                        <Route path={'/register'} element={<RegisterPage />} />
-                        <Route path={'/register/sns'} element={<RegisterSnsPage />} />
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/community" element={<FeedPage />} />
+                        <Route path="/Login" element={<LoginPage />} />
+                        <Route path="/auction/live" element={<LiveAuctionPage />} />
+                        <Route path="/auction/live/:id" element={<LiveAuctionInfoPage />} />
+                        <Route path="/auction/blind" element={<BlindAuctionPage />} />
+                        <Route path="/auction/blind/:id" element={<BlindAuctionInfoPage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/profile/point" element={<PointPage />} />
+                        <Route path="/auction/productUpload" element={<ProductUploadPage />} />
+                        <Route path="/auction/chat/:id" element={<AuctionChatPage />} />
+                        <Route path="/auction/blind/chat/:id" element={<BlindAuctionChatPage />} />
+                        <Route path="/FeedInfo/:id" element={<FeedInfo />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/register/sns" element={<RegisterSnsPage />} />
                         <Route
-                            path={'/auction/live/:id/bid-history'}
+                            path="/auction/live/:id/bid-history"
                             element={<LiveAuctionBidHistoryPage />}
                         />
-                        <Route path={'/admin/home'} element={<AdminHomePage />} />
-                        <Route path={'/shop'} element={<ShopPage />} />
+                        <Route path="/admin/home" element={<AdminHomePage />} />
+                        <Route path="/shop" element={<ShopPage />} />
+
+                        {/* DM 페이지: 채팅방 목록 + 채팅창 */}
+                        <Route path="/dm" element={<DMPage />} />
                     </Routes>
                     <ToastContainer />
                 </Suspense>
