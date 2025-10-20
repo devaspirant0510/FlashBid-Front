@@ -1,8 +1,8 @@
 import React from 'react';
-import { MainLayout } from '@shared/layout';
+import { BaseLayout, MainLayout } from '@shared/layout';
 import AuctionChatHeader from '@/features/auction/ui/AuctionChatHeader.tsx';
 import { useParams } from 'react-router';
-import AuctionChatMenu from '@/features/auction/ui/AuctionChatMenu.tsx';
+import AuctionChatSideMenu from '@/features/auction/ui/AuctionChatSideMenu.tsx';
 import AuctionChatBody from '@/features/auction/ui/AuctionChatBody.tsx';
 import AuctionChatInput from '@/features/auction/ui/AuctionChatInput.tsx';
 import StompClient from '@/features/auction/ui/StompClient.tsx';
@@ -21,14 +21,15 @@ const AuctionChatPage = () => {
         return <>404 잘못된 접근입니다.</>;
     }
     return (
-        <MainLayout>
-            <div>
-                <AuctionChatHeader auctionId={id} type={'live'} />
+        <div>
+            <MainLayout>{}</MainLayout>
+            <AuctionChatHeader auctionId={id} type={'live'} />
+            <BaseLayout className={'bg-[#FAFAFA] pt-8'}>
                 <StompClient auctionId={id}>
                     {(client, auctionId) => {
                         return (
                             <div className={'flex gap-4'}>
-                                <AuctionChatMenu client={client} />
+                                <AuctionChatSideMenu client={client} />
                                 <div className={'flex-1'}>
                                     <div className={'flex flex-col '}>
                                         <AuctionStatus auctionId={auctionId} />
@@ -50,8 +51,8 @@ const AuctionChatPage = () => {
                         );
                     }}
                 </StompClient>
-            </div>
-        </MainLayout>
+            </BaseLayout>
+        </div>
     );
 };
 
