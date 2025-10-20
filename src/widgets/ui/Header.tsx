@@ -151,6 +151,9 @@ const Header = () => {
                                 <Link to='/auction/productUpload' className='hover:underline'>
                                     상품판매
                                 </Link>
+                                <Link to='/dm' className='hover:underline'>
+                                    채팅
+                                </Link>
                             </li>
                         </ul>
                     </nav>
