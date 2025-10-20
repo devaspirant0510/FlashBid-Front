@@ -16,7 +16,7 @@ const HotAuctionList = () => {
     return (
         <div>
             <div className={'text-5xl font-bold text-[#B2B2B2] text-center mt-24'}>
-                진행 중인 <span className={'text-uprimary'}>HOT 블라인드 경매</span>
+                진행 중인 <span className={'text-uprimary'}>HOT 경매</span>
             </div>
             <div className={'text-xl text-center text-[#F7A17E] my-4'}>HOT BLIND</div>
 

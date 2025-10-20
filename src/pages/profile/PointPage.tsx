@@ -25,7 +25,7 @@ const PointPage = () => {
                 };
             case 'GIFT':
                 return {
-                    label: '선물',
+                    label: '판매',
                     icon: <Gift className='w-3 h-3' />,
                     className: 'bg-purple-500 hover:bg-purple-600',
                     textColor: 'text-purple-600',
@@ -39,7 +39,7 @@ const PointPage = () => {
                 };
             default:
                 return {
-                    label: '기타',
+                    label: '환불',
                     icon: <Coins className='w-3 h-3' />,
                     className: 'bg-gray-400 hover:bg-gray-500',
                     textColor: 'text-gray-500',
@@ -86,7 +86,7 @@ const PointPage = () => {
             .reduce((sum, item) => sum + item.earnedPoint, 0);
 
         const totalSpent = data
-            .filter((item) => item.chargeType === 'PURCHASE')
+            .filter((item) => item.chargeType === 'PURCHASE' || item.chargeType === 'REFUND')
             .reduce((sum, item) => sum + item.earnedPoint, 0);
 
         return { totalEarned, totalSpent };
