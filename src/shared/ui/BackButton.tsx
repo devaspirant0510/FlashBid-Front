@@ -1,8 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { ArrowLeftIcon, BackpackIcon } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
-const BackButton = () => {
+type Props = {
+    className?: string;
+};
+const BackButton: FC<Props> = ({ className }) => {
     const navigate = useNavigate();
     const onClickBackButton = useCallback(() => {
         navigate(-1);
@@ -10,7 +13,7 @@ const BackButton = () => {
     return (
         <ArrowLeftIcon
             onClick={onClickBackButton}
-            className={'text-uprimary '}
+            className={`text-uprimary ${className}`}
             size={25}
         ></ArrowLeftIcon>
     );
