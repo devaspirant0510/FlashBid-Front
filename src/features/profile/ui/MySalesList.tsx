@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import { getServerURL } from '@/shared/lib';
-import { ConfirmedBidsEntity } from '@entities/auction/model';
+import { AuctionData } from '@entities/auction/model';
 
 type Props = {
-    item: ConfirmedBidsEntity;
+    item: AuctionData;
 };
 
 const MySalesList: FC<Props> = ({ item }) => {
     const imageUrl =
-        item.auction.goods.images && item.auction.goods.images.length > 0
-            ? getServerURL() + item.auction.goods.images[0]
-            : '/img/default.png'; // 기본 이미지
+        item.images && item.images.length > 0
+            ? getServerURL() + item.images[0].url
+            : '/img/default.png';
 
     return (
         <div>
@@ -26,6 +26,9 @@ const MySalesList: FC<Props> = ({ item }) => {
                     <div className='text-[12px] text-black font-semibold pr-1 text-left'>
                         {item.auction.goods.title}
                     </div>
+                    <div className='text-[13px] text-orange-600 font-bold pr-1 text-left mt-1'>
+                        {item.currentPrice?.toLocaleString() || item.auction.startPrice.toLocaleString()}원
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,4 +36,3 @@ const MySalesList: FC<Props> = ({ item }) => {
 };
 
 export default MySalesList;
-
