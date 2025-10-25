@@ -4,7 +4,7 @@ import { Button } from '@shared/components/ui/button.tsx';
 import { Car } from 'lucide-react';
 import { Card } from '@shared/components/ui/card.tsx';
 import { Link } from 'react-router';
-import { MainLayout } from '@shared/layout';
+import { AppLayout, BaseLayout, MainLayout } from '@shared/layout';
 import AuthUser from '@/features/user/ui/AuthUser.tsx';
 import HotAuctionList from '@/features/main/ui/HotAuctionList.tsx';
 import { Row } from '@shared/ui';
@@ -20,19 +20,15 @@ type TodoItem = {
 };
 const HomePage = () => {
     return (
-        <div>
-            <MainLayout isBanner={true}>
+        <AppLayout>
+            <BaseLayout>
                 <HotAuctionList />
-            </MainLayout>
-            <img className={'my-20'} src={'/img/eventbanner.png'} />
-            <Row>
-                <Column span={2} />
-                <Column span={20}>
-                    <HotFeedList />
-                </Column>
-                <Column span={2} />
-            </Row>
-        </div>
+            </BaseLayout>
+            <img src={'/img/eventbanner.png'} />
+            <BaseLayout>
+                <HotFeedList />
+            </BaseLayout>
+        </AppLayout>
     );
 };
 export default HomePage;

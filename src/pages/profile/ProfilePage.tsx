@@ -12,6 +12,7 @@ import { ApiResult } from '@entities/common';
 import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
 import { useQueryGetAccountStatus } from '@/features/profile/lib/useQueryGetAccountStatus.ts';
 import { EditProfileModal } from '@/features/profile/ui/EditProfileModal.tsx';
+import { AppLayout } from '@shared/layout';
 
 export const ProfilePage = () => {
     const [_, id] = useAuthUser();
@@ -34,9 +35,7 @@ export const ProfilePage = () => {
     }
 
     return (
-        <>
-            <Header />
-
+        <AppLayout>
             <div className='max-w-screen-xl mx-auto px-4'>
                 <section className='grid grid-cols-12 gap-6'>
                     <MyProfile
@@ -76,7 +75,7 @@ export const ProfilePage = () => {
                     currentProfileUrl={data.data.user.profileUrl}
                 />
             )}
-        </>
+        </AppLayout>
     );
 };
 

@@ -3,6 +3,7 @@ import { Header } from '@widgets/ui';
 import { Row } from '@shared/ui';
 import Column from '@shared/ui/grid/Column.tsx';
 import { BaseLayout } from '@shared/layout/index.ts';
+import Footer from '@widgets/ui/Footer.tsx';
 
 type Props = {
     children: React.ReactNode;
@@ -19,15 +20,6 @@ const MainLayout: FC<Props> = ({ children, isBanner, className, headerClassName 
                 <div className='relative z-20'>
                     <Header />
                 </div>
-                {isBanner && (
-                    <>
-                        <img
-                            className='relative w-full -mt-32 z-0'
-                            src='/img/banner.png'
-                            alt='banner logo'
-                        />
-                    </>
-                )}
             </div>
             <BaseLayout className={className}>{children}</BaseLayout>
         </>
