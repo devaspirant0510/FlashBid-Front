@@ -80,7 +80,7 @@ const AuctionWishListButton: FC<Props> = ({ isWishListed, auctionId }) => {
     }, [auctionId]);
     return (
         <>
-            <button className='absolute right-4 bottom-4 bg-white rounded-full p-1 flex items-center justify-center shadow'>
+            <button className='bg-white rounded-full p-1 flex items-center justify-center shadow'>
                 {isWishListed ? (
                     <HeartIcon
                         color='#e53e3e'
