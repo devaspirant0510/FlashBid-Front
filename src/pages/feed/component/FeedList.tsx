@@ -52,13 +52,17 @@ const FeedList = () => {
     if (!data || !data.data) return <>nodata</>;
 
     return (
-        <div className='px-4 py-6 flex flex-col items-center gap-6'>
+        <div className=' py-6 flex flex-col items-center gap-6'>
             {data.data.map((v) => {
                 const feedId = Number(v.feed.id);
                 const isVisible = commentVisibleMap[feedId] ?? false;
 
                 return (
-                    <div key={feedId} className='bg-white w-full rounded-xl shadow-md px-6 py-5'>
+                    <div
+                        key={feedId}
+                        style={{ borderColor: 'rgba(186, 186, 186, 0.5)' }}
+                        className='bg-white w-full rounded-xl shadow-md px-6 py-5 border-1 '
+                    >
                         <div className='flex items-center mb-4'>
                             <ProfileImage
                                 src={v.feed.user.profileUrl}
