@@ -1,14 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { AuctionData } from '@entities/auction/model';
 import { UserIcon } from 'lucide-react';
 import { getServerURL } from '@shared/lib';
+import { useNavigate } from 'react-router';
 
 type Props = {
     item: AuctionData;
 };
 const HotAuctionItem: FC<Props> = ({ item }) => {
+    const navigate = useNavigate();
+    const onClickItem = useCallback(() => {
+        navigate(`/auction/${item.auction.auctionType.toLowerCase()}/${item.auction.id}`);
+    }, [item]);
     return (
-        <div className={'w-full'}>
+        <div className={'w-full'} onClick={onClickItem}>
             <div className='w-full aspect-square overflow-hidden'>
                 <img
                     className='w-full h-full object-cover rounded-2xl'
