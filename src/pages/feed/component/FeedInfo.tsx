@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { httpFetcher } from '@shared/lib';
+import { getServerURL, httpFetcher } from '@shared/lib';
 import { ApiResult } from '@entities/common';
 import { useParams } from 'react-router';
 import { Header } from '@widgets/ui';

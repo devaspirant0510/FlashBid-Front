@@ -1,15 +1,17 @@
 import React, { FC, ReactNode } from 'react';
 
 type ColProps = {
-    span?: number; // 기본 24분할
+    span?: number;
+    xs?: number;
     sm?: number;
     md?: number;
     lg?: number;
+    xl?: number;
+    xxl?: number;
     children?: ReactNode;
 };
 
-const Column: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
-    // 브라우저 너비에 따라 span 결정
+const Column: FC<ColProps> = ({ span = 24, xs, sm, md, lg, xl, xxl: xxl, children }) => {
     const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
     React.useEffect(() => {
@@ -19,13 +21,12 @@ const Column: FC<ColProps> = ({ span = 24, sm, md, lg, children }) => {
     }, []);
 
     let currentSpan = span;
-    if (windowWidth >= 1024 && lg !== undefined) {
-        currentSpan = lg;
-    } else if (windowWidth >= 768 && md !== undefined) {
-        currentSpan = md;
-    } else if (windowWidth >= 640 && sm !== undefined) {
-        currentSpan = sm;
-    }
+    if (windowWidth >= 1536 && xxl !== undefined) currentSpan = xxl;
+    else if (windowWidth >= 1280 && xl !== undefined) currentSpan = xl;
+    else if (windowWidth >= 1024 && lg !== undefined) currentSpan = lg;
+    else if (windowWidth >= 768 && md !== undefined) currentSpan = md;
+    else if (windowWidth >= 640 && sm !== undefined) currentSpan = sm;
+    else if (xs !== undefined) currentSpan = xs;
 
     const width = `${(currentSpan / 24) * 100}%`;
 

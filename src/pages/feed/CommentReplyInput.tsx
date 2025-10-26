@@ -26,6 +26,11 @@ const CommentReplyInput = ({ feedId, commentId, onReplyPosted }: Props) => {
                     commentId,
                     feedId,
                 }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } as any,
             );
             setContents('');
             alert('대댓글이 등록되었습니다.');

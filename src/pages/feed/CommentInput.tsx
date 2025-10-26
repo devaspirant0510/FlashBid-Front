@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import Cookies from 'js-cookie';
 import { axiosClient, getServerURL } from '@shared/lib';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 interface CommentInputProps {
     feedId: number | string;
@@ -10,6 +12,7 @@ interface CommentInputProps {
 
 const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
     const [contents, setContents] = useState('');
+    const queryClient = useQueryClient();
 
     const handleSubmit = async () => {
         if (!contents.trim()) {
@@ -25,12 +28,24 @@ const CommentInput = ({ feedId, onCommentPosted }: CommentInputProps) => {
                     contents,
                     feedId,
                 }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } as any,
             );
 
             if (!response.data) throw new Error('댓글 등록 실패');
 
             setContents('');
-            alert('댓글이 등록되었습니다.');
+            await queryClient.refetchQueries({
+                queryKey: ['api', 'v1', 'feed', 'comment', feedId, 'root'],
+            });
+            await queryClient.refetchQueries({
+                queryKey: ['api', 'v1', 'feed', 'test-all'],
+            });
+            toast('댓글등록 성공', { type: 'success' });
+
             onCommentPosted?.();
         } catch (err: any) {
             alert(err.message || '에러 발생');
