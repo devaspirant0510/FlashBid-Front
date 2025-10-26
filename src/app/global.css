@@ -159,49 +159,36 @@ input[type='number'] {
     body {
         @apply bg-background text-foreground;
     }
-}
 
-/* ========== 전역 스크롤바 스타일 (모든 요소에 자동 적용) ========== */
-* {
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Firefox */
-}
+    /* 전역 스크롤바 스타일 */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(237, 108, 55, 0.4) transparent;
+    }
 
-*::-webkit-scrollbar {
-    width: 6px; /* 세로 스크롤바 */
-    height: 6px; /* 가로 스크롤바 */
-}
+    *::-webkit-scrollbar {
+        width: 0.5px;
+        height: 0.5px;
+    }
 
-*::-webkit-scrollbar-track {
-    background: transparent;
-}
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-*::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 9999px;
-}
+    *::-webkit-scrollbar-thumb {
+        background-color: rgba(237, 108, 55, 0.4);
+        border-radius: 4px;
+    }
 
-*::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(237, 108, 55, 0.6);
+    }
 
-*::-webkit-scrollbar-thumb:active {
-    background-color: rgba(0, 0, 0, 0.4);
-}
+    .dark *::-webkit-scrollbar-thumb {
+        background-color: rgba(237, 108, 55, 0.4);
+    }
 
-/* Dark mode */
-.dark *::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.dark *::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-.dark *::-webkit-scrollbar-thumb:active {
-    background-color: rgba(255, 255, 255, 0.4);
-}
-
-.dark * {
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    .dark * {
+        scrollbar-color: rgba(237, 108, 55, 0.4) transparent;
+    }
 }
