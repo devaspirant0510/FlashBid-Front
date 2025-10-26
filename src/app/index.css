@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 /* scroll.css 같은 파일에 추가하거나 스타일 태그에 넣기 */
 .scrollbar-thin::-webkit-scrollbar {
-    width: 4px; /* 가로 스크롤바 높이 */
-    height: 4px; /* 세로 스크롤바 높이 */
+    width: 2px; /* 가로 스크롤바 높이 */
+    height: 2px; /* 세로 스크롤바 높이 */
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {

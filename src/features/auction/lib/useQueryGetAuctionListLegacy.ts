@@ -4,7 +4,7 @@ import { ApiResult } from '@entities/common';
 import { AuctionData } from '@entities/auction/model';
 import React, { FC } from 'react';
 
-export const useQueryGetAuctionList = (type: 'live' | 'blind') => {
+export const useQueryGetAuctionListLegacy = (type: 'live' | 'blind') => {
     return useQuery({
         queryKey: ['api', 'v1', 'auction', 'test', 'all', type],
         queryFn: httpFetcher<ApiResult<AuctionData[]>>,
