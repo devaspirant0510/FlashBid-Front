@@ -15,6 +15,7 @@ import AuctionBiddingNow from '@/features/auction/ui/AuctionBiddingNow.tsx';
 import { useMutation } from '@tanstack/react-query';
 import FetchAccountStatus from '@/features/profile/ui/FetchAccountStatus.tsx';
 import { ProfileImage } from '@shared/ui';
+import { BaseLayout } from '@shared/layout';
 
 type Props = {
     id: number;
@@ -106,35 +107,44 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
     }
     return (
         <>
-            <div className={'flex gap-2'}>
-                <Badge className={'bg-[var(--uprimary)] text-white'}>
-                    카테고리 - {data.data.auction.category.name}
-                    {/*{data.data.goods.category}*/}
-                </Badge>
-                <div>경매번호 {data.data.auction.id}</div>
-            </div>
-            <div className={'mt-4 text-2xl font-bold flex justify-between'}>
-                <div>{data.data.auction.goods.title}</div>
-                <Button onClick={() => navigate(`/auction/live/${id}/bid-history`)}>
-                    <ChartLine />
-                    거래 내역 상세보기
-                </Button>
-            </div>
-            <div className={'text-[#E36E3E]'}>
-                경매 기간 :
-                {DateUtil.convertDateFormat(data.data.auction.startTime, 'yyyy년MM월dd일 hh시mm분')}{' '}
-                ~ {DateUtil.convertDateFormat(data.data.auction.endTime, 'yyyy년MM월dd일 hh시mm분')}
-            </div>
-            <AuctionImageCarousel
-                images={data.data.images}
-                isWishListed={data.data.isWishListed}
-                className={isEnded ? 'grayscale' : ''}
-            />
+            <BaseLayout>
+                <div className={'flex gap-2'}>
+                    <Badge className={'bg-[var(--uprimary)] text-white'}>
+                        카테고리 - {data.data.auction.category.name}
+                        {/*{data.data.goods.category}*/}
+                    </Badge>
+                    <div>경매번호 {data.data.auction.id}</div>
+                </div>
+                <div className={'mt-4 text-2xl font-bold flex justify-between'}>
+                    <div>{data.data.auction.goods.title}</div>
+                    <Button onClick={() => navigate(`/auction/live/${id}/bid-history`)}>
+                        <ChartLine />
+                        거래 내역 상세보기
+                    </Button>
+                </div>
+                <div className={'text-[#E36E3E]'}>
+                    경매 기간 :
+                    {DateUtil.convertDateFormat(
+                        data.data.auction.startTime,
+                        'yyyy년MM월dd일 hh시mm분',
+                    )}{' '}
+                    ~{' '}
+                    {DateUtil.convertDateFormat(
+                        data.data.auction.endTime,
+                        'yyyy년MM월dd일 hh시mm분',
+                    )}
+                </div>
+                <AuctionImageCarousel
+                    images={data.data.images}
+                    isWishListed={data.data.isWishListed}
+                />
+            </BaseLayout>
             <section className={'flex bg-ubackground1 p-4'}>
                 <article className={'flex flex-col flex-3'}>
                     <Badge className={'bg-[var(--uprimary)] text-white mb-1'}>판매자</Badge>
                     <FetchAccountStatus accountId={data.data.auction.user.id}>
                         {(data) => {
+                            console.log(data);
                             return (
                                 <div className={'flex'}>
                                     <ProfileImage size={60} src={data.profileUrl} />
