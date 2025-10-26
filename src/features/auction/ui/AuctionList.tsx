@@ -93,9 +93,9 @@ const AuctionList: FC<Props> = ({ type }) => {
                 >
                     <CardContent className='flex'>
                         {/* 왼쪽 이미지 */}
-                        <div className='flex-1'>
+                        <div className=''>
                             <img
-                                className='rounded-xl w-full h-48 object-fill border-1'
+                                className='rounded-xl w-48 h-48 object-fill border-1'
                                 src={getServerURL() + v.goodsImageUrl}
                                 alt='auction thumbnail'
                             />
