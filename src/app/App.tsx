@@ -7,6 +7,8 @@ import PointPage from '@pages/profile/PointPage.tsx';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
 import { axiosClient } from '@shared/lib';
 import { ToastContainer } from 'react-toastify';
+import SalesViewPage from "@/features/profile/ui/SalesViewPage";
+import BuysViewPage from "@/features/profile/ui/BuysViewPage";
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -35,6 +37,7 @@ const BlindAuctionChatPage = React.lazy(
 const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
 
 const DMPage = React.lazy(() => import('@pages/dm/DMPage.tsx'));
+
 
 function App() {
     const { setAccessToken } = useAuthStore();
@@ -68,6 +71,8 @@ function App() {
                         <Route path="/auction/blind/:id" element={<BlindAuctionInfoPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/profile/point" element={<PointPage />} />
+                        <Route path="/profile/sales-view" element={<SalesViewPage />} />
+                        <Route path="/profile/buys-view" element={<BuysViewPage />} />
                         <Route path="/auction/productUpload" element={<ProductUploadPage />} />
                         <Route path="/auction/chat/:id" element={<AuctionChatPage />} />
                         <Route path="/auction/blind/chat/:id" element={<BlindAuctionChatPage />} />
