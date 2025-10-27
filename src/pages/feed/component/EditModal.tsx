@@ -2,20 +2,30 @@ import { useState } from 'react';
 import { axiosClient, getServerURL } from '@shared/lib';
 import { useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
-
-interface ModalProps {
-    onClose: () => void;
-}
+import { faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface FileWithPreview {
     file: File;
     preview: string;
 }
 
-export const Modal = ({ onClose }: ModalProps) => {
-    const [content, setContent] = useState('');
-    const [files, setFiles] = useState<FileWithPreview[]>([]);
+interface ExistingImage {
+    url: string;
+    fileName: string;
+}
+
+interface EditModalProps {
+    feedId: number;
+    initialContent: string;
+    initialImages: ExistingImage[];
+    onClose: () => void;
+}
+
+export const EditModal = ({ feedId, initialContent, initialImages, onClose }: EditModalProps) => {
+    const [content, setContent] = useState(initialContent);
+    const [allImages, setAllImages] = useState<(FileWithPreview | (ExistingImage & { isExisting: true }))[]>(
+        initialImages.map((img) => ({ ...img, isExisting: true }))
+    );
     const [isLoading, setIsLoading] = useState(false);
 
     const queryClient = useQueryClient();
@@ -25,7 +35,7 @@ export const Modal = ({ onClose }: ModalProps) => {
             Array.from(e.target.files).forEach((selectedFile) => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    setFiles((prev) => [
+                    setAllImages((prev) => [
                         ...prev,
                         {
                             file: selectedFile,
@@ -38,8 +48,8 @@ export const Modal = ({ onClose }: ModalProps) => {
         }
     };
 
-    const handleRemoveFile = (index: number) => {
-        setFiles((prev) => prev.filter((_, i) => i !== index));
+    const handleRemoveImage = (index: number) => {
+        setAllImages((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async () => {
@@ -56,12 +66,16 @@ export const Modal = ({ onClose }: ModalProps) => {
                 'data',
                 new Blob([JSON.stringify({ content })], { type: 'application/json' }),
             );
-            files.forEach((fileWithPreview) => {
-                formData.append('files', fileWithPreview.file);
+
+            // 새로운 파일들만 추가 (isExisting이 없는 것들)
+            allImages.forEach((image) => {
+                if (!('isExisting' in image)) {
+                    formData.append('files', image.file);
+                }
             });
 
-            const response = await axiosClient.post(
-                `${getServerURL()}/api/v1/feed`,
+            const response = await axiosClient.patch(
+                `${getServerURL()}/api/v1/feed/${feedId}`,
                 formData,
                 {
                     headers: {
@@ -71,21 +85,19 @@ export const Modal = ({ onClose }: ModalProps) => {
             );
 
             if (response.data) {
-                alert('성공');
-                setContent('');
-                setFiles([]);
-
-                // ✅ FeedList 캐시 무효화
+                alert('수정 완료');
                 queryClient.invalidateQueries({
                     queryKey: ['api', 'v1', 'feed', 'test-all'],
                 });
-
+                queryClient.invalidateQueries({
+                    queryKey: ['api', 'v1', 'feed', feedId],
+                });
                 onClose();
             } else {
-                alert('실패: 글 작성에 실패했습니다.');
+                alert('실패: 수정에 실패했습니다.');
             }
         } catch (error: any) {
-            console.error('글 작성 에러:', error);
+            console.error('수정 에러:', error);
             alert(`실패: ${error.response?.data?.message || error.message}`);
         } finally {
             setIsLoading(false);
@@ -95,7 +107,7 @@ export const Modal = ({ onClose }: ModalProps) => {
     return (
         <div className='fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4'>
             <div
-                className='relative bg-white w-full max-w-lg rounded-2xl shadow-xl p-8'
+                className='relative bg-white w-full max-w-lg rounded-2xl shadow-xl p-8 max-h-[90vh] overflow-y-auto'
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -107,7 +119,7 @@ export const Modal = ({ onClose }: ModalProps) => {
                 </button>
 
                 <h2 className='text-center text-gray-800 text-2xl font-bold mb-6'>
-                    게시글 작성
+                    게시글 수정
                 </h2>
 
                 {/* 텍스트 영역 */}
@@ -119,9 +131,11 @@ export const Modal = ({ onClose }: ModalProps) => {
                     disabled={isLoading}
                 />
 
-                {/* 이미지 업로드 영역 */}
+                {/* 이미지 관리 영역 */}
                 <div className='mt-6'>
-                    {files.length === 0 ? (
+                    <p className='text-sm font-semibold text-gray-700 mb-3'>이미지</p>
+
+                    {allImages.length === 0 ? (
                         <label className='flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition'>
                             <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                                 <FontAwesomeIcon
@@ -147,20 +161,31 @@ export const Modal = ({ onClose }: ModalProps) => {
                     ) : (
                         <div>
                             <div className='grid grid-cols-2 gap-4 mb-4'>
-                                {files.map((fileWithPreview, index) => (
+                                {allImages.map((image, index) => (
                                     <div key={index} className='relative'>
                                         <img
-                                            src={fileWithPreview.preview}
-                                            alt={`미리보기 ${index + 1}`}
+                                            src={
+                                                'isExisting' in image
+                                                    ? `${getServerURL()}${image.url}`
+                                                    : image.preview
+                                            }
+                                            alt={
+                                                'isExisting' in image
+                                                    ? image.fileName
+                                                    : `미리보기 ${index + 1}`
+                                            }
                                             className='w-full h-32 object-cover rounded-lg border border-gray-200'
                                         />
                                         <button
                                             type='button'
-                                            onClick={() => handleRemoveFile(index)}
+                                            onClick={() => handleRemoveImage(index)}
                                             disabled={isLoading}
-                                            className='absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-1.5 shadow-md transition disabled:opacity-50'
+                                            className='absolute top-2 right-2 hover:bg-red-600 rounded-full p-1.5 shadow-md transition disabled:opacity-50'
                                         >
-                                            <span className='text-gray-600 text-sm'>×</span>
+                                            <FontAwesomeIcon
+                                                icon={faXmark}
+                                                className='text-white text-sm'
+                                            />
                                         </button>
                                     </div>
                                 ))}
@@ -194,7 +219,7 @@ export const Modal = ({ onClose }: ModalProps) => {
                         onClick={handleSubmit}
                         disabled={isLoading}
                     >
-                        {isLoading ? '작성 중...' : '게시하기'}
+                        {isLoading ? '수정 중...' : '수정하기'}
                     </button>
                 </div>
             </div>

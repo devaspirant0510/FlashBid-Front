@@ -24,13 +24,14 @@ type Message = {
 const DMChatBody: React.FC<Props> = ({
                                          client,
                                          roomId,
-                                         userId, // ✅ 비구조화 할당
+                                         userId,
                                          onMessageReceived,
                                          onMessagesRead,
                                      }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [auctionInfo, setAuctionInfo] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isPurchasing, setIsPurchasing] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
     const subscriptionRef = useRef<any>(null);
 
@@ -75,6 +76,49 @@ const DMChatBody: React.FC<Props> = ({
         }
     }, [roomId, onMessagesRead]);
 
+    const handlePurchaseConfirmation = useCallback(async () => {
+        if (!auctionInfo || isPurchasing) return;
+
+        const isBuyer = auctionInfo.sellerId !== userId;
+        if (!isBuyer) {
+            alert('판매자는 구매 확정을 할 수 없습니다.');
+            return;
+        }
+
+        if (!confirm('구매를 확정하시겠습니까?')) {
+            return;
+        }
+
+        try {
+            setIsPurchasing(true);
+
+            const response = await axiosClient.post(
+                `${getServerURL()}/api/auction/purchase/confirm`,
+                {
+                    auctionId: auctionInfo.id,
+                    buyerId: userId,
+                    sellerId: auctionInfo.sellerId,
+                    amount: auctionInfo.price, // 또는 auctionInfo.finalPrice
+                    roomId: roomId,
+                }
+            );
+
+            if (response.data) {
+                alert('구매가 확정되었습니다. 판매자에게 결제액이 입금되었습니다.');
+                // 경매 정보 업데이트 (상태를 '판매완료' 등으로 변경)
+                setAuctionInfo((prev: any) => ({
+                    ...prev,
+                    status: 'SOLD', // 또는 서버에서 반환한 상태
+                }));
+            }
+        } catch (error: any) {
+            console.error('구매 확정 실패:', error);
+            alert(error.response?.data?.message || '구매 확정 중 오류가 발생했습니다.');
+        } finally {
+            setIsPurchasing(false);
+        }
+    }, [auctionInfo, userId, roomId, isPurchasing]);
+
     // 1. 채팅방 내역 로드
     useEffect(() => {
         const loadChatHistory = async () => {
@@ -115,7 +159,7 @@ const DMChatBody: React.FC<Props> = ({
         loadChatHistory();
     }, [roomId]);
 
-    // 2. STOMP 구독 (✅ 수정된 부분)
+    // 2. STOMP 구독
     useEffect(() => {
         if (!client || !client.connected) {
             return;
@@ -123,27 +167,19 @@ const DMChatBody: React.FC<Props> = ({
 
         subscriptionRef.current = client.subscribe(`/topic/dm/${roomId}`, (msg: any) => {
             try {
-                const parsed = JSON.parse(msg.body) as Message; // ✅ 타입 명시
+                const parsed = JSON.parse(msg.body) as Message;
 
                 if (!parsed.contents || !parsed.contents.startsWith('AUCTION_INFO:')) {
-                    // 1. 수신한 메시지를 화면에 추가
                     setMessages((prev) => {
                         const updated = [...prev, parsed];
                         return updated;
                     });
 
-                    // ✅ 2. 발신자와 현재 유저 ID 비교
                     if (parsed.senderId === userId) {
-                        // "나" (발신자)
-                        // 채팅방 목록의 '마지막 메시지'를 갱신하기 위해 호출
                         if (onMessageReceived) {
                             onMessageReceived();
                         }
                     } else {
-                        // "상대방" (수신자)
-                        // 방금 수신한 메시지를 '읽음' 처리하기 위해 호출
-                        // 이 함수는 성공 시 onMessagesRead (refreshRooms)를 호출하여
-                        // 뱃지(unreadCount)를 0으로 갱신합니다.
                         markMessagesAsRead();
                     }
                 }
@@ -157,10 +193,9 @@ const DMChatBody: React.FC<Props> = ({
                 subscriptionRef.current.unsubscribe();
             }
         };
-        // ✅ 3. 의존성 배열에 markMessagesAsRead와 userId 추가
     }, [client, roomId, onMessageReceived, markMessagesAsRead, userId]);
 
-    // 3. 채팅방 로드 완료 시 '읽음' 처리 (최초 1회)
+    // 3. 채팅방 로드 완료 시 '읽음' 처리
     useEffect(() => {
         if (!isLoading) {
             markMessagesAsRead();
@@ -185,13 +220,39 @@ const DMChatBody: React.FC<Props> = ({
         );
     }
 
+    // ✅ 현재 사용자가 구매자인지 확인
+    const isBuyer = auctionInfo && auctionInfo.sellerId !== userId;
+    const isAuctionSold = auctionInfo?.status === 'SOLD' || auctionInfo?.status === 'COMPLETED';
+
     return (
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 bg-gray-50">
             {auctionInfo && (
-                <AuctionInfoCard
-                    auctionData={auctionInfo}
-                    serverUrl={getServerURL()}
-                />
+                <div className="mb-4">
+                    <AuctionInfoCard
+                        auctionData={auctionInfo}
+                        serverUrl={getServerURL()}
+                    />
+
+                    {/* ✅ 구매 확정 버튼 - 구매자이고 아직 판매되지 않았을 때만 표시 */}
+                    {isBuyer && !isAuctionSold && (
+                        <div className="mt-4 flex gap-2">
+                            <button
+                                onClick={handlePurchaseConfirmation}
+                                disabled={isPurchasing}
+                                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition"
+                            >
+                                {isPurchasing ? '처리 중...' : '구매 확정'}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* ✅ 판매 완료 상태 표시 */}
+                    {isAuctionSold && (
+                        <div className="mt-4 bg-gray-200 text-gray-700 py-3 rounded-lg text-center font-semibold">
+                            판매 완료
+                        </div>
+                    )}
+                </div>
             )}
 
             {messages.length === 0 ? (
@@ -214,7 +275,7 @@ const DMChatBody: React.FC<Props> = ({
                                 <div
                                     className="my-4 text-center text-xs text-gray-500 bg-gray-200 rounded-full px-3 py-1 mx-auto w-fit">
                                     {formatDateSeparator(currentMessage.createdAt)}
-                                    D/</div>
+                                </div>
                             );
                         } else if (prevMessage && prevMessage.createdAt) {
                             const prevDate = new Date(prevMessage.createdAt);
@@ -262,11 +323,10 @@ const DMChatBody: React.FC<Props> = ({
                                     </div>
 
                                     <div className="flex flex-col items-center gap-1">
-                                        {/* ✅ 내 메시지일 때만 읽음 상태 표시 */}
                                         {m.senderId === userId && m.readCount !== undefined && (
                                             <span className="text-xs text-gray-400">
-    {m.readCount === 0 ? '1' : ''}
-  </span>
+                                                {m.readCount === 0 ? '1' : ''}
+                                            </span>
                                         )}
                                         {showTime && (
                                             <span className="text-xs text-gray-400 whitespace-nowrap">
