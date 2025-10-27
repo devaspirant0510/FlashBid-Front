@@ -17,8 +17,9 @@ const MyBuysList: FC<Props> = ({ item }) => {
 
     const imageUrl =
         item.images && item.images.length > 0
-            ? getServerURL() + item.images[0].url
+            ? `${getServerURL()}${item.images[0].url}`
             : '/img/default.png';
+
 
     const seller = auction.user;
 

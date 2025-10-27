@@ -12,11 +12,11 @@ const MySalesList: FC<Props> = ({ item }) => {
         return null;
     }
 
-    const { auction } = item; // [수정] item에서 auction을 미리 추출합니다.
+    const { auction } = item;
 
     const imageUrl =
         item.images && item.images.length > 0
-            ? getServerURL() + item.images[0].url
+            ? `${getServerURL()}${item.images[0].url}`
             : '/img/default.png';
 
     const isEnded = new Date(auction.endTime) < new Date();
