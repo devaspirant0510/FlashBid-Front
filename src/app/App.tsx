@@ -37,7 +37,7 @@ const BlindAuctionChatPage = React.lazy(
 const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
 
 const DMPage = React.lazy(() => import('@pages/dm/DMPage.tsx'));
-
+const NotFoundPage = React.lazy(() => import('@pages/common/NotFoundPage.tsx'));
 
 function App() {
     const { setAccessToken } = useAuthStore();
@@ -62,34 +62,35 @@ function App() {
             <BrowserRouter>
                 <Suspense fallback={<LoadingPage />}>
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/community" element={<FeedPage />} />
-                        <Route path="/Login" element={<LoginPage />} />
-                        <Route path="/auction/live" element={<LiveAuctionPage />} />
-                        <Route path="/auction/live/:id" element={<LiveAuctionInfoPage />} />
-                        <Route path="/auction/blind" element={<BlindAuctionPage />} />
-                        <Route path="/auction/blind/:id" element={<BlindAuctionInfoPage />} />
-                        <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/profile/point" element={<PointPage />} />
-                        <Route path="/profile/sales-view" element={<SalesViewPage />} />
-                        <Route path="/profile/buys-view" element={<BuysViewPage />} />
-                        <Route path="/auction/productUpload" element={<ProductUploadPage />} />
-                        <Route path="/auction/chat/:id" element={<AuctionChatPage />} />
-                        <Route path="/auction/blind/chat/:id" element={<BlindAuctionChatPage />} />
-                        <Route path="/FeedInfo/:id" element={<FeedInfo />} />
-                        <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/register/sns" element={<RegisterSnsPage />} />
+                        <Route path='/' element={<HomePage />} />
+                        <Route path='/community' element={<FeedPage />} />
+                        <Route path='/Login' element={<LoginPage />} />
+                        <Route path='/auction/live' element={<LiveAuctionPage />} />
+                        <Route path='/auction/live/:id' element={<LiveAuctionInfoPage />} />
+                        <Route path='/auction/blind' element={<BlindAuctionPage />} />
+                        <Route path='/auction/blind/:id' element={<BlindAuctionInfoPage />} />
+                        <Route path='/profile' element={<ProfilePage />} />
+                        <Route path='/profile/point' element={<PointPage />} />
+                        <Route path='/profile/sales-view' element={<SalesViewPage />} />
+                        <Route path='/profile/buys-view' element={<BuysViewPage />} />
+                        <Route path='/auction/productUpload' element={<ProductUploadPage />} />
+                        <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
+                        <Route path='/auction/blind/chat/:id' element={<BlindAuctionChatPage />} />
+                        <Route path='/FeedInfo/:id' element={<FeedInfo />} />
+                        <Route path='/register' element={<RegisterPage />} />
+                        <Route path='/register/sns' element={<RegisterSnsPage />} />
                         <Route
-                            path="/auction/live/:id/bid-history"
+                            path='/auction/live/:id/bid-history'
                             element={<LiveAuctionBidHistoryPage />}
                         />
-                        <Route path="/admin/home" element={<AdminHomePage />} />
-                        <Route path="/shop" element={<ShopPage />} />
+                        <Route path='/admin/home' element={<AdminHomePage />} />
+                        <Route path='/shop' element={<ShopPage />} />
 
                         {/* DM 페이지: 채팅방 목록 + 채팅창 */}
-                        <Route path="/dm" element={<DMPage />} />
+                        <Route path='/dm' element={<DMPage />} />
+                        <Route path='*' element={<NotFoundPage />} />
                     </Routes>
-                    <ToastContainer />
+                    <ToastContainer hideProgressBar={true} autoClose={2000} />
                 </Suspense>
             </BrowserRouter>
         </RQProvider>

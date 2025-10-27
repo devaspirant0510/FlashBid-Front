@@ -23,6 +23,9 @@ const AuctionChatInput: FC<Props> = ({ client, auctionId, account }) => {
     const onClickSubmit = useCallback(
         (e) => {
             e.preventDefault();
+            if (!message?.trim()) {
+                return;
+            }
             const data = {
                 contents: message,
                 nickname: account.nickname,

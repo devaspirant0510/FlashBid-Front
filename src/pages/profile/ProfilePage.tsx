@@ -12,6 +12,7 @@ import { ApiResult } from '@entities/common';
 import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
 import { useQueryGetAccountStatus } from '@/features/profile/lib/useQueryGetAccountStatus.ts';
 import { EditProfileModal } from '@/features/profile/ui/EditProfileModal.tsx';
+import { AppLayout } from '@shared/layout';
 
 export const ProfilePage = () => {
     const [_, id] = useAuthUser();
@@ -34,22 +35,22 @@ export const ProfilePage = () => {
     }
 
     return (
-        <>
-            <Header />
-
+        <AppLayout>
             <div className='max-w-screen-xl mx-auto px-4'>
-                <section className='grid grid-cols-12 gap-6'>
-                    <MyProfile
-                        nickname={data.data.user.nickname}
-                        email={data.data.user.email}
-                        url={data.data.user.profileUrl}
-                        cash={data?.data?.user.point}
-                        interestedCount={statusData?.data?.interestedCount}
-                        biddingCount={statusData?.data?.biddingCount}
-                        onEditClick={() => setIsEditModalOpen(true)}
-                    />
+                <section className='grid grid-cols-1 md:grid-cols-12! gap-6'>
+                    <div className='col-span-1 md:col-span-3!'>
+                        <MyProfile
+                            nickname={data.data.user.nickname}
+                            email={data.data.user.email}
+                            url={data.data.user.profileUrl}
+                            cash={data?.data?.user.point}
+                            interestedCount={statusData?.data?.interestedCount}
+                            biddingCount={statusData?.data?.biddingCount}
+                            onEditClick={() => setIsEditModalOpen(true)}
+                        />
+                    </div>
 
-                    <section className='col-span-9 space-y-6 mt-30'>
+                    <section className='col-span-1 md:col-span-9! space-y-6 mt-30'>
                         <MyWallet cash={data?.data?.user.point} />
 
                         {/* 👇 MyActive 컴포넌트에 필요한 모든 데이터를 정확히 전달합니다. */}
@@ -76,7 +77,7 @@ export const ProfilePage = () => {
                     currentProfileUrl={data.data.user.profileUrl}
                 />
             )}
-        </>
+        </AppLayout>
     );
 };
 

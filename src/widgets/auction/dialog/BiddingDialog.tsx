@@ -61,7 +61,7 @@ const BiddingDialog: FC<Props> = ({ client }) => {
                     userId: userId,
                     bid: {
                         price: inputValue, // 최종 입찰가
-                        prevPrice: lastPrice,
+                        prevPrice: lastPrice === 0 ? data?.data?.auction.startPrice : lastPrice,
                     },
                 };
                 (client as any).publish({

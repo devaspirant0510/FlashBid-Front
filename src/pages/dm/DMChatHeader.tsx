@@ -14,10 +14,13 @@ type ParticipantInfo = {
 };
 
 type AuctionStatus = 'ONGOING' | 'ENDED';
+type AuctionType = 'LIVE' | 'BLIND';
 
 const DMChatHeader: React.FC<Props> = ({ roomId, participantId }) => {
     const [participant, setParticipant] = useState<ParticipantInfo | null>(null);
     const [auctionInfo, setAuctionInfo] = useState<any>(null);
+    const [auctionType, setAuctionType] = useState<AuctionType>('LIVE');
+    const [currentPrice, setCurrentPrice] = useState<number>(0);
     const [auctionStatus, setAuctionStatus] = useState<AuctionStatus>('ONGOING');
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
@@ -54,10 +57,39 @@ const DMChatHeader: React.FC<Props> = ({ roomId, participantId }) => {
                     if (roomData?.auction) {
                         setAuctionInfo(roomData.auction);
 
+                        // 경매 타입 설정
+                        const type = roomData.auction.auctionType || 'LIVE';
+                        setAuctionType(type as AuctionType);
+
                         // 경매 상태 판단 (종료 시간 기준)
                         const endTime = new Date(roomData.auction.endTime);
                         const now = new Date();
                         setAuctionStatus(endTime < now ? 'ENDED' : 'ONGOING');
+
+                        // 3. 경매 타입에 따라 가격 처리
+                        try {
+                            const auctionDetailResponse = await axiosClient.get(
+                                `${getServerURL()}/api/v1/auction/${roomData.auction.id}`
+                            );
+
+                            const auctionDetail = auctionDetailResponse.data?.data || auctionDetailResponse.data;
+
+                            if (type === 'LIVE') {
+                                // LIVE: 최고가 표시
+                                if (auctionDetail?.lastBiddingLog?.price) {
+                                    setCurrentPrice(auctionDetail.lastBiddingLog.price);
+                                } else {
+                                    setCurrentPrice(roomData.auction.startPrice || 0);
+                                }
+                            } else if (type === 'BLIND') {
+                                // BLIND: 시작가격만 표시 (입찰가는 비공개)
+                                setCurrentPrice(roomData.auction.startPrice || 0);
+                            }
+                        } catch (error) {
+                            console.error('경매 상세 정보 로딩 실패:', error);
+                            // 경매가격 조회 실패 시 시작가격으로 설정
+                            setCurrentPrice(roomData.auction.startPrice || 0);
+                        }
                     }
                 } catch (error) {
                     console.error('경매 정보 로딩 실패:', error);
@@ -83,6 +115,13 @@ const DMChatHeader: React.FC<Props> = ({ roomId, participantId }) => {
                 경매중
             </span>
         );
+    };
+
+    const getPriceLabel = () => {
+        if (auctionType === 'BLIND') {
+            return '시작가';
+        }
+        return '현재가';
     };
 
     // 경매 페이지로 이동
@@ -187,7 +226,7 @@ const DMChatHeader: React.FC<Props> = ({ roomId, participantId }) => {
                                 {auctionInfo.goodsTitle}
                             </h3>
                             <p className="text-sm text-orange-500 font-semibold">
-                                낙찰가: {auctionInfo.startPrice?.toLocaleString() || '0'} p
+                                {getPriceLabel()}: {currentPrice.toLocaleString() || '0'} p
                             </p>
                         </div>
 

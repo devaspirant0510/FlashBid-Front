@@ -130,3 +130,21 @@ export type ConfirmedBidsEntity = {
     finalPrice: number;
     createdAt: string;
 };
+
+export type AuctionItem = {
+    id: number;
+    goodsTitle: string;
+    goodsImageUrl: string;
+    categoryName: string;
+    bidderName: string;
+    status: 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED'; // 상태 enum 가능
+    startPrice: number;
+    currentPrice: number | null;
+    viewCount: number;
+    likeCount: number;
+    participantCount: number;
+    biddingCount: number | null;
+    chattingCount: number | null;
+    startTime: string; // ISO 문자열
+    endTime: string; // ISO 문자열
+};

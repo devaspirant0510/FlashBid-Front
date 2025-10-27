@@ -25,6 +25,11 @@ axiosClient.interceptors.response.use(
             originalRequest._retry = true; // 무한 루프 방지!
 
             try {
+                console.log(originalRequest.url);
+                if (originalRequest?.url?.includes('auth/token')) {
+                    return Promise.reject(error);
+                }
+
                 // refresh token으로 새 access token 발급
                 const { data } = await axios.post(`${getServerURL()}/auth/token`, {}, {
                     withCredentials: true,

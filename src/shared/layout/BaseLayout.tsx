@@ -8,11 +8,11 @@ type Props = {
 const BaseLayout: FC<Props> = ({ children, className }) => {
     return (
         <Row className={className}>
-            <Column lg={2} md={1} span={0} />
-            <Column lg={20} md={22} span={24}>
+            <Column xxl={3} xl={2} lg={2} md={3} span={0} />
+            <Column xxl={18} xl={20} lg={20} md={18} span={24}>
                 {children}
             </Column>
-            <Column lg={2} md={1} span={0} />
+            <Column xxl={3} xl={2} lg={2} md={3} span={0} />
         </Row>
     );
 };

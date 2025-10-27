@@ -10,7 +10,7 @@ import {
     RotateCcw,
     Zap,
 } from 'lucide-react';
-import { MainLayout } from '@shared/layout';
+import { AppLayout, MainLayout } from '@shared/layout';
 import ShopPayButton from '@/features/shop/ui/ShopPayButton.tsx';
 import { getPaymentConfig } from '@/features/shop/lib/getPaymentConfig.ts';
 import AuthUser from '@/features/user/ui/AuthUser.tsx';
@@ -44,7 +44,7 @@ const PointRechargePage = () => {
     const paymentConfig = getPaymentConfig(selectedMethod);
 
     return (
-        <MainLayout>
+        <AppLayout>
             <AuthUser>
                 <div className='min-h-screen bg-gray-50 p-4'>
                     <div className='max-w-7xl mx-auto'>
@@ -308,7 +308,7 @@ const PointRechargePage = () => {
                     </div>
                 </div>
             </AuthUser>
-        </MainLayout>
+        </AppLayout>
     );
 };
 

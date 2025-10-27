@@ -1,4 +1,4 @@
-import { MainLayout } from '@shared/layout';
+import { AppLayout, BaseLayout, MainLayout } from '@shared/layout';
 import { AuctionInfo, RecommendsGoods } from '@/features/auction/ui';
 import React from 'react';
 import { useParams } from 'react-router';
@@ -14,10 +14,13 @@ const LiveAuctionInfoPage = () => {
     }
     useIncreaseAuctionView(id);
     return (
-        <MainLayout>
+        <div>
+            <MainLayout>{}</MainLayout>
             <AuctionInfo id={id} type={'live'} />
-            <RecommendsGoods id={id} />
-        </MainLayout>
+            <BaseLayout>
+                <RecommendsGoods id={id} />
+            </BaseLayout>
+        </div>
     );
 };
 export default LiveAuctionInfoPage;

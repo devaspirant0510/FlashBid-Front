@@ -3,10 +3,11 @@ import { faEllipsisH, faFaceSmile, faImage } from '@fortawesome/free-solid-svg-i
 
 const WritePost = ({ onClick }: { onClick: () => void }) => {
     return (
-        <div className='flex justify-center px-4 py-2'>
+        <div className='flex justify-center py-2'>
             <div
                 onClick={onClick}
-                className='flex items-center justify-between bg-white w-full max-w-[800px] rounded-lg shadow px-4 py-3'
+                style={{ borderColor: 'rgba(186, 186, 186, 0.5)' }}
+                className='flex items-center justify-between bg-white w-full  rounded-lg shadow px-4 py-3 border-1'
             >
                 <div className='flex items-center gap-3 w-full'>
                     <img src='/img/default.png' className='rounded-full w-10 h-10 bg-[#F7F7F7]' />
@@ -14,27 +15,25 @@ const WritePost = ({ onClick }: { onClick: () => void }) => {
                         type='text'
                         placeholder='새로운 글 작성하기'
                         className='w-full bg-transparent outline-none text-gray-600 placeholder:text-gray-400'
+                        readOnly
                     />
                 </div>
                 <div className='flex items-center gap-3 ml-4'>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faFaceSmile} />
                     </button>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faImage} />
                     </button>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faEllipsisH} />
                     </button>
