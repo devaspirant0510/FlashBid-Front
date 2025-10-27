@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisVertical, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { getServerURL } from '@shared/lib';
@@ -34,11 +34,7 @@ const MyFeed: FC<Props> = ({ feedData }) => {
         <div className='flex flex-col'>
             <div className='aspect-square w-full relative overflow-hidden rounded-md bg-gray-100'>
                 {images && images.length > 0 ? (
-                    <img
-                        className='h-full w-full object-cover'
-                        src={`${getServerURL()}${images[0].url}`}
-                        alt='feed'
-                    />
+                    <img className='h-full w-full object-cover' src={images[0].url} alt='feed' />
                 ) : (
                     <div className='h-full w-full bg-gray-200 flex items-center justify-center'>
                         <span className='text-gray-500 text-sm'>No Image</span>
@@ -49,14 +45,11 @@ const MyFeed: FC<Props> = ({ feedData }) => {
                     className='absolute top-2 right-2 cursor-pointer z-20 bg-black/30 rounded-full w-6 h-6 flex items-center justify-center'
                     onClick={() => setMenuOpen((prev) => !prev)}
                 >
-                    <FontAwesomeIcon icon={faEllipsisVertical} className='text-white' size='sm'/>
+                    <FontAwesomeIcon icon={faEllipsisVertical} className='text-white' size='sm' />
                 </div>
 
                 {menuOpen && (
-                    <div
-                        className='absolute top-9 right-2 space-y-1 z-10'
-                        ref={menuRef}
-                    >
+                    <div className='absolute top-9 right-2 space-y-1 z-10' ref={menuRef}>
                         <div className='bg-white px-3 py-1 rounded-md text-gray-500 shadow text-sm text-center cursor-pointer hover:bg-gray-100'>
                             수정
                         </div>

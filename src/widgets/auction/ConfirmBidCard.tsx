@@ -35,10 +35,7 @@ const ConfirmBidCard: React.FC<Props> = ({ data, thumbnail }) => {
                   이미지 없으면 닉네임 첫 글자 (Fallback) 표시
                 */}
                 <Avatar className='h-8 w-8'>
-                    <AvatarImage
-                        src={getServerURL() + profileImageUrl || undefined}
-                        alt={bidder.nickname}
-                    />
+                    <AvatarImage src={profileImageUrl || undefined} alt={bidder.nickname} />
                     <AvatarFallback className='bg-orange-100 text-orange-600 font-semibold'>
                         {bidder.nickname.substring(0, 1)}
                     </AvatarFallback>
@@ -55,7 +52,7 @@ const ConfirmBidCard: React.FC<Props> = ({ data, thumbnail }) => {
                 {/* 2-1. 상품 이미지 */}
                 <div className='w-24 h-24 sm:w-28 sm:h-28 rounded-md overflow-hidden flex-shrink-0 bg-gray-100'>
                     <img
-                        src={getServerURL() + thumbnail}
+                        src={thumbnail}
                         alt={auction.goods.title}
                         className='w-full h-full object-cover'
                     />

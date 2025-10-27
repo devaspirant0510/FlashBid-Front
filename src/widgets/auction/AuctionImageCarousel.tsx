@@ -52,7 +52,7 @@ const AuctionImageCarousel: FC<Props> = ({ images, isWishListed }) => {
                                         <div className='flex items-center justify-center p-6 relative'>
                                             <img
                                                 className='w-full h-auto max-h-96 object-contain'
-                                                src={getServerURL() + image.url}
+                                                src={image.url}
                                             />
                                         </div>
                                     </CarouselItem>
