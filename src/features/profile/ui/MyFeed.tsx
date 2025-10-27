@@ -1,6 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC } from 'react'; // useEffect, useRef, useState 제거
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faComment } from '@fortawesome/free-solid-svg-icons'; // faEllipsisVertical 제거
 import { getServerURL } from '@shared/lib';
 import { FeedWrapper } from '@pages/feed/component/FeedList';
 import { useNavigate } from 'react-router-dom';
@@ -10,25 +10,7 @@ type Props = {
 };
 
 const MyFeed: FC<Props> = ({ feedData }) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setMenuOpen(false);
-            }
-        };
-
-        if (menuOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [menuOpen]);
 
     const { feed, images, likeCount, commentCount } = feedData;
     const feedId = feed.id;
@@ -58,32 +40,8 @@ const MyFeed: FC<Props> = ({ feedData }) => {
                     </div>
                 )}
 
-                {/* 메뉴 버튼 */}
-                <div
-                    className='absolute top-2 right-2 cursor-pointer z-20 bg-black/30 rounded-full w-6 h-6 flex items-center justify-center hover:bg-black/50'
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuOpen((prev) => !prev);
-                    }}
-                >
-                    <FontAwesomeIcon icon={faEllipsisVertical} className='text-white' size='sm' />
-                </div>
-
-                {/* 드롭다운 메뉴 */}
-                {menuOpen && (
-                    <div
-                        className='absolute top-9 right-2 space-y-1 z-30'
-                        ref={menuRef}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className='bg-white px-3 py-1 rounded-md text-gray-500 shadow text-sm text-center cursor-pointer hover:bg-gray-100'>
-                            수정
-                        </div>
-                        <button className='w-full bg-white px-3 py-1 rounded-md text-red-500 shadow text-sm text-center cursor-pointer hover:bg-gray-100 disabled:opacity-50'>
-                            삭제
-                        </button>
-                    </div>
-                )}
+                {/* 메뉴 버튼 제거됨 */}
+                {/* 드롭다운 메뉴 제거됨 */}
             </div>
 
             {/* 텍스트 정보 영역 */}
