@@ -28,7 +28,7 @@ const RecommendsGoods: FC<Props> = ({ id }) => {
                                         {auction.auction.goods.description}
                                     </p>
                                     <img
-                                        src={`${getServerURL()}${auction.images[0].url}`}
+                                        src={auction.images[0].url}
                                         className='w-full aspect-square object-cover rounded-md mb-4'
                                     />
                                     <p className='text-gray-800 font-bold'>

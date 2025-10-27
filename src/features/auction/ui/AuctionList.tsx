@@ -96,7 +96,7 @@ const AuctionList: FC<Props> = ({ type }) => {
                         <div className=''>
                             <img
                                 className='rounded-xl w-48 h-48 object-fill border-1'
-                                src={getServerURL() + v.goodsImageUrl}
+                                src={v.goodsImageUrl}
                                 alt='auction thumbnail'
                             />
                         </div>

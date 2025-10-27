@@ -86,7 +86,7 @@ function App() {
                         <Route path='/dm' element={<DMPage />} />
                         <Route path='*' element={<NotFoundPage />} />
                     </Routes>
-                    <ToastContainer />
+                    <ToastContainer hideProgressBar={true} autoClose={2000} />
                 </Suspense>
             </BrowserRouter>
         </RQProvider>
