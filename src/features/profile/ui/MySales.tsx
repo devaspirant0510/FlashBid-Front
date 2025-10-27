@@ -15,7 +15,7 @@ const MySales = () => {
             return <div className='py-10 text-gray-500'>등록한 상품이 없습니다.</div>;
         }
         return (
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+            <div className='grid grid-cols-4 gap-4'>
                 {data.data.map((sale) => (
                     <MySalesList key={sale.auction.id} item={sale} />
                 ))}
