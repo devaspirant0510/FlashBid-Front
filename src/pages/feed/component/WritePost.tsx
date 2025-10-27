@@ -15,27 +15,25 @@ const WritePost = ({ onClick }: { onClick: () => void }) => {
                         type='text'
                         placeholder='새로운 글 작성하기'
                         className='w-full bg-transparent outline-none text-gray-600 placeholder:text-gray-400'
+                        readOnly
                     />
                 </div>
                 <div className='flex items-center gap-3 ml-4'>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faFaceSmile} />
                     </button>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faImage} />
                     </button>
                     <button
                         disabled
-                        style={{ background: '#FFFFFF' }}
-                        className='bg-transparent text-gray-400'
+                        className='bg-transparent text-gray-400 cursor-not-allowed'
                     >
                         <FontAwesomeIcon icon={faEllipsisH} />
                     </button>
