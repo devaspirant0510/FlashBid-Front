@@ -27,7 +27,7 @@ const MyFeed: FC<Props> = ({ feedData }) => {
                 {images && images.length > 0 ? (
                     <img
                         className='h-full w-full object-cover cursor-pointer'
-                        src={`${getServerURL()}${images[0].url}`}
+                        src={`${images[0].url}`}
                         alt='feed'
                         onClick={handleNavigate}
                     />

@@ -225,7 +225,7 @@ const FeedList = () => {
                                     {v.images.map((img, idx) => (
                                         <img
                                             key={idx}
-                                            src={`${getServerURL()}${img.url}`}
+                                            src={`${img.url}`}
                                             alt={img.fileName}
                                             className='h-60 rounded-md object-cover border border-gray-200'
                                         />
