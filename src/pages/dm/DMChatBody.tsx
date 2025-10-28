@@ -5,7 +5,7 @@ import AuctionInfoCard from '@/pages/dm/AuctionInfoCard';
 type Props = {
     client: any;
     roomId: number;
-    userId: number; // ✅ 현재 로그인한 유저 ID
+    userId: number;
     onMessageReceived?: () => void;
     onMessagesRead?: () => void;
 };
@@ -32,6 +32,7 @@ const DMChatBody: React.FC<Props> = ({
     const [auctionInfo, setAuctionInfo] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isPurchasing, setIsPurchasing] = useState(false);
+    const [isAuctionSold, setIsAuctionSold] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
     const subscriptionRef = useRef<any>(null);
 
@@ -76,10 +77,36 @@ const DMChatBody: React.FC<Props> = ({
         }
     }, [roomId, onMessagesRead]);
 
+    /**
+     * ✅ 판매 완료 상태 확인
+     * PointHistory에서 PURCHASE 타입이고 contents에 해당 auctionId가 있으면 판매 완료
+     */
+    const checkAuctionSoldStatus = useCallback(async (auctionId: number) => {
+        try {
+            const response = await axiosClient.get(
+                `${getServerURL()}/api/v1/payment/point-history/check-purchase/${auctionId}`
+            );
+
+            // ApiResult 응답 구조: { data: true/false, message: "...", success: true }
+            if (response.data && response.data.data === true) {
+                setIsAuctionSold(true);
+            } else {
+                setIsAuctionSold(false);
+            }
+        } catch (error) {
+            console.error('판매 상태 확인 실패:', error);
+            setIsAuctionSold(false);
+        }
+    }, []);
+
     const handlePurchaseConfirmation = useCallback(async () => {
         if (!auctionInfo || isPurchasing) return;
 
-        const isBuyer = auctionInfo.sellerId !== userId;
+        const sellerId = auctionInfo?.data?.auction?.user?.id;
+        const auctionId = auctionInfo?.data?.auction?.id;
+        const finalPrice = auctionInfo?.data?.lastBiddingLog?.price || auctionInfo?.data?.auction?.startPrice;
+
+        const isBuyer = sellerId !== userId;
         if (!isBuyer) {
             alert('판매자는 구매 확정을 할 수 없습니다.');
             return;
@@ -95,21 +122,18 @@ const DMChatBody: React.FC<Props> = ({
             const response = await axiosClient.post(
                 `${getServerURL()}/api/auction/purchase/confirm`,
                 {
-                    auctionId: auctionInfo.id,
+                    auctionId: auctionId,
                     buyerId: userId,
-                    sellerId: auctionInfo.sellerId,
-                    amount: auctionInfo.price, // 또는 auctionInfo.finalPrice
+                    sellerId: sellerId,
+                    amount: finalPrice,
                     roomId: roomId,
                 }
             );
 
             if (response.data) {
-                alert('구매가 확정되었습니다. 판매자에게 결제액이 입금되었습니다.');
-                // 경매 정보 업데이트 (상태를 '판매완료' 등으로 변경)
-                setAuctionInfo((prev: any) => ({
-                    ...prev,
-                    status: 'SOLD', // 또는 서버에서 반환한 상태
-                }));
+                alert('구매가 확정되었습니다.');
+                // 포인트 이력에서 상태 확인
+                await checkAuctionSoldStatus(auctionId);
             }
         } catch (error: any) {
             console.error('구매 확정 실패:', error);
@@ -117,7 +141,7 @@ const DMChatBody: React.FC<Props> = ({
         } finally {
             setIsPurchasing(false);
         }
-    }, [auctionInfo, userId, roomId, isPurchasing]);
+    }, [auctionInfo, userId, roomId, isPurchasing, checkAuctionSoldStatus]);
 
     // 1. 채팅방 내역 로드
     useEffect(() => {
@@ -126,6 +150,7 @@ const DMChatBody: React.FC<Props> = ({
                 setIsLoading(true);
                 setMessages([]);
                 setAuctionInfo(null);
+                setIsAuctionSold(false);
 
                 const response = await axiosClient.get(
                     `${getServerURL()}/api/dm/chat/${roomId}`
@@ -135,7 +160,7 @@ const DMChatBody: React.FC<Props> = ({
                     const chats = response.data;
 
                     if (chats[0].contents && chats[0].contents.startsWith('AUCTION_INFO:')) {
-                        const auctionId = chats[0].contents.split(':')[1];
+                        const auctionId = parseInt(chats[0].contents.split(':')[1]);
                         try {
                             const auctionResponse = await axiosClient.get(
                                 `${getServerURL()}/api/v1/auction/${auctionId}`
@@ -145,6 +170,9 @@ const DMChatBody: React.FC<Props> = ({
                             console.error('경매 정보 로딩 실패:', error);
                         }
                         setMessages(chats.slice(1));
+
+                        // ✅ 경매 ID를 state에 임시 저장하여 별도 effect에서 처리
+                        return auctionId;
                     } else {
                         setMessages(chats);
                     }
@@ -158,6 +186,14 @@ const DMChatBody: React.FC<Props> = ({
 
         loadChatHistory();
     }, [roomId]);
+
+    // ✅ 새로운 useEffect: 경매 정보 로드 후 판매 상태 확인
+    useEffect(() => {
+        if (auctionInfo && auctionInfo.data?.auction?.id) {
+            const auctionId = auctionInfo.data.auction.id;
+            checkAuctionSoldStatus(auctionId);
+        }
+    }, [auctionInfo, checkAuctionSoldStatus]);
 
     // 2. STOMP 구독
     useEffect(() => {
@@ -211,7 +247,6 @@ const DMChatBody: React.FC<Props> = ({
         }
     }, [messages, auctionInfo]);
 
-
     if (isLoading) {
         return (
             <div className="flex-1 flex items-center justify-center">
@@ -221,38 +256,20 @@ const DMChatBody: React.FC<Props> = ({
     }
 
     // ✅ 현재 사용자가 구매자인지 확인
-    const isBuyer = auctionInfo && auctionInfo.sellerId !== userId;
-    const isAuctionSold = auctionInfo?.status === 'SOLD' || auctionInfo?.status === 'COMPLETED';
+    const sellerId = auctionInfo?.data?.auction?.user?.id;
+    const isBuyer = auctionInfo && sellerId !== userId;
 
     return (
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 bg-gray-50">
             {auctionInfo && (
-                <div className="mb-4">
-                    <AuctionInfoCard
-                        auctionData={auctionInfo}
-                        serverUrl={getServerURL()}
-                    />
-
-                    {/* ✅ 구매 확정 버튼 - 구매자이고 아직 판매되지 않았을 때만 표시 */}
-                    {isBuyer && !isAuctionSold && (
-                        <div className="mt-4 flex gap-2">
-                            <button
-                                onClick={handlePurchaseConfirmation}
-                                disabled={isPurchasing}
-                                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition"
-                            >
-                                {isPurchasing ? '처리 중...' : '구매 확정'}
-                            </button>
-                        </div>
-                    )}
-
-                    {/* ✅ 판매 완료 상태 표시 */}
-                    {isAuctionSold && (
-                        <div className="mt-4 bg-gray-200 text-gray-700 py-3 rounded-lg text-center font-semibold">
-                            판매 완료
-                        </div>
-                    )}
-                </div>
+                <AuctionInfoCard
+                    auctionData={auctionInfo}
+                    serverUrl={getServerURL()}
+                    isBuyer={isBuyer}
+                    isAuctionSold={isAuctionSold}
+                    isPurchasing={isPurchasing}
+                    onPurchaseConfirm={handlePurchaseConfirmation}
+                />
             )}
 
             {messages.length === 0 ? (
