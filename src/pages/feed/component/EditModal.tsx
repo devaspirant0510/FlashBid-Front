@@ -166,7 +166,7 @@ export const EditModal = ({ feedId, initialContent, initialImages, onClose }: Ed
                                         <img
                                             src={
                                                 'isExisting' in image
-                                                    ? `${getServerURL()}${image.url}`
+                                                    ? `${image.url}`
                                                     : image.preview
                                             }
                                             alt={
