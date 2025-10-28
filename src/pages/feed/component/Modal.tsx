@@ -1,8 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
 import { axiosClient, getServerURL } from '@shared/lib';
 import { toast } from 'react-toastify';
-import { ImagePlus, X as XIcon } from 'lucide-react';
+import { ArrowUpDownIcon, ImagePlus, PackageIcon, X as XIcon } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from '@/shared/components/ui/dialog';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 
 interface ModalProps {
     onClose: () => void;
@@ -16,6 +26,13 @@ export const Modal = ({ onClose }: ModalProps) => {
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const prevUrlsRef = useRef<string[]>([]);
+
+    // 내 상품 홍보 다이얼로그 상태
+    const [isPromoOpen, setPromoOpen] = useState(false);
+    const [promoLoading, setPromoLoading] = useState(false);
+    const [promoItems, setPromoItems] = useState<
+        Array<{ id: number; title: string; price: number; thumb: string }>
+    >([]);
 
     useEffect(() => {
         return () => {
@@ -58,6 +75,23 @@ export const Modal = ({ onClose }: ModalProps) => {
         inputRef.current!.click();
     };
 
+    // 내 상품 홍보: 다이얼로그 오픈 + 테스트 로딩
+    const handleOpenPromo = () => {
+        setPromoOpen(true);
+        setPromoLoading(true);
+        setPromoItems([]);
+        // 테스트 데이터 로딩 시뮬레이션
+        setTimeout(() => {
+            const demo = [
+                { id: 1, title: '테스트 상품 A', price: 12900, thumb: '/img/default.png' },
+                { id: 2, title: '테스트 상품 B', price: 34900, thumb: '/img/default.png' },
+                { id: 3, title: '테스트 상품 C', price: 9900, thumb: '/img/default.png' },
+            ];
+            setPromoItems(demo);
+            setPromoLoading(false);
+        }, 1200);
+    };
+
     const handleSubmit = async () => {
         if (!content.trim()) {
             toast('내용을 입력해주세요', { type: 'error', autoClose: 2000 });
@@ -95,6 +129,59 @@ export const Modal = ({ onClose }: ModalProps) => {
             console.error('실패:', result);
             alert(`실패: ${result?.error?.errorMessage || result?.message}`);
         }
+    };
+
+    const renderPromoBody = () => {
+        if (promoLoading) {
+            return (
+                <div className='space-y-3'>
+                    <div className='flex items-center gap-3'>
+                        <Skeleton className='h-12 w-12 rounded-md' />
+                        <div className='flex-1 space-y-2'>
+                            <Skeleton className='h-4 w-1/2' />
+                            <Skeleton className='h-4 w-1/3' />
+                        </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                        <Skeleton className='h-12 w-12 rounded-md' />
+                        <div className='flex-1 space-y-2'>
+                            <Skeleton className='h-4 w-2/3' />
+                            <Skeleton className='h-4 w-1/4' />
+                        </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                        <Skeleton className='h-12 w-12 rounded-md' />
+                        <div className='flex-1 space-y-2'>
+                            <Skeleton className='h-4 w-1/2' />
+                            <Skeleton className='h-4 w-1/5' />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div className='space-y-3'>
+                {promoItems.map((it) => (
+                    <div key={it.id} className='flex items-center gap-3 p-2 rounded-md border'>
+                        <img
+                            src={it.thumb}
+                            className='w-12 h-12 rounded-md object-cover'
+                            alt={it.title}
+                        />
+                        <div className='flex-1 min-w-0'>
+                            <div className='text-sm font-medium truncate'>{it.title}</div>
+                            <div className='text-xs text-gray-500'>
+                                {it.price.toLocaleString()}원
+                            </div>
+                        </div>
+                        <button className='text-uprimary text-sm hover:underline'>홍보하기</button>
+                    </div>
+                ))}
+                {promoItems.length === 0 && (
+                    <div className='text-sm text-gray-500'>표시할 상품이 없습니다.</div>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -161,17 +248,35 @@ export const Modal = ({ onClose }: ModalProps) => {
                         />
 
                         {/* Add button remains visible */}
-                        <button
-                            type='button'
-                            onClick={triggerFilePicker}
-                            className='inline-flex items-center gap-2 px-3 py-1 rounded-md text-uprimary hover:bg-uprimary/10 transition'
-                        >
-                            <ImagePlus className='w-5 h-5' />
-                            <span className='font-medium text-sm'>사진 추가</span>
-                        </button>
+                        <div className={'flex flex-col gap-1'}>
+                            <button
+                                type='button'
+                                onClick={triggerFilePicker}
+                                className='inline-flex items-center gap-2 px-3 py-1 rounded-md text-uprimary hover:bg-uprimary/10 transition'
+                            >
+                                <ImagePlus className='w-5 h-5' />
+                                <span className='font-medium text-sm'>사진 추가</span>
+                            </button>
+                            <button
+                                type='button'
+                                onClick={handleOpenPromo}
+                                className='inline-flex items-center gap-2 px-3 py-1 rounded-md text-uprimary hover:bg-uprimary/10 transition'
+                            >
+                                <PackageIcon className='w-5 h-5' />
+                                <span className='font-medium text-sm'>내 상품 홍보</span>
+                            </button>
+                            <button
+                                type='button'
+                                className='inline-flex items-center gap-2 px-3 py-1 rounded-md text-uprimary hover:bg-uprimary/10 transition'
+                            >
+                                <ArrowUpDownIcon className='w-5 h-5' />
+                                <span className='font-medium text-sm'>거래내역</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
+                <hr className={'border-t-1 mt-4 border-uprimary'} />
                 <div className='text-center mt-6'>
                     <button
                         className='bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded'
@@ -181,6 +286,26 @@ export const Modal = ({ onClose }: ModalProps) => {
                     </button>
                 </div>
             </div>
+
+            {/* 내 상품 홍보 다이얼로그 */}
+            <Dialog open={isPromoOpen} onOpenChange={setPromoOpen}>
+                <DialogContent className='sm:max-w-lg w-[90vw]'>
+                    <DialogHeader>
+                        <DialogTitle>내 상품 홍보</DialogTitle>
+                        <DialogDescription>테스트 데이터 로딩 예시입니다.</DialogDescription>
+                    </DialogHeader>
+
+                    {renderPromoBody() as any}
+
+                    <DialogFooter className='mt-4'>
+                        <DialogClose asChild>
+                            <button className='px-4 py-2 rounded-md border hover:bg-gray-50'>
+                                닫기
+                            </button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

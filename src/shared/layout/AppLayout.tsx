@@ -4,12 +4,16 @@ import Footer from '@widgets/ui/Footer.tsx';
 
 type Props = {
     children: React.ReactNode;
+    headerClassName?: string;
+    className?: string;
 };
-const AppLayout: FC<Props> = ({ children }) => {
+const AppLayout: FC<Props> = ({ children, headerClassName, className }) => {
     return (
         <div className={'flex flex-col h-screen'}>
-            <Header />
-            <div className={'flex-grow overflow-y-auto'}>{children}</div>
+            <div className='relative z-20'>
+                <Header className={headerClassName} />
+            </div>
+            <div className={`flex-grow overflow-y-auto ${className}`}>{children}</div>
             <Footer />
         </div>
     );

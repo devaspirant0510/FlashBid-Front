@@ -9,7 +9,7 @@ import { Column, Row } from '@shared/ui';
 const FeedPage = () => {
     const [openModal, setOpenModal] = useState(false);
     return (
-        <AppLayout>
+        <AppLayout className={'bg-[#F7F7F7]'} headerClassName={'bg-[#F7F7F7]'}>
             <Row>
                 <Column md={5} xs={0} />
                 <Column md={14} xs={24}>

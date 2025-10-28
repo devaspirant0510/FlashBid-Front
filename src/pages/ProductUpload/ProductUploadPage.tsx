@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MainLayout } from '@shared/layout';
 import ImageUploader from '@/pages/ProductUpload/components/ImageUploader';
 import TitleInput from '@/pages/ProductUpload/components/TitleInput';
@@ -11,7 +11,8 @@ import CategorySelect from '@/pages/ProductUpload/components/CategorySelect';
 import Cookies from 'js-cookie';
 import { axiosClient, DateUtil, getServerURL } from '@shared/lib';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 export default function ProductUploadPage() {
     const [title, setTitle] = useState('');
@@ -33,6 +34,7 @@ export default function ProductUploadPage() {
     } | null>(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const navigate = useNavigate();
+    const { userAuth } = useAuthStore();
 
     const handleSubmit = async () => {
         try {
@@ -104,7 +106,12 @@ export default function ProductUploadPage() {
             alert('상품 등록 중 오류가 발생했습니다.');
         }
     };
-
+    useEffect(() => {
+        if (!userAuth) {
+            navigate('/login');
+            toast('로그인후 이용해주세요', { type: 'error' });
+        }
+    }, []);
     return (
         <MainLayout>
             <div className='max-w-2xl mx-auto p-6'>

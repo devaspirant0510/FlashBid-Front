@@ -26,6 +26,8 @@ import {
 } from '@shared/components/ui/dialog';
 import { ApiResult } from '@entities/common';
 import axios from 'axios';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { Navigate } from 'react-router';
 function usePreventBackLeave(condition) {
     useEffect(() => {
         if (!condition) return;
@@ -80,6 +82,7 @@ const RegisterPage = () => {
     const [passwordValid, setPasswordValid] = useState(false);
     const [passwordMessage, setPasswordMessage] = useState('');
     const navigate = useNavigate();
+    const { userAuth } = useAuthStore();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -319,6 +322,9 @@ const RegisterPage = () => {
             setLoading(false);
         }
     };
+    if (userAuth) {
+        return <Navigate to={'/'} />;
+    }
 
     return (
         <MainLayout>

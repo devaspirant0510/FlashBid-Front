@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router';
@@ -18,7 +18,11 @@ import { Button } from '@shared/components/ui/button.tsx';
 import UserProfile from '@/features/user/ui/UserProfile.tsx';
 import { BellIcon, SearchIcon } from 'lucide-react';
 
-const Header = () => {
+type Props = {
+    className?: string;
+};
+
+const Header: FC<Props> = ({ className }) => {
     const [query, setQuery] = useState('');
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
     const { userAuth, setAccessToken, setAuthUser } = useAuthStore();
@@ -49,7 +53,7 @@ const Header = () => {
     };
 
     return (
-        <div>
+        <div className={className}>
             <div className='md:block! hidden rounded-br-[120px] border border-[#eee] shadow-sm bg-white'>
                 {/* 로그아웃 모달 */}
                 <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
