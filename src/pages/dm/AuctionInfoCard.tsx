@@ -3,11 +3,19 @@ import React from 'react';
 type AuctionInfoCardProps = {
     auctionData: any;
     serverUrl?: string;
+    isBuyer?: boolean;
+    isAuctionSold?: boolean;
+    isPurchasing?: boolean;
+    onPurchaseConfirm?: () => void;
 };
 
 const AuctionInfoCard: React.FC<AuctionInfoCardProps> = ({
                                                              auctionData,
-                                                             serverUrl = 'http://localhost:8080'
+                                                             serverUrl = 'http://localhost:8080',
+                                                             isBuyer = false,
+                                                             isAuctionSold = false,
+                                                             isPurchasing = false,
+                                                             onPurchaseConfirm,
                                                          }) => {
     if (!auctionData) return null;
 
@@ -145,6 +153,28 @@ const AuctionInfoCard: React.FC<AuctionInfoCardProps> = ({
                     </div>
                 )}
             </div>
+
+            {/* 구매 확정 버튼 - 구매자이고 아직 판매되지 않았을 때만 표시 */}
+            {isBuyer && !isAuctionSold && (
+                <div className="px-6 pb-6">
+                    <button
+                        onClick={onPurchaseConfirm}
+                        disabled={isPurchasing}
+                        className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition"
+                    >
+                        {isPurchasing ? '처리 중...' : '구매 확정'}
+                    </button>
+                </div>
+            )}
+
+            {/* 판매 완료 상태 표시 */}
+            {isAuctionSold && (
+                <div className="px-6 pb-6">
+                    <div className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg text-center font-semibold">
+                        구매 완료
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
