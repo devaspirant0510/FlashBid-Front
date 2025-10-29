@@ -1,5 +1,5 @@
 // profile/ui/FollowListModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@shared/components/ui/dialog.tsx';
 import { useQueryGetFollowers } from '@/features/profile/lib/useQueryGetFollowers.ts';
 import { useQueryGetFollowings } from '@/features/profile/lib/useQueryGetFollowings.ts';
@@ -10,11 +10,18 @@ import { useQueryGetUserById } from '../lib/useQueryGetUserById.ts';
 interface FollowListModalProps {
     isOpen: boolean;
     onClose: () => void;
+    initialTab: 'followers' | 'followings';
 }
 
-export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClose }) => {
+export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClose, initialTab }) => {
     const [_, authUserId] = useAuthUser();
-    const [tab, setTab] = useState<'followers' | 'followings'>('followers');
+    const [tab, setTab] = useState<'followers' | 'followings'>(initialTab);
+
+    useEffect(() => {
+        if (isOpen) {
+            setTab(initialTab);
+        }
+    }, [isOpen, initialTab]);
 
     const profileUserId = authUserId ? String(authUserId) : undefined;
     const { data: userProfileData } = useQueryGetUserById(profileUserId);
