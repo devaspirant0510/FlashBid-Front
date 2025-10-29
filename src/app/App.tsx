@@ -9,6 +9,7 @@ import { axiosClient } from '@shared/lib';
 import { ToastContainer, toast } from 'react-toastify';
 import SalesViewPage from "@/features/profile/ui/SalesViewPage";
 import BuysViewPage from "@/features/profile/ui/BuysViewPage";
+import PublicProfilePage from "@/features/profile/ui/PublicProfilePage";
 import { messaging } from '@/firebase';
 import { getToken, onMessage } from 'firebase/messaging';
 
@@ -116,6 +117,7 @@ function App() {
                         <Route path='/profile' element={<ProfilePage />} />
                         <Route path='/profile/point' element={<PointPage />} />
                         <Route path='/profile/sales-view' element={<SalesViewPage />} />
+                        <Route path="/users/:userId" element={<PublicProfilePage />} />
                         <Route path='/profile/buys-view' element={<BuysViewPage />} />
                         <Route path='/auction/productUpload' element={<ProductUploadPage />} />
                         <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
