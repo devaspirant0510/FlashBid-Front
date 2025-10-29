@@ -199,7 +199,14 @@ const FeedList = () => {
                                 <ProfileImage
                                     src={v.feed.user.profileUrl}
                                     size={48}
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        // 사용자 ID가 존재하면 프로필 페이지로 이동
+                                        if (v.feed.user.id) {
+                                            navigate(`/users/${v.feed.user.id}`);
+                                        }
+                                    }}
+                                    style={{ cursor: v.feed.user.id ? 'pointer' : 'default' }}
                                 />
                                 <div className='ml-3'>
                                     <div className='font-semibold'>{v.feed.user.nickname}</div>
