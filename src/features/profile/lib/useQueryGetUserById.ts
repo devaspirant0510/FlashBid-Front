@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { httpFetcher } from '@shared/lib'; // [주의] httpFetcher 경로는 실제 프로젝트에 맞게 확인해주세요.
+import { axiosClient } from '@shared/lib/axiosClient.ts';
 import { ApiResult } from '@entities/common';
-import {FileEntity} from "@/entities/auction/model"; // [주의] ApiResult 경로는 실제 프로젝트에 맞게 확인해주세요.
+import {FileEntity} from "@/entities/auction/model";
+import Cookies from 'js-cookie';
 
 export interface Account {
     id: number;
@@ -21,26 +22,33 @@ export interface Account {
     point: number;
 }
 
-/**
- * UserDto.java 및 샘플 JSON 기반 타입
- * profileImage는 FileEntity 또는 null일 수 있습니다.
- */
 export interface UserDto {
     user: Account;
     followerCount: number;
     followingCount: number;
     feedCount: number;
     profileImage: FileEntity;
+    following: boolean;
 }
 
-/**
- * [신규 훅] ID로 특정 유저의 기본 정보(스탯 포함)를 조회합니다.
- * API: GET /api/v1/profile/{id}
- */
 export const useQueryGetUserById = (userId: string | undefined) => {
     return useQuery({
         queryKey: ['api', 'v1', 'profile', Number(userId)],
-        queryFn: httpFetcher<ApiResult<UserDto>>,
-        enabled: !!userId, // userId가 유효할 때만 쿼리를 실행합니다.
+
+        queryFn: async () => {
+            if (!userId) {
+                return null;
+            }
+            const response = await axiosClient.get<ApiResult<UserDto>>(
+                `/api/v1/profile/${Number(userId)}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('access_token') || ''}`,
+                    },
+                }
+            );
+            return response.data; // httpFetcher와 동일하게 data를 반환
+        },
+        enabled: !!userId,
     });
 };

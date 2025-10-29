@@ -51,3 +51,10 @@ export type UserStats = {
     profileUrl: string;
     followingCount: number;
 };
+
+export type FollowEntity = {
+    id: number;
+    follower: Account;
+    following: Account;
+    createdAt: string;
+};

@@ -3,16 +3,20 @@ import { MainLayout } from '@shared/layout';
 import { BackButton } from '@shared/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 
-// 3단계에서 생성한 훅
+// 훅 임포트
 import { useQueryGetUserById } from '../lib/useQueryGetUserById.ts';
 import { useQueryGetUserFeeds } from '../lib/useQueryGetUserFeeds.ts';
+import { useAuthUser } from '@shared/hooks/useAuthUser.tsx'; // 로그인 유저 정보 훅
 
 // 재사용 컴포넌트
 import { PublicProfileHeader } from '../ui/PublicProfileHeader.tsx';
-import MyFeed from '@/features/profile/ui/MyFeed.tsx'; //
+import MyFeed from '@/features/profile/ui/MyFeed.tsx';
 
 const PublicProfilePage = () => {
     const { userId } = useParams<{ userId: string }>();
+
+    // 현재 로그인한 유저의 ID를 가져옵니다.
+    const [_, authUserId] = useAuthUser();
 
     // 1. 유저 정보 API 호출
     const { data: userData, isLoading: isUserLoading, isError: isUserError } =
@@ -28,6 +32,9 @@ const PublicProfilePage = () => {
     const feeds = feedsData?.data || [];
     const userProfile = userData?.data;
 
+    // 현재 보고 있는 프로필이 '내 프로필'인지 확인합니다.
+    const isMe = Number(authUserId) === Number(userId);
+
     const renderContent = () => {
         if (isLoading) {
             return <div className='py-20 text-center text-gray-500'>로딩 중...</div>;
@@ -38,8 +45,8 @@ const PublicProfilePage = () => {
 
         return (
             <>
-                {/* 1. 프로필 헤더 */}
-                <PublicProfileHeader userData={userProfile} />
+                {/* 1. 프로필 헤더 (isMe 프롭스 전달) */}
+                <PublicProfileHeader userData={userProfile} isMe={isMe} />
 
                 {/* 2. 콘텐츠 탭 */}
                 <Tabs defaultValue='feeds'>
@@ -47,12 +54,6 @@ const PublicProfilePage = () => {
                         <TabsTrigger value='feeds'>
                             게시물 ({userProfile.feedCount})
                         </TabsTrigger>
-
-                        {/* [제한 사항]
-                          현재 백엔드에는 {id}로 남의 '판매 상품' 목록을 가져오는 API가 없습니다.
-                          (GET /api/v1/profile/sales는 '내' 판매 목록만 가져옴)
-                          따라서 이 탭은 비활성화합니다.
-                        */}
                         <TabsTrigger value='sales' disabled>
                             판매 상품
                         </TabsTrigger>
@@ -62,7 +63,6 @@ const PublicProfilePage = () => {
                         {feeds.length === 0 ? (
                             <div className='py-20 text-center text-gray-500'>게시물이 없습니다.</div>
                         ) : (
-                            // MyFeedList.tsx의 그리드 스타일 재사용
                             <div className='grid grid-cols-3 gap-4'>
                                 {feeds.map((feed) => (
                                     <MyFeed key={feed.feed.id} feedData={feed} />

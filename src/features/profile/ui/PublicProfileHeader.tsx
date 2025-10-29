@@ -1,14 +1,33 @@
+// features/profile/ui/PublicProfileHeader.tsx
 import { FC } from 'react';
 import { ProfileImage } from '@shared/ui';
 import { Button } from '@shared/components/ui/button.tsx';
-import { UserDto } from '../lib/useQueryGetUserById.ts'; // 3단계에서 정의한 타입
+import { UserDto } from '../lib/useQueryGetUserById.ts';
+import { useMutationFollowUser } from '../lib/useMutationFollowUser.ts';
+import { useMutationUnfollowUser } from '../lib/useMutationUnfollowUser.ts';
 
 interface Props {
     userData: UserDto;
+    isMe: boolean;
 }
 
-export const PublicProfileHeader: FC<Props> = ({ userData }) => {
-    const { user, followerCount, followingCount, feedCount } = userData;
+export const PublicProfileHeader: FC<Props> = ({ userData, isMe }) => {
+    const { user, followerCount, followingCount, feedCount, following } = userData;
+
+    const followMutation = useMutationFollowUser();
+    const unfollowMutation = useMutationUnfollowUser();
+
+    const isFollowLoading = followMutation.isPending || unfollowMutation.isPending;
+
+    const handleFollowToggle = () => {
+        if (isFollowLoading || isMe) return;
+
+        if (following) {
+            unfollowMutation.mutate(user.id);
+        } else {
+            followMutation.mutate(user.id);
+        }
+    };
 
     return (
         <div className='flex flex-col sm:flex-row items-center gap-4 sm:gap-12 p-4 border-b mb-8'>
@@ -18,11 +37,24 @@ export const PublicProfileHeader: FC<Props> = ({ userData }) => {
             <div className='flex flex-col gap-4 items-center sm:items-start'>
                 <div className='flex items-center gap-4'>
                     <h1 className='text-2xl font-bold'>{user.nickname}</h1>
-                    <Button
-                        style={{ backgroundColor: '#ED6C37', color: 'white' }}
-                    >
-                        팔로우
-                    </Button>
+
+                    {!isMe && (
+                        <Button
+                            style={{
+                                // [수정] isFollowing -> following
+                                backgroundColor: following ? '#E0E0E0' : '#ED6C37',
+                                color: following ? '#333333' : 'white',
+                            }}
+                            onClick={handleFollowToggle}
+                            disabled={isFollowLoading}
+                        >
+                            {isFollowLoading
+                                ? '처리 중...'
+                                : following // [수정] isFollowing -> following
+                                    ? '팔로잉'
+                                    : '팔로우'}
+                        </Button>
+                    )}
                 </div>
                 <div className='flex gap-6 text-sm sm:text-base'>
                     <span>게시물 <span className='font-bold'>{feedCount}</span></span>
