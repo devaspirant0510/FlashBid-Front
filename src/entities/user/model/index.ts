@@ -4,6 +4,7 @@ export type FollowUser = {
     id: number;
     nickname: string;
     profileUrl: string;
+    following: boolean;
 };
 
 export type User = {

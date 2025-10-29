@@ -1,34 +1,47 @@
+// profile/ui/FollowListModal.tsx
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@shared/components/ui/dialog.tsx';
 import { useQueryGetFollowers } from '@/features/profile/lib/useQueryGetFollowers.ts';
 import { useQueryGetFollowings } from '@/features/profile/lib/useQueryGetFollowings.ts';
 import { FollowUserItem } from '@/features/profile/ui/FollowUserItem.tsx';
 import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
+import { useQueryGetUserById } from '../lib/useQueryGetUserById.ts'; // [추가]
 
 interface FollowListModalProps {
     isOpen: boolean;
     onClose: () => void;
+    // [추가] type 프롭스 제거 (내부에서 탭으로 관리)
+    // type: 'followers' | 'followings';
 }
 
 export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClose }) => {
-    const [_, userId] = useAuthUser();
+    const [_, authUserId] = useAuthUser(); // [수정] 변수명 authUserId로
     const [tab, setTab] = useState<'followers' | 'followings'>('followers');
 
+    // [수정] authUserId를 string | undefined로 변환
+    const profileUserId = authUserId ? String(authUserId) : undefined;
+
+    // [추가] 내 프로필 정보(닉네임 등)를 가져옵니다.
+    const { data: userProfileData } = useQueryGetUserById(profileUserId);
+
     const { data: followersData, isLoading: isFollowersLoading } = useQueryGetFollowers(
-        Number(userId),
+        Number(authUserId),
     );
     const { data: followingsData, isLoading: isFollowingsLoading } = useQueryGetFollowings(
-        Number(userId),
+        Number(authUserId),
     );
 
     const isLoading = tab === 'followers' ? isFollowersLoading : isFollowingsLoading;
     const data = tab === 'followers' ? followersData?.data : followingsData?.data;
 
+    const nickname = userProfileData?.data?.user?.nickname || '프로필';
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='w-full max-w-[425px] mx-auto'>
                 <DialogHeader>
-                    <DialogTitle className='font-bold text-lg'>T1 Gumayusi</DialogTitle>
+                    {/* [수정] 동적 닉네임 적용 */}
+                    <DialogTitle className='font-bold text-lg'>{nickname}</DialogTitle>
                 </DialogHeader>
 
                 {/* 탭 버튼 */}
@@ -37,13 +50,13 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClos
                         className={`flex-1 py-2 text-center font-semibold ${tab === 'followers' ? 'border-b-2 border-orange-500 text-orange-500' : 'text-gray-500'}`}
                         onClick={() => setTab('followers')}
                     >
-                        팔로워 {followersData?.data.length || 0}
+                        팔로워 {followersData?.data?.length || 0}
                     </button>
                     <button
                         className={`flex-1 py-2 text-center font-semibold ${tab === 'followings' ? 'border-b-2 border-orange-500 text-orange-500' : 'text-gray-500'}`}
                         onClick={() => setTab('followings')}
                     >
-                        팔로잉 {followingsData?.data.length || 0}
+                        팔로잉 {followingsData?.data?.length || 0}
                     </button>
                 </div>
 
@@ -51,7 +64,15 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClos
                 <div className='mt-4 max-h-[400px] overflow-y-auto space-y-2'>
                     {isLoading && <div className='text-center p-4'>로딩 중...</div>}
                     {!isLoading && data && data.length > 0 ? (
-                        data.map((user) => <FollowUserItem key={user.id} user={user} type={tab} />)
+                        data.map((user) => (
+                            <FollowUserItem
+                                key={user.id}
+                                user={user} // 'following' 상태가 포함된 user 객체 전달
+                                type={tab}
+                                // [추가] 목록을 다시 불러오기 위한 authUserId 전달
+                                authUserId={Number(authUserId)}
+                            />
+                        ))
                     ) : (
                         <div className='text-center text-gray-500 py-8'>목록이 비어있습니다.</div>
                     )}
