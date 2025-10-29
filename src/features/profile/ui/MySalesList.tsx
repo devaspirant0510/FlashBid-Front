@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { getServerURL } from '@/shared/lib';
 import { AuctionData } from '@entities/auction/model';
-import { Link } from 'react-router-dom'; // [추가] react-router-dom의 Link를 가져옵니다.
+import { Link } from 'react-router-dom';
 
 type Props = {
     item: AuctionData;
@@ -19,13 +18,10 @@ const MySalesList: FC<Props> = ({ item }) => {
 
     const isEnded = new Date(auction.endTime) < new Date();
 
-    // [추가] 상세 페이지로 이동할 동적 URL을 생성합니다.
-    // auction.auctionType이 'live' 또는 'blind' 값에 따라 URL이 결정됩니다.
     const detailUrl = `/auction/${auction.auctionType}/${auction.id}`;
 
     return (
         <div className='w-full'>
-            {/* [수정] Link 컴포넌트로 이미지 영역을 감싸줍니다. */}
             <Link to={detailUrl}>
                 <div
                     className={`relative w-full aspect-square overflow-hidden rounded-md ${isEnded ? 'grayscale' : ''}`}
@@ -45,11 +41,14 @@ const MySalesList: FC<Props> = ({ item }) => {
             <div className='mt-2'>
                 <div className='flex flex-col items-start'>
                     <div className='flex flex-row items-baseline w-full'>
-                        <span className='text-[12px] text-gray-500 font-semibold pr-1'>
+                        <span
+                            className='text-[12px] text-gray-500 font-semibold pr-1 whitespace-nowrap flex-shrink-0'
+                            title={auction.category.name}
+                        >
                             [{auction.category.name}]
                         </span>
                         <span
-                            className='text-[12px] text-black font-semibold text-left truncate'
+                            className='text-[12px] text-black font-semibold truncate overflow-hidden'
                             title={auction.goods.title}
                         >
                             {auction.goods.title}
