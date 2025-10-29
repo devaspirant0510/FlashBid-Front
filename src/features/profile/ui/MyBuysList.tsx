@@ -25,6 +25,7 @@ const MyBuysList: FC<Props> = ({ item }) => {
 
     // [추가] 상세 페이지로 이동할 동적 URL을 생성합니다.
     const detailUrl = `/auction/${auction.auctionType}/${auction.id}`;
+    const profileUrl = `/users/${seller.id}`;
 
     return (
         <div className='w-full'>
@@ -37,15 +38,15 @@ const MyBuysList: FC<Props> = ({ item }) => {
 
             {/* 정보 영역 */}
             <div className='mt-2'>
-                <div className='flex items-center space-x-2 mb-2'>
+                <Link to={profileUrl} className='flex items-center space-x-2 mb-2 group'>
                     <ProfileImage
                         size={24}
                         src={seller.profileUrl}
                     />
-                    <span className='text-xs font-semibold text-gray-700 truncate'>
+                    <span className='text-xs font-semibold text-gray-700 truncate group-hover:underline'>
                         {seller.nickname}
                     </span>
-                </div>
+                </Link>
 
                 <div className='flex flex-col items-start'>
                     <div className='flex flex-row items-baseline w-full'>

@@ -9,6 +9,7 @@ import { axiosClient } from '@shared/lib';
 import { ToastContainer } from 'react-toastify';
 import SalesViewPage from "@/features/profile/ui/SalesViewPage";
 import BuysViewPage from "@/features/profile/ui/BuysViewPage";
+import PublicProfilePage from "@/features/profile/ui/PublicProfilePage";
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -72,6 +73,7 @@ function App() {
                         <Route path='/profile' element={<ProfilePage />} />
                         <Route path='/profile/point' element={<PointPage />} />
                         <Route path='/profile/sales-view' element={<SalesViewPage />} />
+                        <Route path="/users/:userId" element={<PublicProfilePage />} />
                         <Route path='/profile/buys-view' element={<BuysViewPage />} />
                         <Route path='/auction/productUpload' element={<ProductUploadPage />} />
                         <Route path='/auction/chat/:id' element={<AuctionChatPage />} />
