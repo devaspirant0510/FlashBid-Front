@@ -12,12 +12,12 @@ const FetchRecommendAuctions: FC<Props> = ({ id, children }) => {
         return <></>;
     }
     if (isError) {
-        return <>{error}</>;
+        return <>error</>;
     }
-    if (!data || !data.data || !data?.data) {
+    if (!data || !data.data || !data?.data || data.data.length === 0) {
         return <>nodata</>;
     }
-    return <>{children(data?.data!)}</>;
+    return <>{children(data.data)}</>;
 };
 
 export default FetchRecommendAuctions;

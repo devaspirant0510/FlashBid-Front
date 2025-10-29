@@ -4,3 +4,4 @@ export * from './rqFetcher.ts';
 export * from './dateUtils.ts';
 export * from './jwtUtils.ts';
 export * from './config.ts';
+export * from './ApiException.ts';

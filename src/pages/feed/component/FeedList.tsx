@@ -12,10 +12,19 @@ import { ProfileImage } from '@shared/ui';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
 import { EditModal } from '@pages/feed/component/EditModal.tsx';
 import { toast } from 'react-toastify';
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from '@/shared/components/ui/dropdown-menu';
+import { MoreVertical } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface User {
     nickname: string;
     profileUrl?: string;
+    id?: number; // 추가: 사용자 ID 사용 라인과 타입 일치
 }
 
 interface Feed {
@@ -35,6 +44,8 @@ export interface FeedWrapper {
     images: Image[];
     commentCount: number;
     likeCount: number;
+    liked?: boolean; // 추가: API 응답에 존재 가능
+    isLiked?: boolean; // 추가: 기존 코드에서 참조함
 }
 
 const FeedList = () => {
@@ -70,8 +81,9 @@ const FeedList = () => {
 
             data.data.forEach((item) => {
                 commentCounts[Number(item.feed.id)] = item.commentCount;
+                const computedLiked = item.liked ?? item.isLiked ?? false;
                 likeStatus[Number(item.feed.id)] = {
-                    isLiked: item.liked,
+                    isLiked: computedLiked,
                     count: item.likeCount,
                 };
             });
@@ -138,11 +150,11 @@ const FeedList = () => {
     };
 
     if (isLoading) return <>loading</>;
-    if (isError) return <>{error?.message || 'error'}</>;
+    if (isError) return <>{(error as any)?.message || 'error'}</>;
     if (!data || !data.data) return <>nodata</>;
 
     return (
-        <div className='px-4 py-6 flex flex-col items-center gap-6'>
+        <div className=' flex flex-col items-center gap-2 mt-8'>
             {editingFeedId && editingFeedData && (
                 <EditModal
                     feedId={editingFeedId}
@@ -177,8 +189,12 @@ const FeedList = () => {
                 });
 
                 return (
-                    <div key={feedId} className='bg-white w-full rounded-xl shadow-md px-6 py-5'>
-                        <div className='flex items-start justify-between mb-4'>
+                    <div
+                        key={feedId}
+                        className='bg-white w-full rounded-xl shadow-md px-6 py-5 mt-2 '
+                        style={{ border: '1px solid #bababa80' }}
+                    >
+                        <div className='flex items-start justify-between mb-2'>
                             <div className='flex items-center'>
                                 <ProfileImage
                                     src={v.feed.user.profileUrl}
@@ -193,26 +209,45 @@ const FeedList = () => {
                                 </div>
                             </div>
                             {isAuthor && (
-                                <div className='flex gap-1 text-xs text-gray-500'>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleEditClick(v);
-                                        }}
-                                        className='hover:text-gray-700 transition'
-                                    >
-                                        수정
-                                    </button>
-                                    <span>|</span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteClick(feedId);
-                                        }}
-                                        className='hover:text-gray-700 transition'
-                                    >
-                                        삭제
-                                    </button>
+                                <div className='flex items-center'>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <button
+                                                className='p-2 rounded-md hover:bg-gray-100 transition text-gray-600'
+                                                aria-label='글 옵션'
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <MoreVertical className='w-5 h-5' />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            side='left'
+                                            align='start'
+                                            sideOffset={2}
+                                            className='min-w-[8rem]'
+                                        >
+                                            <DropdownMenuItem
+                                                className='justify-center gap-2'
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditClick(v);
+                                                }}
+                                            >
+                                                <Pencil className='w-4 h-4' />
+                                                <span>수정하기</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                className='justify-center gap-2 text-red-600 focus:text-red-700'
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteClick(feedId);
+                                                }}
+                                            >
+                                                <Trash2 className='w-4 h-4' />
+                                                <span>삭제하기</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             )}
                         </div>
@@ -221,11 +256,11 @@ const FeedList = () => {
                                 {v.feed.contents}
                             </div>
                             {v.images.length > 0 && (
-                                <div className='flex gap-2 overflow-x-auto mb-3 flex items-center'>
+                                <div className='flex items-center gap-2 overflow-x-auto mb-3'>
                                     {v.images.map((img, idx) => (
                                         <img
                                             key={idx}
-                                            src={`${getServerURL()}${img.url}`}
+                                            src={`${img.url}`}
                                             alt={img.fileName}
                                             className='h-60 rounded-md object-cover border border-gray-200'
                                         />

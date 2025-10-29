@@ -12,10 +12,10 @@ type Props = {
 const CategoryLists: FC<Props> = ({ type }) => {
     if (type === 'live') {
         return (
-            <div className={'bg-[#F0F1F5] w-full'}>
+            <div className={'bg-[#F0F1F5] w-full pb-4'}>
                 <div
                     className={
-                        'flex flex-col w-full items-center rounded-b-[70px] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.1)]'
+                        'flex flex-col w-full items-center rounded-b-[70px] bg-white shadow-[0_4px_6px_rgba(0,0,0,0.1)] '
                     }
                 >
                     <div className={'text-[#ED6C37] text-2xl font-bold  mt-8'}>실시간 경매</div>
@@ -34,7 +34,7 @@ const CategoryLists: FC<Props> = ({ type }) => {
         );
     } else {
         return (
-            <div className={'w-full bg-[#F0F1F5]'}>
+            <div className={'w-full bg-[#F0F1F5] pb-4'}>
                 <div
                     className={
                         'flex flex-col w-full items-center rounded-b-[70px] shadow-[0_4px_6px_rgba(0,0,0,0.1)] bg-udark'

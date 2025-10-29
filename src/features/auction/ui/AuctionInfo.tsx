@@ -97,7 +97,7 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
         return <>loading</>;
     }
     if (isError) {
-        return <>aa</>;
+        return <>error</>;
     }
     if (!data || !data.data) {
         return <>no data</>;

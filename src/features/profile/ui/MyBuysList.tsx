@@ -16,10 +16,7 @@ const MyBuysList: FC<Props> = ({ item }) => {
     const { auction } = item; // [수정] item에서 auction을 미리 추출합니다.
 
     const imageUrl =
-        item.images && item.images.length > 0
-            ? `${getServerURL()}${item.images[0].url}`
-            : '/img/default.png';
-
+        item.images && item.images.length > 0 ? `${item.images[0].url}` : '/img/default.png';
 
     const seller = auction.user;
 
@@ -32,18 +29,19 @@ const MyBuysList: FC<Props> = ({ item }) => {
             {/* [수정] Link 컴포넌트로 이미지 영역을 감싸줍니다. */}
             <Link to={detailUrl}>
                 <div className='relative w-full aspect-square overflow-hidden rounded-md'>
-                    <img className='h-full w-full object-cover' src={imageUrl} alt='purchased product' />
+                    <img
+                        className='h-full w-full object-cover'
+                        src={imageUrl}
+                        alt='purchased product'
+                    />
                 </div>
             </Link>
 
             {/* 정보 영역 */}
             <div className='mt-2'>
                 <Link to={profileUrl} className='flex items-center space-x-2 mb-2 group'>
-                    <ProfileImage
-                        size={24}
-                        src={seller.profileUrl}
-                    />
-                    <span className='text-xs font-semibold text-gray-700 truncate group-hover:underline'>
+                    <ProfileImage size={24} src={seller.profileUrl} />
+                    <span className='text-xs font-semibold text-gray-700 truncate'>
                         {seller.nickname}
                     </span>
                 </Link>
@@ -53,13 +51,17 @@ const MyBuysList: FC<Props> = ({ item }) => {
                         <span className='text-[12px] text-gray-500 font-semibold pr-1'>
                             [{auction.category.name}]
                         </span>
-                        <span className='text-[12px] text-black font-semibold text-left truncate' title={auction.goods.title}>
+                        <span
+                            className='text-[12px] text-black font-semibold text-left truncate'
+                            title={auction.goods.title}
+                        >
                             {auction.goods.title}
                         </span>
                     </div>
 
                     <div className='text-[13px] text-orange-600 font-bold pr-1 text-left mt-1'>
-                        {item.currentPrice?.toLocaleString() || auction.startPrice.toLocaleString()}원
+                        {item.currentPrice?.toLocaleString() || auction.startPrice.toLocaleString()}
+                        원
                     </div>
                 </div>
             </div>

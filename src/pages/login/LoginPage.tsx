@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
 import LoginPan from './loginpan';
 import { MainLayout } from '@shared/layout';
@@ -7,13 +7,14 @@ import Cookies from 'js-cookie';
 import useInput from '@shared/hooks/useInput.ts';
 import { axiosClient } from '@shared/lib';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { Navigate } from 'react-router';
 
 function LoginPage() {
     const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
     const navigate = useNavigate(); // useNavigate 훅 호출
     const [email, onChangeEmail] = useInput({ initialValue: '' });
     const [password, onChangePassword] = useInput({ initialValue: '' });
-    const { setAccessToken } = useAuthStore();
+    const { setAccessToken, userAuth } = useAuthStore();
 
     const handleLoginPanOpen = () => {
         setIsLoginPanOpen(true);
@@ -42,6 +43,10 @@ function LoginPage() {
         setAccessToken(result.headers['authorization']);
         navigate('/', { replace: true } as any);
     }, [email, password]);
+
+    if (userAuth) {
+        return <Navigate to={'/'} />;
+    }
 
     return (
         <MainLayout>
