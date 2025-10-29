@@ -1,26 +1,28 @@
-import WritePost from "@pages/feed/component/WritePost.tsx";
-import FeedList from "@pages/feed/component/FeedList.tsx";
-import {useState} from "react";
-import {Modal} from "@pages/feed/component/Modal.tsx";
-import {Header} from "@widgets/ui";
+import WritePost from '@pages/feed/component/WritePost.tsx';
+import FeedList from '@pages/feed/component/FeedList.tsx';
+import React, { useState } from 'react';
+import { Modal } from '@pages/feed/component/Modal.tsx';
+import { Header } from '@widgets/ui';
+import { AppLayout, BaseLayout } from '@shared/layout';
+import { Column, Row } from '@shared/ui';
 
 const FeedPage = () => {
     const [openModal, setOpenModal] = useState(false);
     return (
-        <>
-            <Header />
-            <div className="min-h-screen w-full bg-[#F7F7F7]">
-                <div className="max-w-[800px] mx-auto px-4">
-                    <div className="sticky top-0 z-10">
+        <AppLayout className={'bg-[#F7F7F7]'} headerClassName={'bg-[#F7F7F7]'}>
+            <Row>
+                <Column md={5} xs={0} />
+                <Column md={14} xs={24}>
+                    <div className=' top-0 z-10 '>
                         <WritePost onClick={() => setOpenModal(true)} />
                     </div>
                     <FeedList />
-                </div>
-            </div>
+                </Column>
+                <Column md={5} xs={0} />
+            </Row>
             {openModal && <Modal onClose={() => setOpenModal(false)} />}
-        </>
+        </AppLayout>
     );
 };
 
-
-export default FeedPage
+export default FeedPage;

@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const GoogleLoginButton = () => {
-
-    return (
-        <>
-        </>
-    );
+    return <></>;
 };
 
 export default GoogleLoginButton;

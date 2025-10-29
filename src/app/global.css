@@ -10,6 +10,18 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+/* Number input spinner 제거 */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
 :root {
     --primary: oklch(0.205 0 0);
     --secondary: oklch(0.97 0 0);
@@ -46,10 +58,11 @@
     --warning: oklch(0.84 0.16 84);
     --warning-foreground: oklch(0.28 0.07 46);
 
-    --uprimary: #ED6C37;
-    --usecondary: #F7A17E;
-    --ubackground1: #F2F2F2;
-    --ubackground2: #E4E4E4;
+    --uprimary: #ed6c37;
+    --usecondary: #f7a17e;
+    --ubackground1: #f2f2f2;
+    --ubackground2: #e4e4e4;
+    --udark: #4e4e4e;
 }
 
 @theme inline {
@@ -95,7 +108,7 @@
     --color-usecondary: var(--usecondary);
     --color-ubackground1: var(--ubackground1);
     --color-ubackground2: var(--ubackground2);
-
+    --color-udark: var(--udark);
 }
 
 .dark {
@@ -132,18 +145,50 @@
     --sidebar-ring: oklch(0.556 0 0);
     --warning: oklch(0.84 0.16 84);
     --warning-foreground: oklch(0.28 0.07 46);
-    --uprimary: #ED6C37;
-    --usecondary: #F7A17E;
-    --ubackground1: #F2F2F2;
-    --ubackground2: #E4E4E4;
+    --uprimary: #ed6c37;
+    --usecondary: #f7a17e;
+    --ubackground1: #f2f2f2;
+    --ubackground2: #e4e4e4;
+    --udark: #4e4e4e;
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
+    }
+
+    /* 전역 스크롤바 스타일 */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(237, 108, 55, 0.4) transparent;
+    }
+
+    *::-webkit-scrollbar {
+        width: 0.5px;
+        height: 0.5px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: rgba(237, 108, 55, 0.4);
+        border-radius: 4px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(237, 108, 55, 0.6);
+    }
+
+    .dark *::-webkit-scrollbar-thumb {
+        background-color: rgba(237, 108, 55, 0.4);
+    }
+
+    .dark * {
+        scrollbar-color: rgba(237, 108, 55, 0.4) transparent;
     }
 }
-

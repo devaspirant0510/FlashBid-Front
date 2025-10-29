@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef} from "react";
+import React, { FC, useEffect, useRef } from 'react';
 
 interface Props {
     lat: number;
@@ -13,7 +13,7 @@ const DirectMapInfo: FC<Props> = ({ lat, lng, radius }) => {
 
     useEffect(() => {
         // 카카오맵 스크립트 로드
-        const script = document.createElement("script");
+        const script = document.createElement('script');
         script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&autoload=false`;
         script.async = true;
         document.head.appendChild(script);
@@ -58,7 +58,7 @@ const DirectMapInfo: FC<Props> = ({ lat, lng, radius }) => {
     return (
         <div
             ref={mapRef}
-            style={{ width: "100%", height: "400px", borderRadius: "8px", overflow: "hidden" }}
+            style={{ width: '100%', height: '400px', borderRadius: '8px', overflow: 'hidden' }}
         />
     );
 };

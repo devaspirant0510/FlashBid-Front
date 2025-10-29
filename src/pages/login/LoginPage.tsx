@@ -1,18 +1,20 @@
-import React, {useCallback, useState} from 'react';
-import {useNavigate} from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // react-router-dom에서 useNavigate 임포트
 import LoginPan from './loginpan';
-import {MainLayout} from "@shared/layout";
-import {AuthLoginButton} from "@/features/login/ui";
-import Cookies from "js-cookie";
-import useInput from "@shared/hooks/useInput.ts";
-import {axiosClient} from "@shared/lib";
-
+import { MainLayout } from '@shared/layout';
+import { AuthLoginButton } from '@/features/login/ui';
+import Cookies from 'js-cookie';
+import useInput from '@shared/hooks/useInput.ts';
+import { axiosClient } from '@shared/lib';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
+import { Navigate } from 'react-router';
 
 function LoginPage() {
     const [isLoginPanOpen, setIsLoginPanOpen] = useState(false);
     const navigate = useNavigate(); // useNavigate 훅 호출
-    const [email,onChangeEmail] = useInput({initialValue:''})
-    const [password,onChangePassword] = useInput({initialValue:''})
+    const [email, onChangeEmail] = useInput({ initialValue: '' });
+    const [password, onChangePassword] = useInput({ initialValue: '' });
+    const { setAccessToken, userAuth } = useAuthStore();
 
     const handleLoginPanOpen = () => {
         setIsLoginPanOpen(true);
@@ -26,22 +28,30 @@ function LoginPage() {
     const handleSignUpClick = () => {
         navigate('/register');
     };
-    const onClickLogin = useCallback(async ()=>{
-        const result = await axiosClient.post('/auth/login', {
-            email: email,
-            password: password,
-        },{
-            withCredentials:true
-        } as any);
-        console.log(result.headers)
-        navigate("/",{replace:true} as any)
-    },[email,password])
+    const onClickLogin = useCallback(async () => {
+        const result = await axiosClient.post(
+            '/auth/login',
+            {
+                email: email,
+                password: password,
+            },
+            {
+                withCredentials: true,
+            } as any,
+        );
+        console.log(result.headers['authorization']);
+        setAccessToken(result.headers['authorization']);
+        navigate('/', { replace: true } as any);
+    }, [email, password]);
+
+    if (userAuth) {
+        return <Navigate to={'/'} />;
+    }
 
     return (
         <MainLayout>
-
-            <div style={{padding: '40px 110px', textAlign: 'center', color: '#f26522'}}>
-                <h2 style={{fontSize: '24px', marginBottom: '20px'}}>LOGIN</h2>
+            <div style={{ padding: '40px 110px', textAlign: 'center', color: '#f26522' }}>
+                <h2 style={{ fontSize: '24px', marginBottom: '20px' }}>LOGIN</h2>
 
                 <div
                     style={{
@@ -52,8 +62,8 @@ function LoginPage() {
                     }}
                 >
                     <input
-                        type="email"
-                        placeholder="아이디"
+                        type='email'
+                        placeholder='아이디'
                         value={email}
                         onChange={onChangeEmail}
                         style={{
@@ -67,8 +77,8 @@ function LoginPage() {
                         }}
                     />
                     <input
-                        type="password"
-                        placeholder="비밀번호"
+                        type='password'
+                        placeholder='비밀번호'
                         value={password}
                         onChange={onChangePassword}
                         style={{
@@ -91,15 +101,21 @@ function LoginPage() {
                         }}
                     >
                         <label>
-                            <input type="checkbox" style={{marginRight: '5px'}}/>
+                            <input type='checkbox' style={{ marginRight: '5px' }} />
                             이메일 저장
                         </label>
                         <div>
-                            <a href="/find-email" style={{textDecoration: 'none', color: '#F5BC94'}}>
+                            <a
+                                href='/find-email'
+                                style={{ textDecoration: 'none', color: '#F5BC94' }}
+                            >
                                 이메일 찾기
                             </a>
-                            <span style={{margin: '0 5px'}}>|</span>
-                            <a href="/find-password" style={{textDecoration: 'none', color: '#F5BC94'}}>
+                            <span style={{ margin: '0 5px' }}>|</span>
+                            <a
+                                href='/find-password'
+                                style={{ textDecoration: 'none', color: '#F5BC94' }}
+                            >
                                 비밀번호 찾기
                             </a>
                         </div>
@@ -134,34 +150,35 @@ function LoginPage() {
                         회원가입
                     </button>
 
-                    <div style={{marginTop: '40px'}}>
-                        <div style={{display: 'flex', alignItems: 'center', marginBottom: '20px'}}>
-                            <div style={{flex: 1, height: '1px', backgroundColor: '#f26522'}}></div>
-                            <span style={{padding: '0 10px', color: '#f26522', fontSize: '14px'}}>
-              소셜 로그인
-            </span>
-                            <div style={{flex: 1, height: '1px', backgroundColor: '#f26522'}}></div>
+                    <div style={{ marginTop: '40px' }}>
+                        <div
+                            style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}
+                        >
+                            <div
+                                style={{ flex: 1, height: '1px', backgroundColor: '#f26522' }}
+                            ></div>
+                            <span style={{ padding: '0 10px', color: '#f26522', fontSize: '14px' }}>
+                                소셜 로그인
+                            </span>
+                            <div
+                                style={{ flex: 1, height: '1px', backgroundColor: '#f26522' }}
+                            ></div>
                         </div>
 
-                        <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
-                            <AuthLoginButton auth={"kakao"}/>
-                            <AuthLoginButton auth={"naver"}/>
-                            <AuthLoginButton auth={"google"}/>
-                            <AuthLoginButton auth={"apple"}/>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                            <AuthLoginButton auth={'kakao'} />
+                            <AuthLoginButton auth={'naver'} />
+                            <AuthLoginButton auth={'google'} />
+                            <AuthLoginButton auth={'apple'} />
                         </div>
                     </div>
                 </div>
 
                 {/* 로그인 모달 */}
-                <LoginPan isOpen={isLoginPanOpen} onClose={handleLoginPanClose}/>
+                <LoginPan isOpen={isLoginPanOpen} onClose={handleLoginPanClose} />
 
                 {/* 푸터 */}
                 <footer
-                    onClick={()=>{
-                        Cookies.set("access_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc1MjMxMTg1NiwiZXhwIjoxNzgzODQ3ODU2LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoiMTIzNCIsInJvbGUiOiIxMjM0In0.ZDoQCYyOzOBBRXC4c5bJ78hneZu9uFAki4OnrPzMmxE");
-                        window.location.reload();
-
-                    }}
                     style={{
                         marginTop: '80px',
                         backgroundColor: '#444',
@@ -177,26 +194,40 @@ function LoginPage() {
                             flexWrap: 'wrap',
                         }}
                     >
-                        <div style={{lineHeight: '1.6', fontSize: '14px'}}>
+                        <div style={{ lineHeight: '1.6', fontSize: '14px' }}>
                             <strong>Unknown Auction</strong>
-                            <br/>
-                            <a href="/company" style={{color: '#fff', marginRight: '10px', textDecoration: 'none'}}>
+                            <br />
+                            <a
+                                href='/company'
+                                style={{
+                                    color: '#fff',
+                                    marginRight: '10px',
+                                    textDecoration: 'none',
+                                }}
+                            >
                                 회사소개
                             </a>
-                            <a href="/terms" style={{color: '#fff', marginRight: '10px', textDecoration: 'none'}}>
+                            <a
+                                href='/terms'
+                                style={{
+                                    color: '#fff',
+                                    marginRight: '10px',
+                                    textDecoration: 'none',
+                                }}
+                            >
                                 이용약관
                             </a>
-                            <a href="/privacy" style={{color: '#fff', textDecoration: 'none'}}>
+                            <a href='/privacy' style={{ color: '#fff', textDecoration: 'none' }}>
                                 개인정보처리방침
                             </a>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             상품명 : (주)Unknown Auction
-                            <br/>
+                            <br />
                             대표이사 : OOO
-                            <br/>
+                            <br />
                             Tel: 010-0000-0000 | Fax: 02-000-0000
-                            <br/>
+                            <br />
                             사업자 등록번호 : 000-00-000000
                         </div>
                     </div>

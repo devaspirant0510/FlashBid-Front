@@ -1,84 +1,67 @@
-import React,{ FC, useEffect, useRef, useState } from "react";
-import { useQueryGetAuctionById } from "@/features/auction/lib";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical, faEye } from "@fortawesome/free-solid-svg-icons";
-import {getServerURL} from "@shared/lib";
+import { FC } from 'react'; // useEffect, useRef, useState 제거
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart, faComment } from '@fortawesome/free-solid-svg-icons'; // faEllipsisVertical 제거
+import { getServerURL } from '@shared/lib';
+import { FeedWrapper } from '@pages/feed/component/FeedList';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
-    id: number;
+    feedData: FeedWrapper;
 };
 
-const MyFeed: FC<Props> = ({ id }) => {
-    const { isLoading, isError, data } = useQueryGetAuctionById(id);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null); // 메뉴 참조
+const MyFeed: FC<Props> = ({ feedData }) => {
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setMenuOpen(false);
-            }
-        };
+    const { feed, images, likeCount, commentCount } = feedData;
+    const feedId = feed.id;
 
-        if (menuOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [menuOpen]);
-
-    if (isLoading) return <>로딩 중...</>;
-    if (isError || !data?.data) return <>데이터 오류</>;
-
-    const product = data.data;
+    // 네비게이션 핸들러
+    const handleNavigate = () => {
+        navigate(`/FeedInfo/${feedId}`);
+    };
 
     return (
-        <div>
-            <div className="h-[200px] w-[200px] relative overflow-hidden rounded-md">
-                <img
-                    className="h-full w-full object-cover"
-                    src={`${getServerURL()}` + product.images[0].url}
-                    alt="product"
-                />
-
-                {/* 더보기 아이콘 */}
-                <div
-                    className="absolute top-2 right-3 cursor-pointer z-20"
-                    onClick={() => setMenuOpen((prev) => !prev)}
-                >
-                    <span className="text-[#ED6C37]"><FontAwesomeIcon icon={faEllipsisVertical} /></span>
-                </div>
-
-                {/* 수정/삭제 메뉴 */}
-                {menuOpen && (
+        <div className='flex flex-col'>
+            {/* 이미지 영역 */}
+            <div className='aspect-square w-full relative overflow-hidden rounded-md bg-gray-100'>
+                {images && images.length > 0 ? (
+                    <img
+                        className='h-full w-full object-cover cursor-pointer'
+                        src={`${images[0].url}`}
+                        alt='feed'
+                        onClick={handleNavigate}
+                    />
+                ) : (
                     <div
-                        className="absolute top-10 right-3 space-y-1 z-10"
-                        ref={menuRef} // 참조 연결
+                        className='h-full w-full bg-gray-200 flex items-center justify-center cursor-pointer'
+                        onClick={handleNavigate}
                     >
-                        <div className="bg-white px-3 py-1 rounded-md text-gray-500 shadow text-sm text-center cursor-pointer hover:bg-gray-100">
-                            수정
-                        </div>
-                        <div className="bg-white px-3 py-1 rounded-md text-gray-500 shadow text-sm text-center cursor-pointer hover:bg-gray-100">
-                            삭제
-                        </div>
+                        <span className='text-gray-500 text-sm'>No Image</span>
                     </div>
                 )}
+
+                {/* 메뉴 버튼 제거됨 */}
+                {/* 드롭다운 메뉴 제거됨 */}
             </div>
 
-            <div>
-                <div className="flex justify-between mt-2">
-                    <div className="text-[12px] text-black font-semibold text-left pr-1">
-                        [카테고리]
+            {/* 텍스트 정보 영역 */}
+            <div className='text-left mt-2'>
+                <p
+                    className='text-[13px] text-black font-semibold text-left pr-1 truncate cursor-pointer'
+                    title={feed.contents}
+                    onClick={handleNavigate}
+                >
+                    {feed.contents}
+                </p>
+                <div className='text-[12px] text-gray-500 flex items-center space-x-3 mt-1'>
+                    <div className='flex items-center'>
+                        <FontAwesomeIcon icon={faHeart} className='mr-1 text-red-500' />
+                        <span>{likeCount}</span>
                     </div>
-                    <div className="text-[10px] text-[#ED6C37] flex">
-                        <FontAwesomeIcon icon={faEye} className="mr-1 mt-1" />
-                        <span>{product.auction.viewCount || 196}</span>
+                    <div className='flex items-center'>
+                        <FontAwesomeIcon icon={faComment} className='mr-1' />
+                        <span>{commentCount ?? 0}</span>
                     </div>
-                </div>
-                <div className="text-[12px] text-black font-semibold text-left pb-2 pr-1">
-                    <span>{product.auction.goods.title}</span>
                 </div>
             </div>
         </div>

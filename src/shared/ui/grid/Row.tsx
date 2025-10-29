@@ -2,11 +2,12 @@ import React, { FC, ReactNode } from 'react';
 
 type RowProps = {
     children: ReactNode;
+    className?: string;
 };
 
-const Row: FC<RowProps> = ({ children }) => {
+const Row: FC<RowProps> = ({ children, className }) => {
     return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        <div className={className} style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
             {children}
         </div>
     );

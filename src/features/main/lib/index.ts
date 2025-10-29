@@ -1,1 +1,1 @@
-export * from "./useQueryGetHotAuction.ts";
+export * from './useQueryGetHotAuction.ts';

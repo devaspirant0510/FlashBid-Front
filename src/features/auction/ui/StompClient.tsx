@@ -1,39 +1,42 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import SockJS from 'sockjs-client';
-import Stomp, {Client} from 'stompjs';
-import * as  StompJs from "@stomp/stompjs";
-import {IFrame} from "@stomp/stompjs";
-import {useQueryClient} from "@tanstack/react-query";
-import Cookies from "js-cookie";
-import {useAuthUser} from "@shared/hooks/useAuthUser.tsx";
-import {ChatEntity} from "@entities/auction/model";
+import Stomp, { Client } from 'stompjs';
+import * as StompJs from '@stomp/stompjs';
+import { IFrame } from '@stomp/stompjs';
+import { useQueryClient } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
+import { ChatEntity } from '@entities/auction/model';
+import { useAuthStore } from '@shared/store/AuthStore.ts';
 
 type Props = {
-    children: (client: Client, auctionId: number) => React.ReactNode,
-    auctionId: number
-}
-const StompClient: FC<Props> = ({auctionId, children}) => {
+    children: (client: Client, auctionId: number) => React.ReactNode;
+    auctionId: number;
+};
+const StompClient: FC<Props> = ({ auctionId, children }) => {
     const queryClient = useQueryClient();
     const [messages, setMessages] = useState([]);
     const [msg, setMsg] = useState('');
     const stompClient = useRef(null);
     const clientRef = useRef<any>(null);
-    const [client, setClient] = useState<any>(null)
-    const token = Cookies.get("access_token")
-
+    const [client, setClient] = useState<any>(null);
+    const { accessToken } = useAuthStore();
+    // TODO : 종료된 경매 접속 막기
 
     useEffect(() => {
         const clientdata = new StompJs.Client({
-            webSocketFactory: () => new WebSocket(`ws://${import.meta.env.VITE_MODE=="development"?"127.0.0.1":import.meta.env.VITE_SERVER_URL}:8080/ws`),
+            webSocketFactory: () =>
+                new WebSocket(
+                    `${import.meta.env.VITE_MODE == 'development' ? 'ws' : 'wss'}://${import.meta.env.VITE_MODE == 'development' ? '127.0.0.1:8080' : import.meta.env.VITE_SERVER_URL}/ws`,
+                ),
             onStompError: (i) => {
-                console.log(i)
+                console.log(i);
             },
             onWebSocketError: (e) => {
-                console.log(e)
+                console.log(e);
             },
             connectHeaders: {
-                // Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImlhdCI6MTc0OTQ4MTM5OSwiZXhwIjoxNzgxMDE3Mzk5LCJpZCI6IjEiLCJ1aWQiOiJiNGZmMDIyOTQ1MWQ4ZmM0Zjk4YjBjMmE2NTQ1ZGEzMyIsImVtYWlsIjoic2V1bmdobzAyMDUxMEBnbWFpbC5jb20iLCJyb2xlIjoidG9wIGdhcCJ9.hQVu0R5rxhOiJYHsdLqvkZ5bQMvOZifwKruQkvNa08Y"
-                Authorization: "Bearer " + token
+                Authorization: 'Bearer ' + accessToken,
             },
             debug: function (str) {
                 // console.log(str);
@@ -42,55 +45,59 @@ const StompClient: FC<Props> = ({auctionId, children}) => {
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
             onConnect: function (frame: IFrame) {
-                console.log(frame)
-                clientdata.subscribe("/topic/public/" + auctionId, (data) => {
+                console.log(frame);
+                clientdata.subscribe('/topic/public/' + auctionId, async (data) => {
                     const chatEntity = JSON.parse(data.body) as ChatEntity;
-                    console.log("chatenti")
-                    console.log(chatEntity)
-                    if (chatEntity.biddingLog !== null) {
-                        queryClient.setQueryData(["api", "v1", "auction", auctionId], (prev) => {
+                    console.log('chatenti');
+                    console.log(chatEntity);
+                    await queryClient.refetchQueries({
+                        queryKey: ['api', 'v1', 'auction', Number(auctionId)],
+                    });
+                    if (!chatEntity.biddingLog) {
+                        // queryClient.setQueryData(
+                        //     ['api', 'v1', 'auction', Number(auctionId)],
+                        //     (prev) => {
+                        //         console.log('preev');
+                        //         console.log(prev);
+                        //         return {
+                        //             ...prev,
+                        //             data: {
+                        //                 ...prev?.data,
+                        //                 lastBiddingLog: chatEntity.biddingLog,
+                        //             },
+                        //         };
+                        //     },
+                        // );
+                    }
+                    queryClient.setQueryData(
+                        ['api', 'v1', 'auction', 'chat', Number(auctionId)],
+                        (prev) => {
                             return {
                                 ...prev,
-                                data: {
-                                    ...prev.data,
-                                    currentPrice: chatEntity.biddingLog.price
-                                }
-                            }
-                        })
-                    }
-                    queryClient.setQueryData(["api", "v1", "auction", "chat", auctionId], (prev) => {
-                        return {
-                            ...prev,
-                            data: [...prev.data, JSON.parse(data.body)]
-                        }
-
-                    })
+                                data: [...prev.data, JSON.parse(data.body)],
+                            };
+                        },
+                    );
                 });
-                setClient(1)
 
                 clientRef.current = clientdata;
-            }
+                setClient(clientdata); // 연결 완료 시 상태에 저장
+            },
         });
-        clientdata.activate()
-        console.log(client)
+        clientdata.activate();
         clientRef.current = clientdata;
-        console.log(clientRef.current)
         return () => {
-            clientdata.deactivate().then(r => {
-                console.log("소켓 연결 해제")
-                console.log(r)
+            clientdata.deactivate().then((r) => {
+                console.log('소켓 연결 해제');
+                console.log(r);
             });
+        };
+    }, [auctionId, accessToken]);
 
-        }
-    }, [auctionId]);
-
-    console.log("client app rerender" + clientRef.current)
-    return (
-        <>
-
-            {children(clientRef.current, auctionId)}
-        </>
-    );
+    if (!client) {
+        return null;
+    }
+    return <>{children(client, auctionId)}</>;
 };
 
 export default StompClient;

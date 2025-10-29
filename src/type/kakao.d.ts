@@ -46,7 +46,7 @@ declare global {
                 function addListener(
                     target: any,
                     type: string,
-                    callback: (event: MouseEvent) => void
+                    callback: (event: MouseEvent) => void,
                 ): void;
             }
 
@@ -66,8 +66,8 @@ declare global {
                         lat: number,
                         callback: (
                             result: Address[],
-                            status: 'OK' | 'ZERO_RESULT' | 'ERROR'
-                        ) => void
+                            status: 'OK' | 'ZERO_RESULT' | 'ERROR',
+                        ) => void,
                     ): void;
                 }
 

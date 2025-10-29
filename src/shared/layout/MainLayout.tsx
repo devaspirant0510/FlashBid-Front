@@ -1,40 +1,28 @@
-import React, {FC} from "react";
-import {Header} from "@widgets/ui";
-import {Row} from "@shared/ui";
-import Col from "@shared/ui/grid/Column.tsx";
+import React, { FC } from 'react';
+import { Header } from '@widgets/ui';
+import { Row } from '@shared/ui';
+import Column from '@shared/ui/grid/Column.tsx';
+import { BaseLayout } from '@shared/layout/index.ts';
+import Footer from '@widgets/ui/Footer.tsx';
 
 type Props = {
     children: React.ReactNode;
-    isBanner?: boolean
-}
-const MainLayout: FC<Props> = ({children, isBanner}) => {
+    isBanner?: boolean;
+    className?: string;
+    headerClassName?: string;
+};
+const MainLayout: FC<Props> = ({ children, isBanner, className, headerClassName }) => {
     return (
         <>
-            <div className="relative">
+            <div className={`relative ${headerClassName}`}>
                 {/* 배너 */}
                 {/* 헤더 */}
-                <div className="relative z-20">
-                    <Header/>
+                <div className='relative z-20'>
+                    <Header />
                 </div>
-                {isBanner && (
-                    <>
-                        <img
-                            className="relative w-full -mt-32 z-0"  // 헤더 위로 배너를 올려!
-                            src="/img/banner.png"
-                            alt="banner logo"
-                        />
-                    </>
-                )}
-
             </div>
-            <Row>
-                <Col span={2}/>
-                <Col span={20}>
-                    {children}
-                </Col>
-                <Col span={2}/>
-            </Row>
+            <BaseLayout className={className}>{children}</BaseLayout>
         </>
-    )
-}
+    );
+};
 export default MainLayout;
