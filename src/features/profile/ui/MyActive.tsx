@@ -57,7 +57,7 @@ const MyActive = ({ followercount, followingcount, feedcount }: Props) => {
                 <FollowListModal
                     isOpen={modalState.isOpen}
                     onClose={closeModal}
-                    type={modalState.type}
+                    initialTab={modalState.type}
                 />
             )}
         </div>
