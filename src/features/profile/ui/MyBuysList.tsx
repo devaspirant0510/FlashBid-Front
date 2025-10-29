@@ -45,11 +45,14 @@ const MyBuysList: FC<Props> = ({ item }) => {
 
                 <div className='flex flex-col items-start'>
                     <div className='flex flex-row items-baseline w-full'>
-                        <span className='text-[12px] text-gray-500 font-semibold pr-1'>
+                        <span
+                            className='text-[12px] text-gray-500 font-semibold pr-1 whitespace-nowrap flex-shrink-0'
+                            title={auction.category.name}
+                        >
                             [{auction.category.name}]
                         </span>
                         <span
-                            className='text-[12px] text-black font-semibold text-left truncate'
+                            className='text-[12px] text-black font-semibold truncate overflow-hidden'
                             title={auction.goods.title}
                         >
                             {auction.goods.title}
