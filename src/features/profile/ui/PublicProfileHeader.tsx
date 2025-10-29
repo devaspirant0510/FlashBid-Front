@@ -20,7 +20,6 @@ export const PublicProfileHeader: FC<Props> = ({ userData }) => {
                     <h1 className='text-2xl font-bold'>{user.nickname}</h1>
                     <Button
                         style={{ backgroundColor: '#ED6C37', color: 'white' }}
-                        // TODO: 팔로우 API 연동 필요
                     >
                         팔로우
                     </Button>
