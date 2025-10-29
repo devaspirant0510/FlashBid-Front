@@ -14,14 +14,21 @@ import {
     DialogFooter,
 } from '@shared/components/ui/dialog.tsx';
 import { Button } from '@shared/components/ui/button.tsx';
+import { Link } from 'react-router-dom';
 
 interface FollowUserItemProps {
     user: FollowUser;
     type: 'followers' | 'followings';
     authUserId: number;
+    onCloseModal: () => void; // [추가] 모달 닫기 함수 prop
 }
 
-export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, authUserId }) => {
+export const FollowUserItem: React.FC<FollowUserItemProps> = ({
+                                                                  user,
+                                                                  type,
+                                                                  authUserId,
+                                                                  onCloseModal, // [추가]
+                                                              }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const queryClient = useQueryClient();
     const [_, currentAuthUserId] = useAuthUser();
@@ -31,6 +38,7 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
 
     const isLoading = followMutation.isPending || unfollowMutation.isPending;
 
+    // ... (invalidateQueries, handleUnfollow, handleRemoveFollower, handleConfirmUnfollow, handleFollowBack, handleDmClick 함수는 동일) ...
     // 쿼리 무효화 (목록 + 메인 프로필 카운트 갱신)
     const invalidateQueries = () => {
         queryClient.invalidateQueries({
@@ -74,7 +82,12 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
     return (
         <>
             <div className='flex items-center justify-between py-2 px-4'>
-                <div className='flex items-center space-x-3'>
+                {/* [수정] Link 컴포넌트로 프로필 영역을 감쌉니다. */}
+                <Link
+                    to={`/users/${user.id}`} // [수정] 동적 URL
+                    onClick={onCloseModal}    // [수정] 클릭 시 모달을 닫습니다.
+                    className='flex items-center space-x-3 group' // [수정] group 클래스 추가 (hover 효과용)
+                >
                     {user.profileUrl ? (
                         <img
                             src={user.profileUrl}
@@ -84,18 +97,18 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
                     ) : (
                         <div className='w-10 h-10 bg-gray-300 rounded-full' />
                     )}
-                    <span>{user.nickname}</span>
-                </div>
+                    <span className="group-hover:underline">{user.nickname}</span>
+                </Link>
 
+                {/* --- 버튼 영역 --- */}
                 {type === 'followers' ? (
                     // 팔로워 탭 (나를 팔로우하는 사람들)
                     <div className='flex items-center space-x-2'>
-                        {/* '맞팔로우' / '팔로잉' 버튼 */}
                         {user.following ? (
                             <Button
                                 variant='secondary'
                                 className='bg-gray-200 text-gray-800 px-4 py-1 rounded-md text-sm'
-                                onClick={handleUnfollow} // '팔로잉' -> 언팔로우 모달
+                                onClick={handleUnfollow}
                                 disabled={isLoading}
                             >
                                 {isLoading ? '...' : '팔로잉'}
@@ -103,7 +116,7 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
                         ) : (
                             <Button
                                 className='bg-orange-500 text-white px-4 py-1 rounded-md text-sm'
-                                onClick={handleFollowBack} // '맞팔로우'
+                                onClick={handleFollowBack}
                                 disabled={isLoading}
                             >
                                 {isLoading ? '...' : '맞팔로우'}
@@ -116,7 +129,7 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
                         <Button
                             variant='secondary'
                             className='bg-gray-200 text-gray-800 px-4 py-1 rounded-md text-sm'
-                            onClick={handleUnfollow} // '팔로잉' -> 언팔로우 모달
+                            onClick={handleUnfollow}
                             disabled={isLoading}
                         >
                             {isLoading ? '...' : '팔로잉'}
@@ -125,9 +138,10 @@ export const FollowUserItem: React.FC<FollowUserItemProps> = ({ user, type, auth
                 )}
             </div>
 
-            {/* 언팔로우 확인 모달 */}
+            {/* --- 언팔로우 확인 모달 --- */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogContent className='w-full max-w-[400px]'>
+                    {/* ... (모달 내용은 동일) ... */}
                     <DialogHeader>
                         <DialogTitle>팔로우 취소</DialogTitle>
                         <DialogDescription className="pt-4">

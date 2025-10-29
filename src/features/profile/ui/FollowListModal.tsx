@@ -5,23 +5,18 @@ import { useQueryGetFollowers } from '@/features/profile/lib/useQueryGetFollower
 import { useQueryGetFollowings } from '@/features/profile/lib/useQueryGetFollowings.ts';
 import { FollowUserItem } from '@/features/profile/ui/FollowUserItem.tsx';
 import { useAuthUser } from '@shared/hooks/useAuthUser.tsx';
-import { useQueryGetUserById } from '../lib/useQueryGetUserById.ts'; // [추가]
+import { useQueryGetUserById } from '../lib/useQueryGetUserById.ts';
 
 interface FollowListModalProps {
     isOpen: boolean;
     onClose: () => void;
-    // [추가] type 프롭스 제거 (내부에서 탭으로 관리)
-    // type: 'followers' | 'followings';
 }
 
 export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClose }) => {
-    const [_, authUserId] = useAuthUser(); // [수정] 변수명 authUserId로
+    const [_, authUserId] = useAuthUser();
     const [tab, setTab] = useState<'followers' | 'followings'>('followers');
 
-    // [수정] authUserId를 string | undefined로 변환
     const profileUserId = authUserId ? String(authUserId) : undefined;
-
-    // [추가] 내 프로필 정보(닉네임 등)를 가져옵니다.
     const { data: userProfileData } = useQueryGetUserById(profileUserId);
 
     const { data: followersData, isLoading: isFollowersLoading } = useQueryGetFollowers(
@@ -33,14 +28,12 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClos
 
     const isLoading = tab === 'followers' ? isFollowersLoading : isFollowingsLoading;
     const data = tab === 'followers' ? followersData?.data : followingsData?.data;
-
     const nickname = userProfileData?.data?.user?.nickname || '프로필';
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className='w-full max-w-[425px] mx-auto'>
                 <DialogHeader>
-                    {/* [수정] 동적 닉네임 적용 */}
                     <DialogTitle className='font-bold text-lg'>{nickname}</DialogTitle>
                 </DialogHeader>
 
@@ -67,10 +60,10 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({ isOpen, onClos
                         data.map((user) => (
                             <FollowUserItem
                                 key={user.id}
-                                user={user} // 'following' 상태가 포함된 user 객체 전달
+                                user={user}
                                 type={tab}
-                                // [추가] 목록을 다시 불러오기 위한 authUserId 전달
                                 authUserId={Number(authUserId)}
+                                onCloseModal={onClose}
                             />
                         ))
                     ) : (
