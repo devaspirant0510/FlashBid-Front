@@ -6,10 +6,12 @@ import { LoadingPage } from '@pages/common';
 import PointPage from '@pages/profile/PointPage.tsx';
 import { useAuthStore } from '@shared/store/AuthStore.ts';
 import { axiosClient } from '@shared/lib';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import SalesViewPage from "@/features/profile/ui/SalesViewPage";
 import BuysViewPage from "@/features/profile/ui/BuysViewPage";
 import PublicProfilePage from "@/features/profile/ui/PublicProfilePage";
+import { messaging } from '@/firebase';
+import { getToken, onMessage } from 'firebase/messaging';
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -36,19 +38,61 @@ const BlindAuctionChatPage = React.lazy(
     () => import('@pages/auction/chat/BlindAuctionChatPage.tsx'),
 );
 const ShopPage = React.lazy(() => import('@pages/shop/ShopPage.tsx'));
-
 const DMPage = React.lazy(() => import('@pages/dm/DMPage.tsx'));
 const NotFoundPage = React.lazy(() => import('@pages/common/NotFoundPage.tsx'));
 
 function App() {
     const { setAccessToken } = useAuthStore();
     const [loading, setLoading] = useState(true);
+    const [isMessageListenerAdded, setIsMessageListenerAdded] = useState(false);
 
     useEffect(() => {
         axiosClient
             .post('auth/token')
             .then((r) => {
                 setAccessToken(r.data.data);
+                if (!messaging) {
+                    console.warn('Firebase Messaging is not available');
+                    return;
+                }
+
+                // 포그라운드 메시지 리스너 설정 (1회만)
+                if (!isMessageListenerAdded) {
+                    onMessage(messaging, (payload) => {
+                        console.log('Foreground message:', payload.notification);
+                        toast.info(
+                            payload.notification?.body || 'New notification',
+                            {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: true,
+                            }
+                        );
+                    });
+                    setIsMessageListenerAdded(true);
+                }
+
+                // 알림 권한 요청 및 FCM 토큰 발급
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted' && messaging) {
+                        getToken(messaging, {
+                            vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+                        })
+                            .then((currentToken) => {
+                                if (currentToken) {
+                                    // 백엔드에 FCM 토큰 전송
+                                    axiosClient
+                                        .post('/auth/v1/fcm-token', { fcmToken: currentToken })
+                                        .catch((err) => {
+                                            console.error('FCM 토큰 전송 실패:', err);
+                                        });
+                                }
+                            })
+                            .catch((err) => {
+                                console.error('FCM 토큰 가져오기 실패:', err);
+                            });
+                    }
+                });
             })
             .catch(() => {})
             .finally(() => setLoading(false));
@@ -87,8 +131,6 @@ function App() {
                         />
                         <Route path='/admin/home' element={<AdminHomePage />} />
                         <Route path='/shop' element={<ShopPage />} />
-
-                        {/* DM 페이지: 채팅방 목록 + 채팅창 */}
                         <Route path='/dm' element={<DMPage />} />
                         <Route path='*' element={<NotFoundPage />} />
                     </Routes>
