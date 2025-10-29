@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosClient, getServerURL, httpFetcher } from '@shared/lib';
 import { ApiResult } from '@entities/common';
 import { useNavigate } from 'react-router';
