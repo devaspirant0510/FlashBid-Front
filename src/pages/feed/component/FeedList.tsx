@@ -52,7 +52,7 @@ const FeedList = () => {
     const queryClient = useQueryClient();
     const { getUserAuth } = useAuthStore();
 
-    const { isLoading, isError, data, error } = useInfiniteQuery({
+    const { isLoading, isError, data, error } = useQuery({
         queryKey: ['api', 'v1', 'feed', 'test-all'],
         queryFn: httpFetcher<ApiResult<FeedWrapper[]>>,
     });
