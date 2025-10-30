@@ -16,6 +16,7 @@ import { useMutation } from '@tanstack/react-query';
 import FetchAccountStatus from '@/features/profile/ui/FetchAccountStatus.tsx';
 import { ProfileImage } from '@shared/ui';
 import { BaseLayout } from '@shared/layout';
+import { toast } from 'react-toastify';
 
 type Props = {
     id: number;
@@ -24,22 +25,13 @@ type Props = {
 
 const AuctionInfo: FC<Props> = ({ id, type }) => {
     const { isLoading, isError, error, data } = useQueryGetAuctionById(id);
-    const token = Cookies.get('access_token');
     const navigate = useNavigate();
     // POST 요청 mutation
     const { isPending, mutate } = useMutation({
         mutationFn: async () => {
-            return axiosClient.post(
-                'api/v1/auction/participate',
-                {
-                    auctionId: id,
-                },
-                {
-                    headers: {
-                        Authorization: 'Bearer ' + token,
-                    },
-                } as any,
-            );
+            return axiosClient.post('api/v1/auction/participate', {
+                auctionId: id,
+            });
         },
         onSuccess: () => {
             if (type === 'blind') {
@@ -50,10 +42,9 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
         },
         onError: (error) => {
             console.error('경매 참여 실패', error);
-            if (type === 'live') {
-                navigate(`/auction/chat/${id}`);
-            } else {
-                navigate(`/auction/blind/chat/${id}`);
+            if (error.status === 401) {
+                toast('로그인 후 이용해주세요', { type: 'error' });
+                navigate('/login');
             }
         },
     });
@@ -67,6 +58,11 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
     const isEnded = data && data.data && new Date(data.data.auction.endTime).getTime() < Date.now();
     useEffect(() => {
         if (!data || !data.data) return;
+        if (data.data.auction.auctionType !== type.toUpperCase()) {
+            navigate('/');
+            toast('잘못된 접근입니다.', { type: 'error' });
+            return;
+        }
         const endTime = data.data.auction.endTime;
         let interval: NodeJS.Timeout | null = null;
         const updateRemain = () => {
