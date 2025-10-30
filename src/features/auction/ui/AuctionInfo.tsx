@@ -167,7 +167,9 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
                     </FetchAccountStatus>
                     <div className={'flex flex-col '}>
                         <Badge className={'bg-[var(--uprimary)] text-white'}>내용</Badge>
-                        <p>{data.data.auction.goods.description}</p>
+                        <p className={'whitespace-pre-wrap'}>
+                            {data.data.auction.goods.description}
+                        </p>
                     </div>
                 </article>
                 <div className={'w-24'}></div>
