@@ -59,7 +59,8 @@ export type Auction = {
     user: Account;
     category: Category;
     viewCount: number;
-    auctionType: 'live';
+    // auctionType: 'live';
+    auctionType: 'LIVE' | 'BLIND';
     startPrice: number;
     count: number;
     startTime: string;
