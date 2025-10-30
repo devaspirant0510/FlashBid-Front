@@ -119,7 +119,7 @@ const BiddingDialog: FC<Props> = ({ client }) => {
                                 className='object-cover w-24 h-24 rounded-lg shadow border'
                                 width={96}
                                 height={96}
-                                src={import.meta.env.VITE_SERVER_URL + data.data.images[0].url}
+                                src={data.data.images[0].url}
                                 alt='상품 이미지'
                             />
                             <div className='flex flex-col gap-1'>
