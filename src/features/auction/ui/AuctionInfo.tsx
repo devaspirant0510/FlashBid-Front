@@ -45,6 +45,12 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
             if (error.status === 401) {
                 toast('로그인 후 이용해주세요', { type: 'error' });
                 navigate('/login');
+            } else {
+                if (type === 'blind') {
+                    navigate(`/auction/blind/chat/${id}`);
+                } else {
+                    navigate(`/auction/chat/${id}`);
+                }
             }
         },
     });
