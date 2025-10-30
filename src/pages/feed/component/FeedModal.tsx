@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { axiosClient, getServerURL } from '@shared/lib';
+import React, { useState, useRef, useEffect } from 'react';
+import { axiosClient, getServerURL, toastError } from '@shared/lib';
 import { toast } from 'react-toastify';
-import { ArrowUpDownIcon, ImagePlus, PackageIcon, X as XIcon } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { ArrowUpDownIcon, ImagePlus, PackageIcon, X as XIcon, Loader2 } from 'lucide-react';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import {
     Dialog,
     DialogContent,
@@ -13,19 +13,23 @@ import {
     DialogClose,
 } from '@/shared/components/ui/dialog';
 import { Skeleton } from '@/shared/components/ui/skeleton';
-
+import { ApiResult, Page } from '@entities/common';
+import { FeedListResponse } from '@entities/feed/model';
+interface InfiniteData<T> {
+    pages: T[];
+    pageParams: any[];
+}
 interface ModalProps {
     onClose: () => void;
 }
 
-export const Modal = ({ onClose }: ModalProps) => {
+export const FeedModal = ({ onClose }: ModalProps) => {
     const [content, setContent] = useState('');
-    const queryClient = useQueryClient();
-    // support multiple files now
     const [files, setFiles] = useState<File[]>([]);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const prevUrlsRef = useRef<string[]>([]);
+    const queryClient = useQueryClient();
 
     // 내 상품 홍보 다이얼로그 상태
     const [isPromoOpen, setPromoOpen] = useState(false);
@@ -36,7 +40,6 @@ export const Modal = ({ onClose }: ModalProps) => {
 
     useEffect(() => {
         return () => {
-            // cleanup when component unmounts
             prevUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
             prevUrlsRef.current = [];
         };
@@ -45,42 +48,75 @@ export const Modal = ({ onClose }: ModalProps) => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selected = e.target.files;
         if (selected && selected.length > 0) {
-            const added: File[] = Array.from(selected);
-
-            // create object URLs for new files
+            const added = Array.from(selected);
             const newUrls = added.map((f) => URL.createObjectURL(f));
-
-            // revoke none here for existing; just append
             prevUrlsRef.current = prevUrlsRef.current.concat(newUrls);
-
             setFiles((prev) => prev.concat(added));
             setPreviewUrls((prev) => prev.concat(newUrls));
-
-            // reset input so same file can be selected again if needed
-            const el = inputRef.current;
-            if (el) el.value = '';
+            if (inputRef.current) inputRef.current.value = '';
         }
     };
 
     const handleRemoveFileAt = (index: number) => {
         const url = previewUrls[index];
         if (url) URL.revokeObjectURL(url);
-
         prevUrlsRef.current = prevUrlsRef.current.filter((u) => u !== url);
         setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
         setFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
     const triggerFilePicker = () => {
-        inputRef.current!.click();
+        inputRef.current?.click();
     };
 
-    // 내 상품 홍보: 다이얼로그 오픈 + 테스트 로딩
+    // ✅ useMutation: 게시글 등록 로직
+    const { mutate: submitFeed, isPending } = useMutation({
+        mutationFn: async () => {
+            if (!content.trim()) {
+                throw new Error('내용을 입력해주세요');
+            }
+
+            const formData = new FormData();
+            formData.append(
+                'data',
+                new Blob([JSON.stringify({ content })], { type: 'application/json' }),
+            );
+            files.forEach((f) => formData.append('files', f));
+
+            const response = await axiosClient.post(`${getServerURL()}/api/v1/feed`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            } as any);
+            return response.data;
+        },
+        onSuccess: (data) => {
+            console.log(data);
+            toast.success('작성 성공');
+            setContent('');
+            prevUrlsRef.current.forEach((u) => URL.revokeObjectURL(u));
+            prevUrlsRef.current = [];
+            setFiles([]);
+            setPreviewUrls([]);
+            queryClient.setQueryData(
+                ['api', 'v2', 'feed'],
+                (oldData: InfiniteData<ApiResult<Page<FeedListResponse>>>) => {
+                    const newData = structuredClone(oldData);
+                    console.log(newData.pages[0].data?.content[0]);
+                    newData.pages[0].data?.content.unshift({ ...data.data });
+                    console.log(newData.pages[0].data?.content[0]);
+                    return newData;
+                },
+            );
+            onClose();
+        },
+        onError: (error: any) => {
+            toastError(error?.message || '게시글 작성 중 오류 발생');
+        },
+    });
+
     const handleOpenPromo = () => {
         setPromoOpen(true);
         setPromoLoading(true);
         setPromoItems([]);
-        // 테스트 데이터 로딩 시뮬레이션
         setTimeout(() => {
             const demo = [
                 { id: 1, title: '테스트 상품 A', price: 12900, thumb: '/img/default.png' },
@@ -92,73 +128,23 @@ export const Modal = ({ onClose }: ModalProps) => {
         }, 1200);
     };
 
-    const handleSubmit = async () => {
-        if (!content.trim()) {
-            toast('내용을 입력해주세요', { type: 'error', autoClose: 2000 });
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append(
-            'data',
-            new Blob([JSON.stringify({ content })], { type: 'application/json' }),
-        );
-
-        // append all files (server should accept multiple 'files' entries)
-        files.forEach((f) => formData.append('files', f));
-
-        const response = await axiosClient.post(`${getServerURL()}/api/v1/feed`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        } as any);
-
-        const result = response.data;
-
-        if (response) {
-            toast('작성 성공', { type: 'success' });
-            setContent('');
-            // cleanup previews
-            prevUrlsRef.current.forEach((u) => URL.revokeObjectURL(u));
-            prevUrlsRef.current = [];
-            setFiles([]);
-            setPreviewUrls([]);
-            queryClient.refetchQueries({ queryKey: ['api', 'v1', 'feed', 'test-all'] });
-            onClose();
-        } else {
-            console.error('실패:', result);
-            alert(`실패: ${result?.error?.errorMessage || result?.message}`);
-        }
-    };
-
     const renderPromoBody = () => {
         if (promoLoading) {
             return (
                 <div className='space-y-3'>
-                    <div className='flex items-center gap-3'>
-                        <Skeleton className='h-12 w-12 rounded-md' />
-                        <div className='flex-1 space-y-2'>
-                            <Skeleton className='h-4 w-1/2' />
-                            <Skeleton className='h-4 w-1/3' />
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className='flex items-center gap-3'>
+                            <Skeleton className='h-12 w-12 rounded-md' />
+                            <div className='flex-1 space-y-2'>
+                                <Skeleton className='h-4 w-1/2' />
+                                <Skeleton className='h-4 w-1/3' />
+                            </div>
                         </div>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <Skeleton className='h-12 w-12 rounded-md' />
-                        <div className='flex-1 space-y-2'>
-                            <Skeleton className='h-4 w-2/3' />
-                            <Skeleton className='h-4 w-1/4' />
-                        </div>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <Skeleton className='h-12 w-12 rounded-md' />
-                        <div className='flex-1 space-y-2'>
-                            <Skeleton className='h-4 w-1/2' />
-                            <Skeleton className='h-4 w-1/5' />
-                        </div>
-                    </div>
+                    ))}
                 </div>
             );
         }
+
         return (
             <div className='space-y-3'>
                 {promoItems.map((it) => (
@@ -200,7 +186,7 @@ export const Modal = ({ onClose }: ModalProps) => {
                 <h2 className='text-center text-orange-500 text-lg font-semibold mb-4'>
                     게시글 작성
                 </h2>
-                <hr className={'border-t-1 border-uprimary'} />
+                <hr className='border-t-1 border-uprimary' />
 
                 <textarea
                     className='mt-5 w-full h-80 p-4 bg-orange-50 text-gray-700 border border-orange-100 rounded-md resize-none outline-none'
@@ -209,9 +195,8 @@ export const Modal = ({ onClose }: ModalProps) => {
                     onChange={(e) => setContent(e.target.value)}
                 />
 
-                {/* Custom file picker and preview (multi) */}
+                {/* 이미지 미리보기 */}
                 <div className='mt-4'>
-                    {/* thumbnails above the add button */}
                     {previewUrls.length > 0 && (
                         <div className='flex gap-2 flex-wrap mb-2'>
                             {previewUrls.map((url, idx) => (
@@ -239,16 +224,16 @@ export const Modal = ({ onClose }: ModalProps) => {
 
                     <div className='flex items-start gap-3'>
                         <input
-                            ref={(el) => (inputRef.current = el)}
+                            ref={(el) => {
+                                inputRef.current = el;
+                            }}
                             type='file'
                             accept='image/*'
                             multiple
                             className='hidden'
                             onChange={handleFileChange}
                         />
-
-                        {/* Add button remains visible */}
-                        <div className={'flex flex-col gap-1'}>
+                        <div className='flex flex-col gap-1'>
                             <button
                                 type='button'
                                 onClick={triggerFilePicker}
@@ -276,13 +261,23 @@ export const Modal = ({ onClose }: ModalProps) => {
                     </div>
                 </div>
 
-                <hr className={'border-t-1 mt-4 border-uprimary'} />
+                <hr className='border-t-1 mt-4 border-uprimary' />
                 <div className='text-center mt-6'>
                     <button
-                        className='bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded'
-                        onClick={handleSubmit}
+                        onClick={() => submitFeed()}
+                        disabled={isPending}
+                        className={`bg-orange-500 text-white font-semibold py-2 px-6 rounded transition ${
+                            isPending ? 'opacity-60 cursor-not-allowed' : 'hover:bg-orange-600'
+                        }`}
                     >
-                        게시하기
+                        {isPending ? (
+                            <div className='flex items-center justify-center gap-2'>
+                                <Loader2 className='w-4 h-4 animate-spin' />
+                                게시 중...
+                            </div>
+                        ) : (
+                            '게시하기'
+                        )}
                     </button>
                 </div>
             </div>
@@ -295,7 +290,7 @@ export const Modal = ({ onClose }: ModalProps) => {
                         <DialogDescription>테스트 데이터 로딩 예시입니다.</DialogDescription>
                     </DialogHeader>
 
-                    {renderPromoBody() as any}
+                    {renderPromoBody()}
 
                     <DialogFooter className='mt-4'>
                         <DialogClose asChild>
@@ -309,3 +304,5 @@ export const Modal = ({ onClose }: ModalProps) => {
         </div>
     );
 };
+
+export default FeedModal;
