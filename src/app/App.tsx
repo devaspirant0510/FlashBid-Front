@@ -12,6 +12,7 @@ import BuysViewPage from "@/features/profile/ui/BuysViewPage";
 import PublicProfilePage from "@/features/profile/ui/PublicProfilePage";
 import { messaging } from '@/firebase';
 import { getToken, onMessage } from 'firebase/messaging';
+import FloatingMenu from "@/widgets/ui/FloatingMenu";
 
 const HomePage = React.lazy(() => import('@pages/home/HomePage.tsx'));
 const FeedPage = React.lazy(() => import('@pages/feed/FeedPage.tsx'));
@@ -134,6 +135,7 @@ function App() {
                         <Route path='/dm' element={<DMPage />} />
                         <Route path='*' element={<NotFoundPage />} />
                     </Routes>
+                    <FloatingMenu />
                     <ToastContainer hideProgressBar={true} autoClose={2000} />
                 </Suspense>
             </BrowserRouter>
