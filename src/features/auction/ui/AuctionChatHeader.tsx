@@ -43,9 +43,7 @@ const AuctionChatHeader: FC<Props> = ({ auctionId, type }) => {
                                     p
                                 </span>
                             ) : (
-                                <span className={'text-[#E47547] text-2xl font-bold'}>
-                                    ***,***p
-                                </span>
+                                <span className={'text-[#E47547] text-2xl font-bold'}>Unknown</span>
                             )}
                         </div>
                         <div className={'text-[#C9A9A9] text-sm'}>

@@ -147,7 +147,7 @@ const AuctionChatItem: FC<Props> = ({ data, isMe, type }) => {
                                     </div>
                                 </>
                             ) : (
-                                <div className='text-xl font-bold text-gray-800'>***,***p</div>
+                                <div className='text-xl font-bold text-gray-800'>Unknown</div>
                             )}
                         </div>
 

@@ -112,7 +112,7 @@ const AuctionList: FC<Props> = ({ type }) => {
                             <div className='text-xl font-bold flex gap-2'>
                                 <span className='text-[#F7A17E]'>현재가</span>
                                 {type === 'blind' ? (
-                                    <>***,***p</>
+                                    <>Unknown</>
                                 ) : (
                                     <span>
                                         {v.currentPrice

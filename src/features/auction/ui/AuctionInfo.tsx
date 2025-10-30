@@ -181,7 +181,7 @@ const AuctionInfo: FC<Props> = ({ id, type }) => {
                             p
                         </div>
                     ) : (
-                        <div className={'text-uprimary font-bold text-4xl'}>***,***p</div>
+                        <div className={'text-uprimary font-bold text-4xl'}>Unknown</div>
                     )}
 
                     <button
